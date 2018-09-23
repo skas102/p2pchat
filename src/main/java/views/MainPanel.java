@@ -5,9 +5,9 @@ import java.awt.*;
 
 public class MainPanel extends JPanel {
     public MainPanel(){
-        setPreferredSize(new Dimension(720, 720));
+        setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
-        add(new JButton("hhelo"), BorderLayout.EAST);
+        add(new ContactListView(), BorderLayout.LINE_START);
         add(new JButton("adf"), BorderLayout.CENTER);
     }
 }

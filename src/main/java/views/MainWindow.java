@@ -11,6 +11,7 @@ public class MainWindow extends JFrame {
     private void showFrame(){
         setTitle("P2P Chat");
         pack();
+        setResizable(false);
         setVisible(true);
         setLocation(200, 50);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
