@@ -19,15 +19,17 @@ public class ContactListView extends JPanel {
     }
 
     private void updateListData() {
-        String[] dummy = {"Remo", "HSR"};
+        Object[][] dummy = {{true, "Remo"}, {false, "HSR"}};
 
-        for(String s : dummy){
-            listModel.addElement(new Object[] {"icon", s});
+        for (Object[] data : dummy) {
+            listModel.addElement(data);
         }
     }
 
     private void createView() {
         setBackground(Color.white);
+        setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(74, 126, 187)));
+
         createTileView();
         createListView();
     }
@@ -63,7 +65,7 @@ public class ContactListView extends JPanel {
         // todo add Generics
         listModel = new DefaultListModel();
         JList list = new JList(listModel);
-        list.setPreferredSize(new Dimension(WIDTH, 88));
+        list.setPreferredSize(new Dimension(WIDTH - 1, 88));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setCellRenderer(new ContactCellRenderer());
 
