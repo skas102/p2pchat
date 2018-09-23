@@ -20,22 +20,29 @@ public class ContactListView extends JPanel {
     }
 
     private void createTitleBox() {
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 10, 10));
-        titlePanel.setPreferredSize(new Dimension(WIDTH, 40));
+        JPanel titlePanel = new JPanel(new BorderLayout(20, 20));
         titlePanel.setBackground(Color.white);
+        titlePanel.setPreferredSize(new Dimension(WIDTH, 40));
         titlePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0,
                 new Color(74, 126, 187)));
 
         JLabel title = new JLabel("Contact List");
         title.setFont(new Font(title.getName(), Font.PLAIN, 18));
-        title.setBackground(Color.red);
-        titlePanel.add(title);
+        titlePanel.add(title, BorderLayout.WEST);
 
-        ImageIcon addIcon = new ImageIcon(getClass().getClassLoader().getResource("images/add-friend2.png"));
-        JLabel lblAdd = new JLabel(addIcon);
-        titlePanel.add(lblAdd);
+        ImageIcon friendIcon = new ImageIcon(getClass().getClassLoader().getResource("images/add-friend2.png"));
+        JLabel lblFriendAdd = new JLabel(friendIcon);
+        lblFriendAdd.setSize(16,16);
+        ImageIcon groupIcon = new ImageIcon(getClass().getClassLoader().getResource("images/add-group.png"));
+        JLabel lblGroupAdd = new JLabel(groupIcon);
+
+        Box controlPanel = Box.createHorizontalBox();
+        controlPanel.add(lblFriendAdd);
+        controlPanel.add(Box.createHorizontalStrut(3));
+        controlPanel.add(lblGroupAdd);
+        controlPanel.add(Box.createHorizontalStrut(3));
+        titlePanel.add(controlPanel, BorderLayout.EAST);
 
         add(titlePanel, BorderLayout.NORTH);
-        add(lblAdd, BorderLayout.CENTER);
     }
 }
