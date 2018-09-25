@@ -1,5 +1,7 @@
+import views.MainWindow;
+
 public class Main {
-    public static void main(String[] args){
-        System.out.println("Hello p2p");
+    public static void main(String[] args) {
+        new MainWindow();
     }
 }
