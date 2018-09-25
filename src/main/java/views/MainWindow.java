@@ -8,7 +8,7 @@ public class MainWindow extends JFrame {
         showFrame();
     }
 
-    private void showFrame(){
+    private void showFrame() {
         setTitle("P2P Chat");
         pack();
         setResizable(false);

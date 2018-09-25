@@ -7,8 +7,8 @@ import java.awt.*;
 public class ContactCellRenderer implements ListCellRenderer {
 
     private JLabel lbCell = new JLabel(" ", JLabel.LEFT);
-    private Border lineBorder = BorderFactory.createLineBorder(Color.black,1);
-    private Border emptyBorder = BorderFactory.createEmptyBorder(2,2,2,2);
+    private Border lineBorder = BorderFactory.createLineBorder(Color.black, 1);
+    private Border emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
     private ImageIcon friendChat = new ImageIcon(getClass().getClassLoader().getResource("images/friend.png"));
     private ImageIcon groupChat = new ImageIcon(getClass().getClassLoader().getResource("images/group.png"));
 
@@ -20,11 +20,10 @@ public class ContactCellRenderer implements ListCellRenderer {
         lbCell.setIcon(((boolean) pair[0] ? friendChat : groupChat));
         lbCell.setText(pair[1].toString());
 
-        if(isSelected){
+        if (isSelected) {
             lbCell.setForeground(list.getSelectionForeground());
             lbCell.setBackground(list.getSelectionBackground());
-        }
-        else{
+        } else {
             lbCell.setForeground(list.getForeground());
             lbCell.setBackground(list.getBackground());
         }

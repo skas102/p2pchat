@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainPanel extends JPanel {
-    public MainPanel(){
+    public MainPanel() {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
