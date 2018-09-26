@@ -9,8 +9,8 @@ public class ChatApplication {
     private P2PService p2pService;
     private ChatController chatController;
 
-    public ChatApplication(int port, String bootstrapPeerIP, int bootstrapPeerPort) {
-        p2pService = new TomP2PService(port, bootstrapPeerIP, bootstrapPeerPort);
+    public ChatApplication(int clientPort, String bootstrapPeerIP, int bootstrapPeerPort) {
+        p2pService = new TomP2PService(clientPort, bootstrapPeerIP, bootstrapPeerPort);
 
         // todo create ChatRepository from file
         chatController = new ChatController(p2pService);
@@ -24,7 +24,7 @@ public class ChatApplication {
             System.exit(1);
         }
 
-        // todo pass controller to the
+        // todo pass controller to the view
         new MainWindow();
     }
 }
