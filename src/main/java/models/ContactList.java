@@ -16,5 +16,7 @@ public class ContactList {
         return this.friends;
     }
 
-    public List<Group> getGroups() { return this.groups; }
+    public List<Group> getGroups() {
+        return this.groups;
+    }
 }
