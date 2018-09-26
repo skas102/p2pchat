@@ -1,4 +1,5 @@
 import controllers.ChatController;
+import repositories.ChatRepository;
 import services.P2PService;
 import services.TomP2PService;
 import views.MainWindow;
@@ -12,8 +13,7 @@ public class ChatApplication {
     public ChatApplication(int clientPort, String bootstrapPeerIP, int bootstrapPeerPort) {
         p2pService = new TomP2PService(clientPort, bootstrapPeerIP, bootstrapPeerPort);
 
-        // todo create ChatRepository from file
-        chatController = new ChatController(p2pService);
+        chatController = new ChatController(p2pService, new ChatRepository());
     }
 
     public void run() {
