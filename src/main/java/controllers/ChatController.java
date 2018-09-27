@@ -1,10 +1,12 @@
 package controllers;
 
-import models.*;
+import models.Contact;
+import models.ContactType;
+import models.Group;
+import models.Person;
 import repositories.ChatRepository;
 import services.P2PService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChatController {
@@ -21,11 +23,11 @@ public class ChatController {
     private void sendFriendRequest(String name) {
         // TODO: We need to specify a sequence for adding friends
         // 1. Load data about friend from DHT
-        User user = service.getUser(name);
+//        User user = service.getUser(name);
         // 2. Create FriendRequest locally
-        chatRepository.addMyFriendRequest(user);
+//        chatRepository.addMyFriendRequest(user);
         // 3. Send FriendRequest
-        service.sendMessage();
+//        service.sendMessage();
     }
 
     public void addFriend(String name) {
@@ -40,9 +42,9 @@ public class ChatController {
 
     public void removeContact(Contact contact) {
         if (contact.getType() == ContactType.PERSON) {
-            chatRepository.removeFriendFromContactList((Person)contact);
+            chatRepository.removeFriendFromContactList((Person) contact);
         } else {
-            chatRepository.removeGroupFromContactList((Group)contact);
+            chatRepository.removeGroupFromContactList((Group) contact);
         }
     }
 
