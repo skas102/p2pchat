@@ -1,6 +1,9 @@
 package repositories;
 
-import models.*;
+import models.ContactList;
+import models.Group;
+import models.Person;
+import models.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;

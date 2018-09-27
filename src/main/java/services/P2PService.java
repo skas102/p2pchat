@@ -1,15 +1,13 @@
 package services;
 
-import net.tomp2p.dht.FuturePut;
+import net.tomp2p.dht.FutureGet;
 
 import java.io.IOException;
 
 public interface P2PService {
     void start() throws IOException, InterruptedException;
 
-    FuturePut put(String locationKey, Object value) throws IOException;
-
-    FuturePut put(String locationKey, String domainKey, Object value) throws IOException;
+    FutureGet getUser(String name);
 
     // todo define parameters
     //  void get();

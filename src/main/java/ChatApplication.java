@@ -24,7 +24,8 @@ public class ChatApplication {
         try {
             p2pService.start();
         } catch (InterruptedException | IOException ex) {
-            System.err.println("Starting P2P Service failed - " + ex.getLocalizedMessage());
+            System.err.println("Starting P2P Service failed - " + ex.getMessage());
+            ex.printStackTrace();
             System.exit(1);
         }
 
