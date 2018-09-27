@@ -1,10 +1,10 @@
 {
     "configuration": {
         "status": "error",
-        "name": "ChatLogger",
-        "packages": "p2pchat",
+        "name": "JSONConfigDemo",
+        "packages": "com.howtodoinjava",
         "ThresholdFilter": {
-            "level": "info"
+            "level": "debug"
         },
         "appenders": {
             "Console": {
@@ -16,7 +16,7 @@
         },
         "loggers": {
             "root": {
-                "level": "info",
+                "level": "debug",
                 "AppenderRef": {
                     "ref": "STDOUT"
                 }
