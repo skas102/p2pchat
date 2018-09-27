@@ -1,5 +1,6 @@
 package services;
 
+import models.User;
 import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
 import net.tomp2p.p2p.PeerBuilder;
@@ -9,32 +10,26 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 public class TomP2PService implements P2PService {
-    private int clientPort;
-    private String bootstrapPeerIP;
-    private int bootstrapPeerPort;
-
+    private User user;
     private PeerDHT peerDHT;
 
-    public TomP2PService(int clientPort, String bootstrapPeerIP, int bootstrapPeerPort) {
-        this.clientPort = clientPort;
-        this.bootstrapPeerIP = bootstrapPeerIP;
-        this.bootstrapPeerPort = bootstrapPeerPort;
+    public TomP2PService(User user) {
+        this.user = user;
     }
 
     @Override
     public void start() throws IOException, InterruptedException {
-        // todo replace hardcoded "User" with the user chosen username
-        Number160 uniqueNodeID = Number160.createHash("User" + clientPort);
-        peerDHT = new PeerBuilderDHT(new PeerBuilder(uniqueNodeID).ports(4000).start()).start();
-        System.out.println("Peer started at port " + clientPort);
+        Number160 uniqueNodeID = Number160.createHash(user.getUniqueID().toString());
+        peerDHT = new PeerBuilderDHT(new PeerBuilder(uniqueNodeID).ports(user.getPort()).start()).start();
+        System.out.println("Peer started at port " + user.getPort());
 
-        if (bootstrapPeerIP != null && !"".equals(bootstrapPeerIP)) {
+        if (user.hasBootstrapPeer()) {
             System.out.println(String.format(
-                    "Start bootstrapping using the peer at %s %d", bootstrapPeerIP, bootstrapPeerPort));
+                    "Start bootstrapping using the peer at %s %d", user.getBootstrapIP(), user.getBootstrapPort()));
             peerDHT.peer()
                     .bootstrap()
-                    .inetAddress(InetAddress.getByName(bootstrapPeerIP))
-                    .ports(bootstrapPeerPort)
+                    .inetAddress(InetAddress.getByName(user.getBootstrapIP()))
+                    .ports(user.getBootstrapPort())
                     .start()
                     .awaitListeners();
         }

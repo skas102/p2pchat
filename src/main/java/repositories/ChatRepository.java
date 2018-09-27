@@ -13,8 +13,8 @@ public class ChatRepository implements Serializable {
     private User user;
     private ContactList contactList;
 
-    public ChatRepository(String username) {
-        this.user = new User(username);
+    public ChatRepository(User user) {
+        this.user = user;
     }
 
     private void init() {

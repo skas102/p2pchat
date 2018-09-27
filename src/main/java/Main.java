@@ -1,3 +1,5 @@
+import models.User;
+
 public class Main {
 
     // Usage: java Main <client-port> <bootstrap-peer-ip> <bootstrap-peer-port>
@@ -7,9 +9,13 @@ public class Main {
 
         // By parameterizing the port, multiple chat applications could be started on the same machine
         int clientPort = args.length >= 1 ? Integer.parseInt(args[0]) : 4000;
-        String bootstrapPeerIP = args.length >= 2 ? args[1] : "";
-        int bootstrapPeerPort = args.length == 3 ? Integer.parseInt(args[2]) : 4000;
+        User user = new User(clientPort);
 
-        new ChatApplication(clientPort, bootstrapPeerIP, bootstrapPeerPort).run();
+        if (args.length >= 2) {
+            int bootstrapPort = args.length == 3 ? Integer.parseInt(args[2]) : 4000;
+            user.setBootstrapPeer(args[1], bootstrapPort);
+        }
+
+        new ChatApplication(user).run();
     }
 }
