@@ -30,6 +30,6 @@ public class ChatApplication {
         }
 
         // todo pass controller to the view
-        new MainWindow();
+        new MainWindow(chatController);
     }
 }

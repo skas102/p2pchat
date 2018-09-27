@@ -1,16 +1,24 @@
 package views;
 
+import controllers.ChatController;
+import util.ChatLogger;
 import views.util.ContactCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class ContactListView extends JPanel {
     private final int WIDTH = 240;
 
+    private ChatController controller;
     private DefaultListModel listModel;
 
-    public ContactListView() {
+    public ContactListView(ChatController controller) {
+        this.controller = controller;
+
         setPreferredSize(new Dimension(WIDTH, 600));
         setLayout(new BorderLayout());
 
@@ -59,6 +67,14 @@ public class ContactListView extends JPanel {
         titlePanel.add(controlPanel, BorderLayout.EAST);
 
         add(titlePanel, BorderLayout.NORTH);
+
+        // register click events
+        lblFriendAdd.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                addFriend();
+            }
+        });
     }
 
     private void createListView() {
@@ -73,5 +89,15 @@ public class ContactListView extends JPanel {
         listScroll.setBorder(null);
 
         add(listScroll, BorderLayout.CENTER);
+    }
+
+    private void addFriend() {
+        String username = JOptionPane.showInputDialog("Enter the username of your friend");
+
+        try {
+            controller.addFriend(username);
+        } catch (IOException | ClassNotFoundException e) {
+            ChatLogger.error("Adding friend failed " + e.getMessage());
+        }
     }
 }
