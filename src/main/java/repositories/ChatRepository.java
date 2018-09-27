@@ -1,7 +1,6 @@
 package repositories;
 
-import models.ContactList;
-import models.User;
+import models.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,5 +22,21 @@ public class ChatRepository implements Serializable {
 
     public String getProfileName() {
         return this.user.getUsername();
+    }
+
+    public void addFriendToContactList(Person friend) {
+        contactList.getFriends().add(friend);
+    }
+
+    public void removeFriendFromContactList(Person friend) {
+        contactList.getFriends().remove(friend);
+    }
+
+    public void addGroupToContactList(Group group) {
+        contactList.getGroups().add(group);
+    }
+
+    public void removeGroupFromContactList(Group group) {
+        contactList.getGroups().remove(group);
     }
 }
