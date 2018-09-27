@@ -1,0 +1,26 @@
+{
+    "configuration": {
+        "status": "error",
+        "name": "ChatLogger",
+        "packages": "p2pchat",
+        "ThresholdFilter": {
+            "level": "info"
+        },
+        "appenders": {
+            "Console": {
+                "name": "STDOUT",
+                "PatternLayout": {
+                    "pattern": "%d [%t] %-5p %c - %m%n"
+                }
+            }
+        },
+        "loggers": {
+            "root": {
+                "level": "info",
+                "AppenderRef": {
+                    "ref": "STDOUT"
+                }
+            }
+        }
+    }
+}
