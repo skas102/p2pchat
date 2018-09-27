@@ -1,23 +1,27 @@
 package repositories;
 
 import models.ContactList;
+import models.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // todo Functionalities are to be defined.
-public class ChatRepository {
+public class ChatRepository implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private User user;
     private ContactList contactList;
 
-    public ChatRepository() {
-    }
-
-    private void load() {
-        // todo load from file (different file name depends on username to support multiple application)
-        // if no file is found, init all fields
-        init();
+    public ChatRepository(String username) {
+        this.user = new User(username);
     }
 
     private void init() {
         contactList = new ContactList(new ArrayList<>(), new ArrayList<>());
+    }
+
+    public String getProfileName() {
+        return this.user.getUsername();
     }
 }

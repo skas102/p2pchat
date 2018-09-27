@@ -23,8 +23,8 @@ public class TomP2PService implements P2PService {
 
     @Override
     public void start() throws IOException, InterruptedException {
-        // todo replace hardcoded "Username" with the user chosen username
-        Number160 uniqueNodeID = Number160.createHash("Username" + clientPort);
+        // todo replace hardcoded "User" with the user chosen username
+        Number160 uniqueNodeID = Number160.createHash("User" + clientPort);
         peerDHT = new PeerBuilderDHT(new PeerBuilder(uniqueNodeID).ports(4000).start()).start();
         System.out.println("Peer started at port " + clientPort);
 
