@@ -1,13 +1,13 @@
 package services;
 
-import net.tomp2p.dht.FutureGet;
+import dtos.UserDTO;
 
 import java.io.IOException;
 
 public interface P2PService {
     void start() throws IOException, InterruptedException;
 
-    FutureGet getUser(String name);
+    UserDTO getUser(String name) throws IOException, ClassNotFoundException;
 
     // todo define parameters
     //  void get();

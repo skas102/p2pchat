@@ -57,8 +57,10 @@ public class TomP2PService implements P2PService {
     }
 
     @Override
-    public FutureGet getUser(String username) {
-        return peerDHT.get(Number160.createHash(username))
+    public UserDTO getUser(String username) throws IOException, ClassNotFoundException {
+        FutureGet futureGet = peerDHT.get(Number160.createHash(username))
                 .start();
+        futureGet.awaitUninterruptibly(); // todo This is a blocking operation, refactor code async
+        return (UserDTO) futureGet.data().object();
     }
 }

@@ -5,9 +5,9 @@ import models.Contact;
 import models.ContactType;
 import models.Group;
 import models.Person;
-import net.tomp2p.dht.FutureGet;
 import repositories.ChatRepository;
 import services.P2PService;
+import util.ChatLogger;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,9 +27,8 @@ public class ChatController {
         // TODO: We need to specify a sequence for adding friends
 
         // 1. Load data about friend from DHT
-        // TODO: await is a blocking operation. It should be refactored with listener/observer to process asynchronously.
-        FutureGet futureUser = service.getUser(name).awaitUninterruptibly();
-        UserDTO userDTO = (UserDTO) futureUser.data().object();
+        UserDTO userDTO = service.getUser(name); // todo pass listeners for async
+        ChatLogger.info("User info retrieved: " + userDTO);
 
         // 2. Create FriendRequest locally
         // chatRepository.addMyFriendRequest(user);
