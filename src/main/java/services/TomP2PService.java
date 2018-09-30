@@ -13,6 +13,7 @@ import util.ChatLogger;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 public class TomP2PService implements P2PService {
@@ -54,8 +55,7 @@ public class TomP2PService implements P2PService {
     private void updateUserInfo() throws IOException {
         UserDTO userDTO = new UserDTO(
                 user.getUsername(),
-                peerDHT.peerAddress().inetAddress().getHostAddress(),
-                user.getPort());
+                peerDHT.peerAddress());
 
         // todo on collision use domain key, e.g. UUID
         peerDHT.put(Number160.createHash(user.getUsername()))
@@ -74,14 +74,16 @@ public class TomP2PService implements P2PService {
     }
 
     @Override
-    public void sendDirect(UserDTO receiver, String message) {
-        peerDHT.peer().sendDirect(new PeerAddress(
-                Number160.createHash(receiver.getUsername())
-        )).object(message).start();
+    public void sendDirect(UserDTO receiver, String message) throws UnknownHostException {
+        peerDHT.peer()
+                .sendDirect(receiver.getPeerAddress())
+                .object(message)
+                .start();
     }
 
     @Override
     public void receiveMessage() {
+        System.out.println("Receiving message");
         peerDHT.peer().objectDataReply((sender, request) -> {
             System.out.println("Sender " + sender.inetAddress() + "Message: " + request);
             return request;

@@ -34,7 +34,6 @@ public class TestTomP2PService {
         TomP2PService service2 = new TomP2PService(user2);
         service2.start();
 
-
         assertUser(getUser(service1, user2.getUsername(), 10), user2.getUsername());
         assertUser(getUser(service2, user1.getUsername(), 10), user1.getUsername());
 
@@ -44,7 +43,7 @@ public class TestTomP2PService {
 
     private void assertUser(UserDTO user, String expectedUsername) {
         if (user == null) {
-            Assert.fail("User2 couldn't be retrieved from DHT");
+            Assert.fail(expectedUsername + " couldn't be retrieved from DHT");
         } else {
             Assert.assertEquals(expectedUsername, user.getUsername());
         }
@@ -58,7 +57,7 @@ public class TestTomP2PService {
                 user = service.getUser(username);
                 return user;
             } catch (NullPointerException ex) {
-                ChatLogger.warn("User couldn't retrieved. Remaining retries: " + retries);
+                ChatLogger.warn("User couldn't be retrieved. Remaining retries: " + retries);
                 retries--;
             }
         } while (user == null && retries > 0);

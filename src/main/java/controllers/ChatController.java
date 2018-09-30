@@ -31,7 +31,7 @@ public class ChatController implements MessageListener{
         ChatLogger.info("User info retrieved: " + userDTO);
 
         // 2. Send FriendRequest
-//        service.sendDirect(userDTO, "Hello");
+        service.sendDirect(userDTO, "Hello");
 
         // 3. Create FriendRequest locally
         // chatRepository.addMyFriendRequest(user);
