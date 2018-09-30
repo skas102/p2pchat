@@ -12,7 +12,7 @@ import util.ChatLogger;
 import java.io.IOException;
 import java.util.List;
 
-public class ChatController implements MessageListener{
+public class ChatController implements MessageListener {
 
     private ChatRepository chatRepository;
     private P2PService service;
@@ -31,7 +31,7 @@ public class ChatController implements MessageListener{
         ChatLogger.info("User info retrieved: " + userDTO);
 
         // 2. Send FriendRequest
-        service.sendDirect(userDTO, "Hello");
+        service.sendDirectMessage(userDTO, "Hello");
 
         // 3. Create FriendRequest locally
         // chatRepository.addMyFriendRequest(user);

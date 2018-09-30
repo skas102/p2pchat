@@ -13,7 +13,6 @@ import util.ChatLogger;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Map;
 
 public class TomP2PService implements P2PService {
@@ -74,7 +73,7 @@ public class TomP2PService implements P2PService {
     }
 
     @Override
-    public void sendDirect(UserDTO receiver, String message) throws UnknownHostException {
+    public void sendDirectMessage(UserDTO receiver, String message) {
         peerDHT.peer()
                 .sendDirect(receiver.getPeerAddress())
                 .object(message)
