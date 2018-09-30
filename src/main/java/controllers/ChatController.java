@@ -12,7 +12,7 @@ import util.ChatLogger;
 import java.io.IOException;
 import java.util.List;
 
-public class ChatController {
+public class ChatController implements MessageListener{
 
     private ChatRepository chatRepository;
     private P2PService service;
@@ -30,10 +30,11 @@ public class ChatController {
         UserDTO userDTO = service.getUser(name); // todo pass listeners for async
         ChatLogger.info("User info retrieved: " + userDTO);
 
-        // 2. Create FriendRequest locally
+        // 2. Send FriendRequest
+//        service.sendDirect(userDTO, "Hello");
+
+        // 3. Create FriendRequest locally
         // chatRepository.addMyFriendRequest(user);
-        // 3. Send FriendRequest
-        // service.sendMessage();
     }
 
     public void addFriend(String name) throws IOException, ClassNotFoundException {

@@ -7,15 +7,18 @@ import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
+import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
 import util.ChatLogger;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Map;
 
 public class TomP2PService implements P2PService {
     private User user;
     private PeerDHT peerDHT;
+    private Map<String, PeerAddress> peers;
 
     public TomP2PService(User user) {
         this.user = user;
@@ -40,6 +43,12 @@ public class TomP2PService implements P2PService {
         }
 
         updateUserInfo();
+        receiveMessage(); // todo temp
+    }
+
+    @Override
+    public void shutdown() {
+        peerDHT.shutdown();
     }
 
     private void updateUserInfo() throws IOException {
@@ -62,5 +71,20 @@ public class TomP2PService implements P2PService {
                 .start();
         futureGet.awaitUninterruptibly(); // todo This is a blocking operation, refactor code async
         return (UserDTO) futureGet.data().object();
+    }
+
+    @Override
+    public void sendDirect(UserDTO receiver, String message) {
+        peerDHT.peer().sendDirect(new PeerAddress(
+                Number160.createHash(receiver.getUsername())
+        )).object(message).start();
+    }
+
+    @Override
+    public void receiveMessage() {
+        peerDHT.peer().objectDataReply((sender, request) -> {
+            System.out.println("Sender " + sender.inetAddress() + "Message: " + request);
+            return request;
+        });
     }
 }
