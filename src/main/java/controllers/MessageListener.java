@@ -1,5 +1,7 @@
 package controllers;
 
-public interface MessageListener {
+import dtos.FriendRequestMessage;
 
+public interface MessageListener {
+    void onFriendRequest(FriendRequestMessage m);
 }

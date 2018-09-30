@@ -1,5 +1,6 @@
 package controllers;
 
+import dtos.FriendRequestMessage;
 import dtos.UserDTO;
 import models.Contact;
 import models.ContactType;
@@ -28,10 +29,10 @@ public class ChatController implements MessageListener {
 
         // 1. Load data about friend from DHT
         UserDTO userDTO = service.getUser(name); // todo pass listeners for async
-        ChatLogger.info("User info retrieved: " + userDTO);
+        ChatLogger.info("Client info retrieved: " + userDTO);
 
         // 2. Send FriendRequest
-        service.sendDirectMessage(userDTO, "Hello");
+        service.sendDirectMessage(userDTO, new FriendRequestMessage(chatRepository.getClient().getUsername()));
 
         // 3. Create FriendRequest locally
         // chatRepository.addMyFriendRequest(user);
@@ -55,4 +56,8 @@ public class ChatController implements MessageListener {
         }
     }
 
+    @Override
+    public void onFriendRequest(FriendRequestMessage m) {
+
+    }
 }

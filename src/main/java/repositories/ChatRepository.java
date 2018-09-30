@@ -3,7 +3,7 @@ package repositories;
 import models.ContactList;
 import models.Group;
 import models.Person;
-import models.User;
+import models.Client;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,19 +12,23 @@ import java.util.ArrayList;
 public class ChatRepository implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private User user;
+    private Client client;
     private ContactList contactList;
 
-    public ChatRepository(User user) {
-        this.user = user;
+    public ChatRepository(Client client) {
+        this.client = client;
     }
 
     private void init() {
         contactList = new ContactList(new ArrayList<>(), new ArrayList<>());
     }
 
+    public Client getClient(){
+        return client;
+    }
+
     public String getProfileName() {
-        return this.user.getUsername();
+        return this.client.getUsername();
     }
 
     public void addFriendToContactList(Person friend) {

@@ -1,5 +1,6 @@
 import controllers.ChatController;
-import models.User;
+import models.BootstrapPeer;
+import models.Client;
 import repositories.ChatRepository;
 import services.P2PService;
 import services.TomP2PService;
@@ -10,13 +11,12 @@ import java.io.IOException;
 public class ChatApplication {
     private P2PService p2pService;
     private ChatController chatController;
-    private User user;
 
-    public ChatApplication(User user) {
-        p2pService = new TomP2PService(user);
+    public ChatApplication(Client client, BootstrapPeer bootstrapPeer) {
+        p2pService = new TomP2PService(client, bootstrapPeer);
 
-        // todo ask user for the username if first time, otherwise load from data file
-        ChatRepository repo = new ChatRepository(user);
+        // todo ask client for the username if first time, otherwise load from data file
+        ChatRepository repo = new ChatRepository(client);
         chatController = new ChatController(p2pService, repo);
     }
 

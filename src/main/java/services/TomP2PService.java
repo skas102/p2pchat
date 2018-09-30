@@ -1,7 +1,11 @@
 package services;
 
+import controllers.MessageListener;
+import dtos.FriendRequestMessage;
+import dtos.Message;
 import dtos.UserDTO;
-import models.User;
+import models.BootstrapPeer;
+import models.Client;
 import net.tomp2p.dht.FutureGet;
 import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
@@ -16,34 +20,36 @@ import java.net.InetAddress;
 import java.util.Map;
 
 public class TomP2PService implements P2PService {
-    private User user;
+    private Client client;
+    private BootstrapPeer bootstrapPeer;
     private PeerDHT peerDHT;
     private Map<String, PeerAddress> peers;
 
-    public TomP2PService(User user) {
-        this.user = user;
+    public TomP2PService(Client client, BootstrapPeer bootstrapPeer) {
+        this.client = client;
+        this.bootstrapPeer = bootstrapPeer;
     }
 
     @Override
     public void start() throws IOException, InterruptedException {
-        Number160 uniqueNodeID = Number160.createHash(user.getUniqueID().toString());
-        peerDHT = new PeerBuilderDHT(new PeerBuilder(uniqueNodeID).ports(user.getPort()).start()).start();
-        ChatLogger.info("Peer started at port " + user.getPort());
+        Number160 uniqueNodeID = Number160.createHash(client.getUniqueID().toString());
+        peerDHT = new PeerBuilderDHT(new PeerBuilder(uniqueNodeID).ports(client.getPort()).start()).start();
+        ChatLogger.info("Peer started at port " + client.getPort());
 
-        if (user.hasBootstrapPeer()) {
+        if (bootstrapPeer != null) {
             ChatLogger.info(String.format(
-                    "Start bootstrapping using the peer at %s %d", user.getBootstrapIP(), user.getBootstrapPort()));
+                    "Start bootstrapping using the peer at %s %d",
+                    bootstrapPeer.getIP(), bootstrapPeer.getPort()));
             peerDHT.peer()
                     .bootstrap()
-                    .inetAddress(InetAddress.getByName(user.getBootstrapIP()))
-                    .ports(user.getBootstrapPort())
+                    .inetAddress(InetAddress.getByName(bootstrapPeer.getIP()))
+                    .ports(bootstrapPeer.getPort())
                     .start()
                     .awaitListeners();
             ChatLogger.info("Bootstrapping completed");
         }
 
         updateUserInfo();
-        receiveMessage(); // todo temp
     }
 
     @Override
@@ -53,15 +59,15 @@ public class TomP2PService implements P2PService {
 
     private void updateUserInfo() throws IOException {
         UserDTO userDTO = new UserDTO(
-                user.getUsername(),
+                client.getUsername(),
                 peerDHT.peerAddress());
 
         // todo on collision use domain key, e.g. UUID
-        peerDHT.put(Number160.createHash(user.getUsername()))
+        peerDHT.put(Number160.createHash(client.getUsername()))
                 .data(new Data(userDTO))
                 .start()
                 .awaitUninterruptibly();
-        ChatLogger.info("User info is updated on DHT: " + userDTO);
+        ChatLogger.info("Client info is updated on DHT: " + userDTO);
     }
 
     @Override
@@ -73,7 +79,7 @@ public class TomP2PService implements P2PService {
     }
 
     @Override
-    public void sendDirectMessage(UserDTO receiver, String message) {
+    public void sendDirectMessage(UserDTO receiver, Message message) {
         peerDHT.peer()
                 .sendDirect(receiver.getPeerAddress())
                 .object(message)
@@ -81,10 +87,24 @@ public class TomP2PService implements P2PService {
     }
 
     @Override
-    public void receiveMessage() {
-        System.out.println("Receiving message");
+    public void receiveMessage(MessageListener listener) {
+        ChatLogger.info("Started to listen for messages");
+
         peerDHT.peer().objectDataReply((sender, request) -> {
-            System.out.println("Sender " + sender.inetAddress() + "Message: " + request);
+            ChatLogger.info("Message received: Sender - " + sender + " Message: " + request);
+            try {
+                Message m = (Message) request;
+                switch (m.getType()) {
+                    case FRIEND_REQUEST:
+                        listener.onFriendRequest((FriendRequestMessage) m);
+                        break;
+                    default:
+                        System.out.println("Sender " + sender.inetAddress() + "Message: " + request);
+                }
+                return request;
+            } catch (Exception e) {
+                ChatLogger.error("Error occured on processing incoming message: " + e.getMessage());
+            }
             return request;
         });
     }
