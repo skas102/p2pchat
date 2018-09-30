@@ -1,4 +1,5 @@
 import models.User;
+import util.ChatLogger;
 
 public class Main {
 
@@ -6,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         // todo replace all system log methods with the logger library
         // todo exception handling
+        ChatLogger.info("Started application");
 
         // By parameterizing the port, multiple chat applications could be started on the same machine
         int clientPort = args.length >= 1 ? Integer.parseInt(args[0]) : 4000;
