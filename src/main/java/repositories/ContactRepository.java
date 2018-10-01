@@ -12,6 +12,7 @@ public class ContactRepository implements Serializable {
     private List<Person> myFriendRequests;
     private List<Person> incomingRequests;
     private ContactList contactList;
+    private Person self = null;
 
     private List<ContactListener> contactListeners;
 
@@ -66,4 +67,10 @@ public class ContactRepository implements Serializable {
     public List<Person> getIncomingRequests() {
         return incomingRequests;
     }
+
+    public void setSelf(Person self) {
+        this.self = self;
+    }
+
+    public Person getSelf() { return self;}
 }

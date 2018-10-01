@@ -1,18 +1,14 @@
 package controllers;
 
-import dtos.FriendConfirmMessage;
-import dtos.FriendRequestMessage;
-import dtos.PersonDTO;
-import models.Contact;
-import models.ContactType;
-import models.Group;
-import models.Person;
+import dtos.*;
+import models.*;
 import repositories.ChatRepository;
 import repositories.ContactRepository;
 import services.P2PService;
 import util.ChatLogger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatController implements MessageListener {
@@ -60,12 +56,49 @@ public class ChatController implements MessageListener {
         repo.removeIncomingFriendRequest(person);
     }
 
+    private void sendGroupInvitation(Group group) {
+        // TODO how do we check that everyone invited to the group really gets added to the group? Do we need to check
+        // if they are online and how do we handle message loss?
+        for (Person member : group.getMembers()) {
+            PersonDTO personDTO = member.createPersonDTO();
+            service.sendDirectMessage(personDTO, new GroupInvitationMessage(
+                    chatRepository.getClient().getUsername(),
+                    group.getUniqueID().toString())
+            );
+        }
+    }
+
+    private void sendGroupLeave(Group group) {
+        for (Person member : group.getMembers()) {
+            PersonDTO personDTO = member.createPersonDTO();
+            service.sendDirectMessage(personDTO, new GroupLeaveMessage(
+                    chatRepository.getClient().getUsername(),
+                    group.getUniqueID().toString())
+            );
+        }
+    }
+
     public Person addFriend(String name) throws IOException, ClassNotFoundException {
         return sendFriendRequest(name);
     }
 
     public void confirmFriend(Person friend) {
         sendFriendConfirmation(friend);
+    }
+
+    public void createGroup(String name, List<Person> members) throws IOException {
+        Group group = new Group(name, members);
+        service.storeGroupInfoOnDHT(group);
+        sendGroupInvitation(group);
+        getContactRepository().addGroupToContactList(group);
+    }
+
+    public void leaveGroup(Group group) throws IOException {
+        getContactRepository().removeGroupFromContactList(group);
+        Person self = chatRepository.getContactRepository().getSelf();
+        group.leave(self);
+        service.storeGroupInfoOnDHT(group);
+        sendGroupLeave(group);
     }
 
     @Override
@@ -79,4 +112,28 @@ public class ChatController implements MessageListener {
         repo.removeMyFriendRequest(p);
         repo.addFriendToContactList(p);
     }
+
+    @Override
+    public void onGroupInvitation(String groupKey) throws IOException, ClassNotFoundException {
+        GroupDTO groupDTO = service.getGroup(groupKey);
+        List<Person> members = new ArrayList<>();
+        for (String memberName : groupDTO.getMembers()) {
+            PersonDTO personDTO = service.getPerson(memberName);
+            members.add(Person.create(personDTO));
+        }
+        Group group = new Group(groupDTO.getGroupname(), members);
+        getContactRepository().addGroupToContactList(group);
+    }
+
+    @Override
+    public void onGroupLeave(String groupKey) throws IOException, ClassNotFoundException {
+        // TODO Leave group
+
+    }
+
+    public void setSelf(PersonDTO self) {
+        chatRepository.getContactRepository().setSelf(Person.create(self));
+    }
+
+
 }
