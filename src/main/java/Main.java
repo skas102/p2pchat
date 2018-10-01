@@ -1,4 +1,5 @@
-import models.User;
+import models.BootstrapPeer;
+import models.Client;
 import util.ChatLogger;
 
 public class Main {
@@ -11,13 +12,14 @@ public class Main {
 
         // By parameterizing the port, multiple chat applications could be started on the same machine
         int clientPort = args.length >= 1 ? Integer.parseInt(args[0]) : 4000;
-        User user = new User(clientPort);
+        Client client = new Client(clientPort);
 
+        BootstrapPeer bootstrapPeer = null;
         if (args.length >= 2) {
-            int bootstrapPort = args.length == 3 ? Integer.parseInt(args[2]) : 4000;
-            user.setBootstrapPeer(args[1], bootstrapPort);
+            bootstrapPeer = new BootstrapPeer(
+                    args[1], args.length == 3 ? Integer.parseInt(args[2]) : 4000);
         }
 
-        new ChatApplication(user).run();
+        new ChatApplication(client, bootstrapPeer).run();
     }
 }

@@ -1,10 +1,12 @@
 package views;
 
+import controllers.ChatController;
+
 import javax.swing.*;
 
 public class MainWindow extends JFrame {
-    public MainWindow() {
-        add(new MainPanel());
+    public MainWindow(ChatController controller) {
+        add(new MainPanel(controller));
         showFrame();
     }
 
