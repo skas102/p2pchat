@@ -1,15 +1,26 @@
 package models;
 
+import dtos.UserDTO;
+import net.tomp2p.peers.PeerAddress;
+
 public class Person implements Contact {
 
     private String username;
-    private String ipAddress;
+    private PeerAddress peerAddress;
     private boolean isOnline;
 
-    public Person(String username, String ipAddress, boolean isOnline) {
+    public Person(String username, PeerAddress peerAddress) {
+        this(username, peerAddress, false);
+    }
+
+    public Person(String username, PeerAddress peerAddress, boolean isOnline) {
         this.username = username;
-        this.ipAddress = ipAddress;
+        this.peerAddress = peerAddress;
         this.isOnline = isOnline;
+    }
+
+    public static Person create(UserDTO userDTO) {
+        return new Person(userDTO.getUsername(), userDTO.getPeerAddress());
     }
 
     @Override
@@ -27,11 +38,20 @@ public class Person implements Contact {
         return ContactType.PERSON;
     }
 
-    public String getIpAddress() {
-        return this.ipAddress;
+    public PeerAddress getPeerAddress() {
+        return this.peerAddress;
     }
 
     public boolean isOnline() {
         return this.isOnline;
+    }
+
+    public UserDTO createUserDTO() {
+        return new UserDTO(username, peerAddress);
+    }
+
+    @Override
+    public String toString() {
+        return username;
     }
 }

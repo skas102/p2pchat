@@ -7,6 +7,7 @@ import models.ContactType;
 import models.Group;
 import models.Person;
 import repositories.ChatRepository;
+import repositories.ContactRepository;
 import services.P2PService;
 import util.ChatLogger;
 
@@ -21,10 +22,17 @@ public class ChatController implements MessageListener {
     public ChatController(P2PService service, ChatRepository chatRepository) {
         this.chatRepository = chatRepository;
         this.service = service;
-
     }
 
-    private void sendFriendRequest(String name) throws IOException, ClassNotFoundException {
+    public void listenForMessages() {
+        service.receiveMessage(this);
+    }
+
+    public ContactRepository getContactRepository() {
+        return chatRepository.getContactRepository();
+    }
+
+    private Person sendFriendRequest(String name) throws IOException, ClassNotFoundException {
         // TODO: We need to specify a sequence for adding friends
 
         // 1. Load data about friend from DHT
@@ -35,11 +43,13 @@ public class ChatController implements MessageListener {
         service.sendDirectMessage(userDTO, new FriendRequestMessage(chatRepository.getClient().getUsername()));
 
         // 3. Create FriendRequest locally
-        // chatRepository.addMyFriendRequest(user);
+        Person p = Person.create(userDTO);
+        getContactRepository().addMyFriendRequest(p);
+        return p;
     }
 
-    public void addFriend(String name) throws IOException, ClassNotFoundException {
-        sendFriendRequest(name);
+    public Person addFriend(String name) throws IOException, ClassNotFoundException {
+        return sendFriendRequest(name);
     }
 
     public void addGroup(String name, List<Person> members) {
@@ -57,7 +67,7 @@ public class ChatController implements MessageListener {
     }
 
     @Override
-    public void onFriendRequest(FriendRequestMessage m) {
-
+    public void onFriendRequest(Person p) {
+        getContactRepository().addIncomingFriendRequest(p);
     }
 }

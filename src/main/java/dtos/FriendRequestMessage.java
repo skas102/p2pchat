@@ -1,9 +1,9 @@
 package dtos;
 
-public class FriendRequestMessage implements Message{
+public class FriendRequestMessage implements Message {
     private String sender;
 
-    public FriendRequestMessage(String sender){
+    public FriendRequestMessage(String sender) {
         this.sender = sender;
     }
 
@@ -12,7 +12,8 @@ public class FriendRequestMessage implements Message{
         return MessageType.FRIEND_REQUEST;
     }
 
-    public String getSender(){
+    @Override
+    public String getSenderUsername() {
         return sender;
     }
 }

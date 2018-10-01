@@ -1,7 +1,7 @@
 package controllers;
 
-import dtos.FriendRequestMessage;
+import models.Person;
 
 public interface MessageListener {
-    void onFriendRequest(FriendRequestMessage m);
+    void onFriendRequest(Person requester);
 }

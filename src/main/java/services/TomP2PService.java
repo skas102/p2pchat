@@ -1,11 +1,11 @@
 package services;
 
 import controllers.MessageListener;
-import dtos.FriendRequestMessage;
 import dtos.Message;
 import dtos.UserDTO;
 import models.BootstrapPeer;
 import models.Client;
+import models.Person;
 import net.tomp2p.dht.FutureGet;
 import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
@@ -90,16 +90,17 @@ public class TomP2PService implements P2PService {
     public void receiveMessage(MessageListener listener) {
         ChatLogger.info("Started to listen for messages");
 
-        peerDHT.peer().objectDataReply((sender, request) -> {
-            ChatLogger.info("Message received: Sender - " + sender + " Message: " + request);
+        peerDHT.peer().objectDataReply((senderAddress, request) -> {
+            ChatLogger.info("Message received: Sender - " + senderAddress + " Message: " + request);
             try {
                 Message m = (Message) request;
                 switch (m.getType()) {
                     case FRIEND_REQUEST:
-                        listener.onFriendRequest((FriendRequestMessage) m);
+                        Person p = new Person(m.getSenderUsername(), senderAddress);
+                        listener.onFriendRequest(p);
                         break;
                     default:
-                        System.out.println("Sender " + sender.inetAddress() + "Message: " + request);
+                        System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);
                 }
                 return request;
             } catch (Exception e) {

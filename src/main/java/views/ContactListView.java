@@ -1,6 +1,9 @@
 package views;
 
 import controllers.ChatController;
+import models.Person;
+import repositories.ContactListener;
+import repositories.ContactRepository;
 import util.ChatLogger;
 import views.util.ContactCellRenderer;
 
@@ -10,27 +13,46 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-public class ContactListView extends JPanel {
+public class ContactListView extends JPanel implements ContactListener {
     private final int WIDTH = 240;
 
     private ChatController controller;
+    private ContactRepository repo;
     private DefaultListModel listModel;
+    private DefaultListModel<Person> myFriendRequests;
+    private DefaultListModel<Person> incomingFriendRequests;
 
     public ContactListView(ChatController controller) {
         this.controller = controller;
+        this.repo = controller.getContactRepository();
+        this.repo.registerListener(this);
 
         setPreferredSize(new Dimension(WIDTH, 600));
         setLayout(new BorderLayout());
 
         createView();
-        updateListData();
+        updateContactList();
+        updateMyRequestList();
+        updateIncomingFriendRequestList();
     }
 
-    private void updateListData() {
+    private void updateContactList() {
         Object[][] dummy = {{true, "Remo"}, {false, "HSR"}};
 
         for (Object[] data : dummy) {
             listModel.addElement(data);
+        }
+    }
+
+    private void updateMyRequestList() {
+        for (Person p : repo.getMyRequests()) {
+            myFriendRequests.addElement(p);
+        }
+    }
+
+    private void updateIncomingFriendRequestList() {
+        for (Person p : repo.getIncomingRequests()) {
+            incomingFriendRequests.addElement(p);
         }
     }
 
@@ -40,6 +62,7 @@ public class ContactListView extends JPanel {
 
         createTileView();
         createListView();
+        createFriendRequestsTab();
     }
 
     private void createTileView() {
@@ -81,7 +104,7 @@ public class ContactListView extends JPanel {
         // todo add Generics
         listModel = new DefaultListModel();
         JList list = new JList(listModel);
-        list.setPreferredSize(new Dimension(WIDTH - 1, 88));
+        list.setPreferredSize(new Dimension(WIDTH - 1, 50));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setCellRenderer(new ContactCellRenderer());
 
@@ -95,9 +118,31 @@ public class ContactListView extends JPanel {
         String username = JOptionPane.showInputDialog("Enter the username of your friend");
 
         try {
-            controller.addFriend(username);
+            Person p = controller.addFriend(username);
+            myFriendRequests.addElement(p);
         } catch (IOException | ClassNotFoundException e) {
             ChatLogger.error("Adding friend failed " + e.getMessage());
         }
+    }
+
+    private void createFriendRequestsTab() {
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        myFriendRequests = new DefaultListModel<>();
+        JList listMyRequests = new JList(myFriendRequests);
+        listMyRequests.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabbedPane.addTab("My Requests", null, listMyRequests);
+
+        incomingFriendRequests = new DefaultListModel<>();
+        JList listIncomingRequests = new JList(incomingFriendRequests);
+        listIncomingRequests.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabbedPane.addTab("Incoming Requests", null, listIncomingRequests);
+
+        add(tabbedPane, BorderLayout.SOUTH);
+    }
+
+    @Override
+    public void onIncomingFriendRequest(Person p) {
+        incomingFriendRequests.addElement(p);
     }
 }

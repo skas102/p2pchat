@@ -23,6 +23,7 @@ public class ChatApplication {
     public void run() {
         try {
             p2pService.start();
+            chatController.listenForMessages();
         } catch (InterruptedException | IOException ex) {
             System.err.println("Starting P2P Service failed - " + ex.getMessage());
             ex.printStackTrace();
