@@ -1,6 +1,6 @@
 package services;
 
-import dtos.UserDTO;
+import dtos.PersonDTO;
 import models.BootstrapPeer;
 import models.Client;
 import org.junit.Assert;
@@ -17,8 +17,8 @@ public class TestTomP2PService {
         TomP2PService service = new TomP2PService(client1, null);
         service.start();
 
-        UserDTO userDTO = service.getUser(client1.getUsername());
-        Assert.assertEquals(client1.getUsername(), userDTO.getUsername());
+        PersonDTO personDTO = service.getPerson(client1.getUsername());
+        Assert.assertEquals(client1.getUsername(), personDTO.getUsername());
 
         service.shutdown();
     }
@@ -41,7 +41,7 @@ public class TestTomP2PService {
         service2.shutdown();
     }
 
-    private void assertUser(UserDTO user, String expectedUsername) {
+    private void assertUser(PersonDTO user, String expectedUsername) {
         if (user == null) {
             Assert.fail(expectedUsername + " couldn't be retrieved from DHT");
         } else {
@@ -49,12 +49,12 @@ public class TestTomP2PService {
         }
     }
 
-    private UserDTO getUser(TomP2PService service, String username, int retries) throws IOException, ClassNotFoundException, InterruptedException {
-        UserDTO user = null;
+    private PersonDTO getUser(TomP2PService service, String username, int retries) throws IOException, ClassNotFoundException, InterruptedException {
+        PersonDTO user = null;
         do {
             try {
                 Thread.sleep(2000);
-                user = service.getUser(username);
+                user = service.getPerson(username);
                 return user;
             } catch (NullPointerException ex) {
                 ChatLogger.warn("Client couldn't be retrieved. Remaining retries: " + retries);

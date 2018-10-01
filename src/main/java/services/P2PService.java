@@ -2,7 +2,7 @@ package services;
 
 import controllers.MessageListener;
 import dtos.Message;
-import dtos.UserDTO;
+import dtos.PersonDTO;
 
 import java.io.IOException;
 
@@ -11,9 +11,9 @@ public interface P2PService {
 
     void shutdown();
 
-    UserDTO getUser(String name) throws IOException, ClassNotFoundException;
+    PersonDTO getPerson(String name) throws IOException, ClassNotFoundException;
 
-    void sendDirectMessage(UserDTO receiver, Message message);
+    void sendDirectMessage(PersonDTO receiver, Message message);
 
     void receiveMessage(MessageListener listener);
 }

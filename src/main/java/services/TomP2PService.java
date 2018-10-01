@@ -2,7 +2,7 @@ package services;
 
 import controllers.MessageListener;
 import dtos.Message;
-import dtos.UserDTO;
+import dtos.PersonDTO;
 import models.BootstrapPeer;
 import models.Client;
 import models.Person;
@@ -49,7 +49,7 @@ public class TomP2PService implements P2PService {
             ChatLogger.info("Bootstrapping completed");
         }
 
-        updateUserInfo();
+        updatePersonInfoOnDHT();
     }
 
     @Override
@@ -57,29 +57,29 @@ public class TomP2PService implements P2PService {
         peerDHT.shutdown();
     }
 
-    private void updateUserInfo() throws IOException {
-        UserDTO userDTO = new UserDTO(
+    private void updatePersonInfoOnDHT() throws IOException {
+        PersonDTO personDTO = new PersonDTO(
                 client.getUsername(),
                 peerDHT.peerAddress());
 
         // todo on collision use domain key, e.g. UUID
         peerDHT.put(Number160.createHash(client.getUsername()))
-                .data(new Data(userDTO))
+                .data(new Data(personDTO))
                 .start()
                 .awaitUninterruptibly();
-        ChatLogger.info("Client info is updated on DHT: " + userDTO);
+        ChatLogger.info("Person info is updated on DHT: " + personDTO);
     }
 
     @Override
-    public UserDTO getUser(String username) throws IOException, ClassNotFoundException {
+    public PersonDTO getPerson(String username) throws IOException, ClassNotFoundException {
         FutureGet futureGet = peerDHT.get(Number160.createHash(username))
                 .start();
         futureGet.awaitUninterruptibly(); // todo This is a blocking operation, refactor code async
-        return (UserDTO) futureGet.data().object();
+        return (PersonDTO) futureGet.data().object();
     }
 
     @Override
-    public void sendDirectMessage(UserDTO receiver, Message message) {
+    public void sendDirectMessage(PersonDTO receiver, Message message) {
         peerDHT.peer()
                 .sendDirect(receiver.getPeerAddress())
                 .object(message)
