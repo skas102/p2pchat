@@ -1,5 +1,6 @@
 package controllers;
 
+import dtos.FriendConfirmMessage;
 import dtos.FriendRequestMessage;
 import dtos.PersonDTO;
 import models.Contact;
@@ -33,7 +34,6 @@ public class ChatController implements MessageListener {
     }
 
     private Person sendFriendRequest(String name) throws IOException, ClassNotFoundException {
-        // TODO: We need to specify a sequence for adding friends
 
         // 1. Load data about friend from DHT
         PersonDTO personDTO = service.getPerson(name); // todo pass listeners for async
@@ -48,26 +48,35 @@ public class ChatController implements MessageListener {
         return p;
     }
 
+    private void sendFriendConfirmation(Person person) {
+        PersonDTO personDTO = new PersonDTO(person.getName(),person.getPeerAddress());
+        ChatLogger.info("Person info retrieved: " + personDTO);
+
+        // 1. Send FriendConfirmMessage
+        service.sendDirectMessage(personDTO, new FriendConfirmMessage(chatRepository.getClient().getUsername()));
+
+        // 2. Remove request from Incoming Friend Requests
+        ContactRepository repo = getContactRepository();
+        repo.removeIncomingFriendRequest(person);
+    }
+
     public Person addFriend(String name) throws IOException, ClassNotFoundException {
         return sendFriendRequest(name);
     }
 
-    public void addGroup(String name, List<Person> members) {
-        Group group = new Group(name, members);
-        chatRepository.addGroupToContactList(group);
-        // TODO Inform friends about that they have been added to a group
-    }
-
-    public void removeContact(Contact contact) {
-        if (contact.getType() == ContactType.PERSON) {
-            chatRepository.removeFriendFromContactList((Person) contact);
-        } else {
-            chatRepository.removeGroupFromContactList((Group) contact);
-        }
+    public void confirmFriend(Person friend) {
+        sendFriendConfirmation(friend);
     }
 
     @Override
     public void onFriendRequest(Person p) {
         getContactRepository().addIncomingFriendRequest(p);
+    }
+
+    @Override
+    public void onFriendConfirm(Person p) {
+        ContactRepository repo = getContactRepository();
+        repo.removeMyFriendRequest(p);
+        repo.addFriendToContactList(p);
     }
 }

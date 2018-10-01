@@ -95,10 +95,15 @@ public class TomP2PService implements P2PService {
             try {
                 Message m = (Message) request;
                 switch (m.getType()) {
-                    case FRIEND_REQUEST:
+                    case FRIEND_REQUEST: {
                         Person p = new Person(m.getSenderUsername(), senderAddress);
                         listener.onFriendRequest(p);
                         break;
+                    }
+                    case FRIEND_CONFIRM: {
+                        Person p = new Person(m.getSenderUsername(), senderAddress);
+                        listener.onFriendConfirm(p);
+                    }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);
                 }

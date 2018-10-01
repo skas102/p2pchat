@@ -125,6 +125,10 @@ public class ContactListView extends JPanel implements ContactListener {
         }
     }
 
+    private void confirmFriend() {
+
+    }
+
     private void createFriendRequestsTab() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
