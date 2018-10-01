@@ -104,6 +104,10 @@ public class TomP2PService implements P2PService {
                         Person p = new Person(m.getSenderUsername(), senderAddress);
                         listener.onFriendConfirm(p);
                     }
+                    case FRIEND_REMOVAL: {
+                        Person p = new Person(m.getSenderUsername(), senderAddress);
+                        listener.onFriendRemoval(p);
+                    }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);
                 }
