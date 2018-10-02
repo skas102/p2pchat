@@ -46,10 +46,10 @@ public class ChatController implements MessageListener {
 
     private void sendFriendConfirmation(Person person) {
         PersonDTO personDTO = person.createPersonDTO();
-        ChatLogger.info("Person info retrieved: " + personDTO);
 
         // 1. Send FriendConfirmMessage
         service.sendDirectMessage(personDTO, new FriendConfirmMessage(chatRepository.getClient().getUsername()));
+        ChatLogger.info("Confirmation message sent to: " + personDTO);
 
         // 2. Remove request from Incoming Friend Requests
         ContactRepository repo = getContactRepository();

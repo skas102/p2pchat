@@ -125,19 +125,23 @@ public class TomP2PService implements P2PService {
                     case FRIEND_CONFIRM: {
                         Person p = new Person(m.getSenderUsername(), senderAddress);
                         listener.onFriendConfirm(p);
+                        break;
                     }
                     case FRIEND_REMOVAL: {
                         Person p = new Person(m.getSenderUsername(), senderAddress);
                         listener.onFriendRemoval(p);
+                        break;
                     }
                     case GROUP_INVITATION: {
                         GroupInvitationMessage invitation_message = (GroupInvitationMessage) m;
                         listener.onGroupInvitation(invitation_message.getGroupKey());
+                        break;
                     }
                     case GROUP_LEAVE: {
                         GroupLeaveMessage leave_message = (GroupLeaveMessage) m;
                         Person p = new Person(m.getSenderUsername(), senderAddress);
                         listener.onGroupLeave(p, leave_message.getGroupKey());
+                        break;
                     }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);
