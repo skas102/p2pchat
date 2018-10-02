@@ -56,6 +56,18 @@ public class ChatController implements MessageListener {
         repo.removeIncomingFriendRequest(person);
     }
 
+    private void sendFriendRejection(Person person) {
+        PersonDTO personDTO = person.createPersonDTO();
+        ChatLogger.info("Person info retrieved: " + personDTO);
+
+        // 1. Send FriendRejectionMessage
+        service.sendDirectMessage(personDTO, new FriendRejectionMessage(chatRepository.getClient().getUsername()));
+
+        // 2. Remove request from Incoming Friend Requests
+        ContactRepository repo = getContactRepository();
+        repo.removeIncomingFriendRequest(person);
+    }
+
     private void sendFriendRemoval(Person person) {
         PersonDTO personDTO = person.createPersonDTO();
         ChatLogger.info("Person info retrieved: " + personDTO);
@@ -99,6 +111,8 @@ public class ChatController implements MessageListener {
         sendFriendConfirmation(friend);
     }
 
+    public void rejectFriend(Person friend) { sendFriendRejection(friend); }
+
     public void removeFriend(Person friend) {
         sendFriendRemoval(friend);
     }
@@ -128,6 +142,12 @@ public class ChatController implements MessageListener {
         ContactRepository repo = getContactRepository();
         repo.removeMyFriendRequest(p);
         repo.addFriendToContactList(p);
+    }
+
+    @Override
+    public void onFriendRejection(Person p) {
+        ContactRepository repo = getContactRepository();
+        repo.removeMyFriendRequest(p);
     }
 
     @Override
