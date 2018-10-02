@@ -3,10 +3,13 @@ package services;
 import controllers.MessageListener;
 import models.Group;
 import models.Person;
+import repositories.ContactRepository;
 
 import java.io.IOException;
 
 public interface ChatService extends MessageListener {
+    ContactRepository getContactRepository();
+
     Person sendFriendRequest(String name) throws IOException, ClassNotFoundException;
 
     void sendFriendConfirmation(Person person);

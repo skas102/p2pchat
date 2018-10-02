@@ -20,7 +20,8 @@ public class P2PChatService implements ChatService {
         this.service = service;
     }
 
-    private ContactRepository getContactRepository() {
+    @Override
+    public ContactRepository getContactRepository() {
         return chatRepository.getContactRepository();
     }
 

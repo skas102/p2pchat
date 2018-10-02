@@ -22,7 +22,7 @@ public class ChatApplication {
         // todo ask client for the username if first time, otherwise load from data file
         ChatRepository repo = new ChatRepository(client);
         chatService = new P2PChatService(p2pService, repo);
-        chatController = new ChatController(chatService, repo);
+        chatController = new ChatController(chatService);
     }
 
     public void run() {

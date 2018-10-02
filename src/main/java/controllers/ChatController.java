@@ -3,7 +3,6 @@ package controllers;
 import dtos.PersonDTO;
 import models.Group;
 import models.Person;
-import repositories.ChatRepository;
 import repositories.ContactRepository;
 import services.ChatService;
 
@@ -13,15 +12,13 @@ import java.util.List;
 public class ChatController {
 
     private ChatService chatService;
-    private ChatRepository chatRepository;
 
-    public ChatController(ChatService service, ChatRepository chatRepository) {
+    public ChatController(ChatService service) {
         this.chatService = service;
-        this.chatRepository = chatRepository;
     }
 
     public ContactRepository getContactRepository() {
-        return chatRepository.getContactRepository();
+        return chatService.getContactRepository();
     }
 
     public Person addFriend(String name) throws IOException, ClassNotFoundException {
