@@ -6,8 +6,6 @@ import models.Person;
 import repositories.ChatRepository;
 import repositories.ContactRepository;
 import services.ChatService;
-import services.P2PChatService;
-import services.P2PService;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,13 +15,9 @@ public class ChatController {
     private ChatService chatService;
     private ChatRepository chatRepository;
 
-    public ChatController(P2PService service, ChatRepository chatRepository) {
-        this.chatService = new P2PChatService(service, chatRepository);
+    public ChatController(ChatService service, ChatRepository chatRepository) {
+        this.chatService = service;
         this.chatRepository = chatRepository;
-    }
-
-    public ChatService getChatService() {
-        return chatService;
     }
 
     public ContactRepository getContactRepository() {
