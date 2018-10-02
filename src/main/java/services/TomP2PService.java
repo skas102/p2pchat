@@ -17,7 +17,6 @@ import util.ChatLogger;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.List;
 import java.util.Map;
 
 public class TomP2PService implements P2PService {
@@ -126,7 +125,7 @@ public class TomP2PService implements P2PService {
                         listener.onFriendConfirm(sender);
                         break;
                     }
-                    case FRIEND_REJECTION:{
+                    case FRIEND_REJECTION: {
                         listener.onFriendRejection(sender);
                         break;
                     }

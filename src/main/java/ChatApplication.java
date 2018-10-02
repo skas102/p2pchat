@@ -2,7 +2,6 @@ import controllers.ChatController;
 import dtos.PersonDTO;
 import models.BootstrapPeer;
 import models.Client;
-import models.Person;
 import repositories.ChatRepository;
 import services.P2PService;
 import services.TomP2PService;
@@ -26,7 +25,7 @@ public class ChatApplication {
         try {
             PersonDTO self = p2pService.start();
             chatController.setSelf(self);
-            chatController.listenForMessages();
+            p2pService.receiveMessage(chatController.getChatService());
         } catch (InterruptedException | IOException ex) {
             System.err.println("Starting P2P Service failed - " + ex.getMessage());
             ex.printStackTrace();
