@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ContactList {
 
+    // TODO Use Hashmap
     private List<Person> friends;
     private List<Group> groups;
 
