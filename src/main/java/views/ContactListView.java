@@ -1,6 +1,7 @@
 package views;
 
 import controllers.ChatController;
+import models.Contact;
 import models.Person;
 import repositories.ContactListener;
 import repositories.ContactRepository;
@@ -18,7 +19,7 @@ public class ContactListView extends JPanel implements ContactListener {
 
     private ChatController controller;
     private ContactRepository repo;
-    private DefaultListModel listModel;
+    private DefaultListModel<Contact> listModel;
     private DefaultListModel<Person> myFriendRequests;
     private DefaultListModel<Person> incomingFriendRequests;
 
@@ -37,10 +38,13 @@ public class ContactListView extends JPanel implements ContactListener {
     }
 
     private void updateContactList() {
-        Object[][] dummy = {{true, "Remo"}, {false, "HSR"}};
+        listModel.removeAllElements();
+        for (Contact c : repo.getFriends()) {
+            listModel.addElement(c);
+        }
 
-        for (Object[] data : dummy) {
-            listModel.addElement(data);
+        for (Contact c : repo.getGroups()) {
+            listModel.addElement(c);
         }
     }
 
@@ -125,8 +129,14 @@ public class ContactListView extends JPanel implements ContactListener {
         }
     }
 
-    private void confirmFriend() {
+    private void confirmFriend(Person requester, int index) {
+        controller.confirmFriend(requester);
+        incomingFriendRequests.remove(index);
+    }
 
+    private void rejectFriend(Person requester, int index) {
+        controller.rejectFriend(requester);
+        incomingFriendRequests.remove(index);
     }
 
     private void createFriendRequestsTab() {
@@ -143,10 +153,47 @@ public class ContactListView extends JPanel implements ContactListener {
         tabbedPane.addTab("Incoming Requests", null, listIncomingRequests);
 
         add(tabbedPane, BorderLayout.SOUTH);
+
+        listIncomingRequests.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = listIncomingRequests.getSelectedIndex();
+                Person requester = (Person) listIncomingRequests.getSelectedValue();
+                getPopupMenu(requester, index).show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
     }
 
     @Override
     public void onIncomingFriendRequest(Person p) {
         incomingFriendRequests.addElement(p);
+    }
+
+    @Override
+    public void onMyFriendRequestRemoved(Person p) {
+        myFriendRequests.removeElement(p);
+    }
+
+    @Override
+    public void onContactListUpdated() {
+        updateContactList();
+    }
+
+    private JPopupMenu getPopupMenu(Person requester, int index) {
+        JPopupMenu popup = new JPopupMenu();
+        JMenuItem acceptItem = new JMenuItem("Accept Request");
+        popup.add(acceptItem);
+        JMenuItem rejectItem = new JMenuItem("Reject Request");
+        popup.add(rejectItem);
+
+        acceptItem.addActionListener(e -> {
+            confirmFriend(requester, index);
+        });
+
+        rejectItem.addActionListener(e -> {
+            rejectFriend(requester, index);
+        });
+
+        return popup;
     }
 }

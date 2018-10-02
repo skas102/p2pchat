@@ -54,4 +54,23 @@ public class Person implements Contact {
     public String toString() {
         return username;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Person)) {
+            return false;
+        }
+        Person other = (Person) obj;
+        return username.equals(other.username);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + username.hashCode();
+        return result;
+    }
 }

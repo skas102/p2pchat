@@ -1,12 +1,8 @@
 package repositories;
 
 import models.Client;
-import models.ContactList;
-import models.Group;
-import models.Person;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 // todo Functionalities are to be defined.
 public class ChatRepository implements Serializable {

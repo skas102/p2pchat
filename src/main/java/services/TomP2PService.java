@@ -116,28 +116,33 @@ public class TomP2PService implements P2PService {
             ChatLogger.info("Message received: Sender - " + senderAddress + " Message: " + request);
             try {
                 Message m = (Message) request;
+                Person sender = new Person(m.getSenderUsername(), senderAddress);
                 switch (m.getType()) {
                     case FRIEND_REQUEST: {
-                        Person p = new Person(m.getSenderUsername(), senderAddress);
-                        listener.onFriendRequest(p);
+                        listener.onFriendRequest(sender);
                         break;
                     }
                     case FRIEND_CONFIRM: {
-                        Person p = new Person(m.getSenderUsername(), senderAddress);
-                        listener.onFriendConfirm(p);
+                        listener.onFriendConfirm(sender);
+                        break;
+                    }
+                    case FRIEND_REJECTION:{
+                        listener.onFriendRejection(sender);
+                        break;
                     }
                     case FRIEND_REMOVAL: {
-                        Person p = new Person(m.getSenderUsername(), senderAddress);
-                        listener.onFriendRemoval(p);
+                        listener.onFriendRemoval(sender);
+                        break;
                     }
                     case GROUP_INVITATION: {
                         GroupInvitationMessage invitation_message = (GroupInvitationMessage) m;
                         listener.onGroupInvitation(invitation_message.getGroupKey());
+                        break;
                     }
                     case GROUP_LEAVE: {
                         GroupLeaveMessage leave_message = (GroupLeaveMessage) m;
-                        Person p = new Person(m.getSenderUsername(), senderAddress);
-                        listener.onGroupLeave(p, leave_message.getGroupKey());
+                        listener.onGroupLeave(sender, leave_message.getGroupKey());
+                        break;
                     }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);

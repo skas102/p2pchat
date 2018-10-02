@@ -1,10 +1,13 @@
 package views.util;
 
+import models.Contact;
+import models.ContactType;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-public class ContactCellRenderer implements ListCellRenderer {
+public class ContactCellRenderer implements ListCellRenderer<Contact> {
 
     private JLabel lbCell = new JLabel(" ", JLabel.LEFT);
     private Border lineBorder = BorderFactory.createLineBorder(Color.black, 1);
@@ -13,12 +16,10 @@ public class ContactCellRenderer implements ListCellRenderer {
     private ImageIcon groupChat = new ImageIcon(getClass().getClassLoader().getResource("images/group.png"));
 
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Object[] pair = (Object[]) value;
-
+    public Component getListCellRendererComponent(JList list, Contact contact, int index, boolean isSelected, boolean cellHasFocus) {
         lbCell.setOpaque(true);
-        lbCell.setIcon(((boolean) pair[0] ? friendChat : groupChat));
-        lbCell.setText(pair[1].toString());
+        lbCell.setIcon(contact.getType().equals(ContactType.PERSON) ? friendChat : groupChat);
+        lbCell.setText(contact.getName());
 
         if (isSelected) {
             lbCell.setForeground(list.getSelectionForeground());
