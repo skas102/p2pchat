@@ -1,6 +1,5 @@
 package services;
 
-import controllers.MessageListener;
 import dtos.*;
 import models.BootstrapPeer;
 import models.Client;
