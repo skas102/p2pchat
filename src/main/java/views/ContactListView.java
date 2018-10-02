@@ -1,6 +1,7 @@
 package views;
 
 import controllers.ChatController;
+import models.Contact;
 import models.Person;
 import repositories.ContactListener;
 import repositories.ContactRepository;
@@ -18,7 +19,7 @@ public class ContactListView extends JPanel implements ContactListener {
 
     private ChatController controller;
     private ContactRepository repo;
-    private DefaultListModel listModel;
+    private DefaultListModel<Contact> listModel;
     private DefaultListModel<Person> myFriendRequests;
     private DefaultListModel<Person> incomingFriendRequests;
 
@@ -37,10 +38,12 @@ public class ContactListView extends JPanel implements ContactListener {
     }
 
     private void updateContactList() {
-        Object[][] dummy = {{true, "Remo"}, {false, "HSR"}};
+        for (Contact c : repo.getContactList().getFriends()) {
+            listModel.addElement(c);
+        }
 
-        for (Object[] data : dummy) {
-            listModel.addElement(data);
+        for (Contact c : repo.getContactList().getGroups()) {
+
         }
     }
 
@@ -168,6 +171,11 @@ public class ContactListView extends JPanel implements ContactListener {
     @Override
     public void onMyFriendRequestRemoved(Person p) {
         myFriendRequests.removeElement(p);
+    }
+
+    @Override
+    public void onContactListUpdated() {
+        updateContactList();
     }
 
     private JPopupMenu getPopupMenu(Person requester, int index) {
