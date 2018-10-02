@@ -165,7 +165,7 @@ public class ChatController implements MessageListener {
 
     @Override
     public void onGroupLeave(Person p, String groupKey) throws IOException, ClassNotFoundException {
-        List<Group> groups = getContactRepository().getContactList().getGroups();
+        List<Group> groups = getContactRepository().getGroups();
         Group group = null;
         for (Group g : groups) {
             if (g.getUniqueID().toString().equals(groupKey)) {

@@ -1,6 +1,5 @@
 package repositories;
 
-import models.ContactList;
 import models.Group;
 import models.Person;
 
@@ -11,7 +10,8 @@ import java.util.List;
 public class ContactRepository implements Serializable {
     private List<Person> myFriendRequests;
     private List<Person> incomingRequests;
-    private ContactList contactList;
+    private List<Person> friends;
+    private List<Group> groups;
     private Person self = null;
 
     private List<ContactListener> contactListeners;
@@ -19,10 +19,10 @@ public class ContactRepository implements Serializable {
     public ContactRepository() {
         this.myFriendRequests = new ArrayList<>();
         this.incomingRequests = new ArrayList<>();
+        this.friends = new ArrayList<>();
+        this.groups = new ArrayList<>();
 
         this.contactListeners = new ArrayList<>();
-
-        this.contactList = new ContactList(new ArrayList<>(), new ArrayList<>());
     }
 
     public void registerListener(ContactListener l) {
@@ -48,19 +48,21 @@ public class ContactRepository implements Serializable {
     }
 
     public void addFriendToContactList(Person friend) {
-        this.contactList.getFriends().add(friend);
+        this.friends.add(friend);
+        this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
     public void removeFriendFromContactList(Person friend) {
-        this.contactList.getFriends().remove(friend);
+        this.friends.remove(friend);
+        this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
     public void addGroupToContactList(Group group) {
-        this.contactList.getGroups().add(group);
+        this.groups.add(group);
     }
 
     public void removeGroupFromContactList(Group group) {
-        this.contactList.getGroups().remove(group);
+        this.groups.remove(group);
     }
 
     public List<Person> getMyRequests() {
@@ -79,7 +81,13 @@ public class ContactRepository implements Serializable {
         return self;
     }
 
-    public ContactList getContactList() {
-        return this.contactList;
+    public List<Group> getGroups() {
+        return groups;
     }
+
+    public List<Person> getFriends() {
+        return friends;
+    }
+
+
 }

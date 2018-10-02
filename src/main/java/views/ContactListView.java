@@ -38,12 +38,12 @@ public class ContactListView extends JPanel implements ContactListener {
     }
 
     private void updateContactList() {
-        for (Contact c : repo.getContactList().getFriends()) {
+        for (Contact c : repo.getFriends()) {
             listModel.addElement(c);
         }
 
-        for (Contact c : repo.getContactList().getGroups()) {
-
+        for (Contact c : repo.getGroups()) {
+            listModel.addElement(c);
         }
     }
 
