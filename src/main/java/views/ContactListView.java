@@ -130,6 +130,11 @@ public class ContactListView extends JPanel implements ContactListener {
         incomingFriendRequests.remove(index);
     }
 
+    private void rejectFriend(Person requester, int index) {
+        controller.rejectFriend(requester);
+        incomingFriendRequests.remove(index);
+    }
+
     private void createFriendRequestsTab() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -160,6 +165,11 @@ public class ContactListView extends JPanel implements ContactListener {
         incomingFriendRequests.addElement(p);
     }
 
+    @Override
+    public void onMyFriendRequestRemoved(Person p) {
+        myFriendRequests.removeElement(p);
+    }
+
     private JPopupMenu getPopupMenu(Person requester, int index) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem acceptItem = new JMenuItem("Accept Request");
@@ -171,8 +181,10 @@ public class ContactListView extends JPanel implements ContactListener {
             confirmFriend(requester, index);
         });
 
+        rejectItem.addActionListener(e -> {
+            rejectFriend(requester, index);
+        });
+
         return popup;
     }
-
-
 }

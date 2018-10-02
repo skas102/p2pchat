@@ -33,7 +33,10 @@ public class ContactRepository implements Serializable {
         myFriendRequests.add(person);
     }
 
-    public void removeMyFriendRequest(Person person) {myFriendRequests.remove(person);}
+    public void removeMyFriendRequest(Person person) {
+        myFriendRequests.remove(person);
+        this.contactListeners.forEach(l -> l.onMyFriendRequestRemoved(person));
+    }
 
     public void addIncomingFriendRequest(Person person) {
         this.incomingRequests.add(person);
@@ -72,7 +75,9 @@ public class ContactRepository implements Serializable {
         this.self = self;
     }
 
-    public Person getSelf() { return self;}
+    public Person getSelf() {
+        return self;
+    }
 
     public ContactList getContactList() {
         return this.contactList;
