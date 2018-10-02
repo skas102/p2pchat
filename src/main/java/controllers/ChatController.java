@@ -45,7 +45,7 @@ public class ChatController implements MessageListener {
     }
 
     private void sendFriendConfirmation(Person person) {
-        PersonDTO personDTO = new PersonDTO(person.getName(),person.getPeerAddress());
+        PersonDTO personDTO = person.createPersonDTO();
         ChatLogger.info("Person info retrieved: " + personDTO);
 
         // 1. Send FriendConfirmMessage
@@ -54,6 +54,18 @@ public class ChatController implements MessageListener {
         // 2. Remove request from Incoming Friend Requests
         ContactRepository repo = getContactRepository();
         repo.removeIncomingFriendRequest(person);
+    }
+
+    private void sendFriendRemoval(Person person) {
+        PersonDTO personDTO = person.createPersonDTO();
+        ChatLogger.info("Person info retrieved: " + personDTO);
+
+        // 1. Send FriendRemovalMessage
+        service.sendDirectMessage(personDTO, new FriendRemovalMessage(chatRepository.getClient().getUsername()));
+
+        // 2. Remove friend from contactlist
+        ContactRepository repo = getContactRepository();
+        repo.removeFriendFromContactList(person);
     }
 
     private void sendGroupInvitation(Group group) {
@@ -78,12 +90,17 @@ public class ChatController implements MessageListener {
         }
     }
 
+
     public Person addFriend(String name) throws IOException, ClassNotFoundException {
         return sendFriendRequest(name);
     }
 
     public void confirmFriend(Person friend) {
         sendFriendConfirmation(friend);
+    }
+
+    public void removeFriend(Person friend) {
+        sendFriendRemoval(friend);
     }
 
     public void createGroup(String name, List<Person> members) throws IOException {
@@ -135,5 +152,9 @@ public class ChatController implements MessageListener {
         chatRepository.getContactRepository().setSelf(Person.create(self));
     }
 
+    @Override
+    public void onFriendRemoval(Person p) {
+        getContactRepository().removeFriendFromContactList(p);
+    }
 
 }

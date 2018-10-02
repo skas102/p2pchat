@@ -126,6 +126,10 @@ public class TomP2PService implements P2PService {
                         Person p = new Person(m.getSenderUsername(), senderAddress);
                         listener.onFriendConfirm(p);
                     }
+                    case FRIEND_REMOVAL: {
+                        Person p = new Person(m.getSenderUsername(), senderAddress);
+                        listener.onFriendRemoval(p);
+                    }
                     case GROUP_INVITATION: {
                         GroupInvitationMessage invitation_message = (GroupInvitationMessage) m;
                         listener.onGroupInvitation(invitation_message.getGroupKey());
