@@ -1,10 +1,10 @@
 package services;
 
 import controllers.MessageListener;
-import dtos.Message;
-import dtos.PersonDTO;
+import dtos.*;
 import models.BootstrapPeer;
 import models.Client;
+import models.Group;
 import models.Person;
 import net.tomp2p.dht.FutureGet;
 import net.tomp2p.dht.PeerBuilderDHT;
@@ -17,6 +17,7 @@ import util.ChatLogger;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Map;
 
 public class TomP2PService implements P2PService {
@@ -31,7 +32,7 @@ public class TomP2PService implements P2PService {
     }
 
     @Override
-    public void start() throws IOException, InterruptedException {
+    public PersonDTO start() throws IOException, InterruptedException {
         Number160 uniqueNodeID = Number160.createHash(client.getUniqueID().toString());
         peerDHT = new PeerBuilderDHT(new PeerBuilder(uniqueNodeID).ports(client.getPort()).start()).start();
         ChatLogger.info("Peer started at port " + client.getPort());
@@ -49,7 +50,7 @@ public class TomP2PService implements P2PService {
             ChatLogger.info("Bootstrapping completed");
         }
 
-        updatePersonInfoOnDHT();
+        return updatePersonInfoOnDHT();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class TomP2PService implements P2PService {
         peerDHT.shutdown();
     }
 
-    private void updatePersonInfoOnDHT() throws IOException {
+    private PersonDTO updatePersonInfoOnDHT() throws IOException {
         PersonDTO personDTO = new PersonDTO(
                 client.getUsername(),
                 peerDHT.peerAddress());
@@ -68,6 +69,19 @@ public class TomP2PService implements P2PService {
                 .start()
                 .awaitUninterruptibly();
         ChatLogger.info("Person info is updated on DHT: " + personDTO);
+        return personDTO;
+    }
+
+    @Override
+    public void storeGroupInfoOnDHT(Group group) throws IOException {
+
+        GroupDTO groupDTO = group.createGroupDTO();
+
+        peerDHT.put(Number160.createHash(group.getUniqueID().toString()))
+                .data(new Data(groupDTO))
+                .start()
+                .awaitUninterruptibly();
+        ChatLogger.info("Group info is updated on DHT: " + groupDTO);
     }
 
     @Override
@@ -76,6 +90,14 @@ public class TomP2PService implements P2PService {
                 .start();
         futureGet.awaitUninterruptibly(); // todo This is a blocking operation, refactor code async
         return (PersonDTO) futureGet.data().object();
+    }
+
+    @Override
+    public GroupDTO getGroup(String groupKey) throws IOException, ClassNotFoundException {
+        FutureGet futureGet = peerDHT.get(Number160.createHash(groupKey))
+                .start();
+        futureGet.awaitUninterruptibly();
+        return (GroupDTO) futureGet.data().object();
     }
 
     @Override
@@ -107,6 +129,14 @@ public class TomP2PService implements P2PService {
                     case FRIEND_REMOVAL: {
                         Person p = new Person(m.getSenderUsername(), senderAddress);
                         listener.onFriendRemoval(p);
+                    }
+                    case GROUP_INVITATION: {
+                        GroupInvitationMessage invitation_message = (GroupInvitationMessage) m;
+                        listener.onGroupInvitation(invitation_message.getGroupKey());
+                    }
+                    case GROUP_LEAVE: {
+                        GroupLeaveMessage leave_message = (GroupLeaveMessage) m;
+                        listener.onGroupLeave(leave_message.getGroupKey());
                     }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);
