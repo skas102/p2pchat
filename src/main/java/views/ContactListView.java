@@ -38,6 +38,7 @@ public class ContactListView extends JPanel implements ContactListener {
     }
 
     private void updateContactList() {
+        listModel.removeAllElements();
         for (Contact c : repo.getFriends()) {
             listModel.addElement(c);
         }
