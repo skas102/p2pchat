@@ -152,6 +152,7 @@ public class ChatController implements MessageListener {
 
     @Override
     public void onGroupInvitation(String groupKey) throws IOException, ClassNotFoundException {
+        // TODO Optimization - Check if person exists locally
         GroupDTO groupDTO = service.getGroup(groupKey);
         List<Person> members = new ArrayList<>();
         for (String memberName : groupDTO.getMembers()) {
@@ -163,9 +164,15 @@ public class ChatController implements MessageListener {
     }
 
     @Override
-    public void onGroupLeave(String groupKey) throws IOException, ClassNotFoundException {
-        // TODO Leave group
-
+    public void onGroupLeave(Person p, String groupKey) throws IOException, ClassNotFoundException {
+        List<Group> groups = getContactRepository().getContactList().getGroups();
+        Group group = null;
+        for (Group g : groups) {
+            if (g.getUniqueID().toString().equals(groupKey)) {
+                group = g;
+            }
+        }
+        group.leave(p);
     }
 
     public void setSelf(PersonDTO self) {

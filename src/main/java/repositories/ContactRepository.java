@@ -73,4 +73,8 @@ public class ContactRepository implements Serializable {
     }
 
     public Person getSelf() { return self;}
+
+    public ContactList getContactList() {
+        return this.contactList;
+    }
 }

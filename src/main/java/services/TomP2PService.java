@@ -136,7 +136,8 @@ public class TomP2PService implements P2PService {
                     }
                     case GROUP_LEAVE: {
                         GroupLeaveMessage leave_message = (GroupLeaveMessage) m;
-                        listener.onGroupLeave(leave_message.getGroupKey());
+                        Person p = new Person(m.getSenderUsername(), senderAddress);
+                        listener.onGroupLeave(p, leave_message.getGroupKey());
                     }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);
