@@ -85,6 +85,7 @@ public class P2PChatService implements ChatService {
     @Override
     public void sendGroupInvitation(String name, List<Person> members) throws IOException {
         Group group = new Group(name);
+        group.join(getContactRepository().getSelf());
         getContactRepository().addGroupToContactList(group);
         for (Person member : members) {
             sendGroupInvitation(group, member);
