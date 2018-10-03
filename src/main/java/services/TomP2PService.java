@@ -144,7 +144,7 @@ public class TomP2PService implements P2PService {
                         break;
                     }
                     case GROUP_JOIN: {
-                        GroupJoinMessage joinMessage = (GroupJoinMessage)m;
+                        GroupJoinMessage joinMessage = (GroupJoinMessage) m;
                         listener.onGroupJoin(Person.create(joinMessage.getJoiner()), joinMessage.getGroupKey());
                         break;
                     }
