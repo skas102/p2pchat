@@ -39,11 +39,11 @@ public class ContactListView extends JPanel implements ContactListener {
 
     private void updateContactList() {
         listModel.removeAllElements();
-        for (Contact c : repo.getFriends()) {
+        for (Contact c : repo.getFriends().values()) {
             listModel.addElement(c);
         }
 
-        for (Contact c : repo.getGroups()) {
+        for (Contact c : repo.getGroups().values()) {
             listModel.addElement(c);
         }
     }

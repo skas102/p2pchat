@@ -4,14 +4,13 @@ import models.Group;
 import models.Person;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ContactRepository implements Serializable {
     private List<Person> myFriendRequests;
     private List<Person> incomingRequests;
-    private List<Person> friends;
-    private List<Group> groups;
+    private Map<String, Person> friends;
+    private Map<UUID, Group> groups;
     private Person self = null;
 
     private List<ContactListener> contactListeners;
@@ -19,8 +18,8 @@ public class ContactRepository implements Serializable {
     public ContactRepository() {
         this.myFriendRequests = new ArrayList<>();
         this.incomingRequests = new ArrayList<>();
-        this.friends = new ArrayList<>();
-        this.groups = new ArrayList<>();
+        this.friends = new HashMap();
+        this.groups = new HashMap();
 
         this.contactListeners = new ArrayList<>();
     }
@@ -48,21 +47,21 @@ public class ContactRepository implements Serializable {
     }
 
     public void addFriendToContactList(Person friend) {
-        this.friends.add(friend);
+        this.friends.put(friend.getName(), friend);
         this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
     public void removeFriendFromContactList(Person friend) {
-        this.friends.remove(friend);
+        this.friends.remove(friend.getName());
         this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
     public void addGroupToContactList(Group group) {
-        this.groups.add(group);
+        this.groups.put(group.getUniqueID(), group);
     }
 
     public void removeGroupFromContactList(Group group) {
-        this.groups.remove(group);
+        this.groups.remove(group.getUniqueID());
     }
 
     public List<Person> getMyRequests() {
@@ -81,13 +80,12 @@ public class ContactRepository implements Serializable {
         return self;
     }
 
-    public List<Group> getGroups() {
+    public Map<UUID, Group> getGroups() {
         return groups;
     }
 
-    public List<Person> getFriends() {
+    public Map<String, Person> getFriends() {
         return friends;
     }
-
 
 }

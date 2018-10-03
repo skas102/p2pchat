@@ -3,6 +3,7 @@ package services;
 import models.Person;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public interface MessageListener {
     void onFriendRequest(Person requester);
@@ -13,9 +14,9 @@ public interface MessageListener {
 
     void onFriendRemoval(Person sender);
 
-    void onGroupInvitation(String groupKey) throws IOException, ClassNotFoundException;
+    void onGroupInvitation(UUID groupKey) throws IOException, ClassNotFoundException;
 
-    void onGroupLeave(Person sender, String groupKey) throws IOException, ClassNotFoundException;
+    void onGroupLeave(Person sender, UUID groupKey) throws IOException, ClassNotFoundException;
 
-    void onGroupJoin(Person joiner, String groupKey);
+    void onGroupJoin(Person joiner, UUID groupKey);
 }

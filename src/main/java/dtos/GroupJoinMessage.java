@@ -1,12 +1,14 @@
 package dtos;
 
+import java.util.UUID;
+
 public class GroupJoinMessage implements Message {
 
     private String sender;
-    private String groupKey;
+    private UUID groupKey;
     private PersonDTO joiner;
 
-    public GroupJoinMessage(String sender, String groupKey, PersonDTO joiner) {
+    public GroupJoinMessage(String sender, UUID groupKey, PersonDTO joiner) {
         this.sender = sender;
         this.groupKey = groupKey;
         this.joiner = joiner;
@@ -22,7 +24,7 @@ public class GroupJoinMessage implements Message {
         return sender;
     }
 
-    public String getGroupKey() { return groupKey; }
+    public UUID getGroupKey() { return groupKey; }
 
     public PersonDTO getJoiner() { return joiner; }
 }
