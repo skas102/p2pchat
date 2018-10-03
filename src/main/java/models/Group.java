@@ -12,11 +12,16 @@ public class Group implements Contact {
     private List<Person> members;
     private UUID uniqueID;
 
-    public Group(String name, List<Person> members) {
+    public Group(String name) {
+        this.name = name;
+        this.members = new ArrayList<>();
+        this.uniqueID = UUID.randomUUID();
+    }
 
+    public Group(String name, UUID uuid, List<Person> members){
         this.name = name;
         this.members = members;
-        this.uniqueID = UUID.randomUUID();
+        this.uniqueID = uuid;
     }
 
     private List<String> getMemberNames() {
