@@ -1,6 +1,5 @@
 package services;
 
-import controllers.MessageListener;
 import dtos.GroupDTO;
 import dtos.Message;
 import dtos.PersonDTO;

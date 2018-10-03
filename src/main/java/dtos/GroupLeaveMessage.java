@@ -19,5 +19,7 @@ public class GroupLeaveMessage implements Message {
         return sender;
     }
 
-    public String getGroupKey() { return groupKey; }
+    public String getGroupKey() {
+        return groupKey;
+    }
 }
