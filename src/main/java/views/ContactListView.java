@@ -102,6 +102,12 @@ public class ContactListView extends JPanel implements ContactListener {
                 addFriend();
             }
         });
+        lblGroupAdd.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                createGroup();
+            }
+        });
     }
 
     private void createListView() {
@@ -126,6 +132,16 @@ public class ContactListView extends JPanel implements ContactListener {
             myFriendRequests.addElement(p);
         } catch (IOException | ClassNotFoundException e) {
             ChatLogger.error("Adding friend failed " + e.getMessage());
+        }
+    }
+
+    private void createGroup() {
+        String groupName = JOptionPane.showInputDialog("Enter the group name");
+
+        try {
+            controller.createGroup(groupName, null);
+        } catch (Exception e) {
+            ChatLogger.error("Create a new group failed " + e.getMessage());
         }
     }
 
