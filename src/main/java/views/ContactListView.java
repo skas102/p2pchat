@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ContactListView extends JPanel implements ContactListener {
     private final int WIDTH = 240;
@@ -128,18 +129,36 @@ public class ContactListView extends JPanel implements ContactListener {
         String username = JOptionPane.showInputDialog("Enter the username of your friend");
 
         try {
-            Person p = controller.addFriend(username);
-            myFriendRequests.addElement(p);
+            if (username != null) {
+                Person p = controller.addFriend(username);
+                myFriendRequests.addElement(p);
+            }
         } catch (IOException | ClassNotFoundException e) {
             ChatLogger.error("Adding friend failed " + e.getMessage());
         }
     }
 
     private void createGroup() {
-        String groupName = JOptionPane.showInputDialog("Enter the group name");
+        ArrayList<JComponent> inputs = new ArrayList<>();
+        JTextField groupName = new JTextField();
+
+        inputs.add(new JLabel("Group Name"));
+        inputs.add(groupName);
+
+        ArrayList<JCheckBox> cbFriends = new ArrayList<>();
+        for (Person p : repo.getFriends()) {
+            cbFriends.add(new JCheckBox(p.getName()));
+        }
+
+        int result = JOptionPane.showConfirmDialog(null, inputs.toArray(), "My custom dialog", JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            System.out.println("You entered ");
+        } else {
+            System.out.println("User canceled / closed the dialog, result = " + result);
+        }
 
         try {
-            controller.createGroup(groupName, null);
+            controller.createGroup(groupName.getText(), null);
         } catch (Exception e) {
             ChatLogger.error("Create a new group failed " + e.getMessage());
         }
