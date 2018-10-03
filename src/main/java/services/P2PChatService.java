@@ -51,6 +51,8 @@ public class P2PChatService implements ChatService {
         // 2. Remove request from Incoming Friend Requests
         ContactRepository repo = getContactRepository();
         repo.removeIncomingFriendRequest(person);
+
+        repo.addFriendToContactList(person);
     }
 
     @Override
@@ -133,8 +135,10 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void onFriendRequest(Person p) {
+        ChatLogger.info("Received Friend Request by person " + p.getName());
         getContactRepository().addIncomingFriendRequest(p);
     }
+
 
     @Override
     public void onFriendConfirm(Person p) {
