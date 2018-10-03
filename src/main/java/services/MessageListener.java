@@ -16,4 +16,6 @@ public interface MessageListener {
     void onGroupInvitation(String groupKey) throws IOException, ClassNotFoundException;
 
     void onGroupLeave(Person sender, String groupKey) throws IOException, ClassNotFoundException;
+
+    void onGroupJoin(Person joiner, String groupKey);
 }

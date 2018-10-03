@@ -38,12 +38,15 @@ public class ChatController {
     }
 
     public void createGroup(String name, List<Person> members) throws IOException {
-        Group group = new Group(name, members);
-        chatService.sendGroupInvitation(group);
+        chatService.sendGroupInvitation(name, members);
     }
 
     public void leaveGroup(Group group) throws IOException {
         chatService.sendGroupLeave(group);
+    }
+
+    public void joinGroup(Group group, Person joiner) throws IOException {
+        chatService.sendGroupJoin(group, joiner);
     }
 
     public void setSelf(PersonDTO self) {
