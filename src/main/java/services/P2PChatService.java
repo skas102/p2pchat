@@ -10,6 +10,7 @@ import util.ChatLogger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class P2PChatService implements ChatService {
     private ChatRepository chatRepository;
@@ -97,8 +98,8 @@ public class P2PChatService implements ChatService {
         PersonDTO personDTO = person.createPersonDTO();
         service.sendDirectMessage(personDTO, new GroupInvitationMessage(
                 chatRepository.getClient().getUsername(),
-                group.getUniqueID().toString())
-        );
+                group.getUniqueID()
+        ));
     }
 
     @Override
@@ -112,7 +113,7 @@ public class P2PChatService implements ChatService {
             PersonDTO personDTO = member.createPersonDTO();
             service.sendDirectMessage(personDTO, new GroupLeaveMessage(
                     chatRepository.getClient().getUsername(),
-                    group.getUniqueID().toString()
+                    group.getUniqueID()
             ));
         }
     }
@@ -126,7 +127,7 @@ public class P2PChatService implements ChatService {
             } else {
                 service.sendDirectMessage(personDTO, new GroupJoinMessage(
                         chatRepository.getClient().getUsername(),
-                        group.getUniqueID().toString(),
+                        group.getUniqueID(),
                         joiner.createPersonDTO()));
             }
         }
@@ -154,7 +155,7 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public void onGroupInvitation(String groupKey) throws IOException, ClassNotFoundException {
+    public void onGroupInvitation(UUID groupKey) throws IOException, ClassNotFoundException {
         // TODO Optimization - Check if person exists locally
         GroupDTO groupDTO = service.getGroup(groupKey);
         List<Person> members = new ArrayList<>();
@@ -167,26 +168,14 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public void onGroupLeave(Person p, String groupKey) throws IOException, ClassNotFoundException {
-        List<Group> groups = getContactRepository().getGroups();
-        Group group = null;
-        for (Group g : groups) {
-            if (g.getUniqueID().toString().equals(groupKey)) {
-                group = g;
-            }
-        }
+    public void onGroupLeave(Person p, UUID groupKey) throws IOException, ClassNotFoundException {
+        Group group = getContactRepository().getGroups().get(groupKey);
         group.leave(p);
     }
 
     @Override
-    public void onGroupJoin(Person joiner, String groupKey) {
-        List<Group> groups = getContactRepository().getGroups();
-        Group group = null;
-        for (Group g : groups) {
-            if (g.getUniqueID().toString().equals(groupKey)) {
-                group = g;
-            }
-        }
+    public void onGroupJoin(Person joiner, UUID groupKey) {
+        Group group = getContactRepository().getGroups().get(groupKey);
         group.join(joiner);
     }
 

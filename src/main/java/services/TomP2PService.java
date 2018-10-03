@@ -17,6 +17,7 @@ import util.ChatLogger;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
+import java.util.UUID;
 
 public class TomP2PService implements P2PService {
     private Client client;
@@ -91,8 +92,8 @@ public class TomP2PService implements P2PService {
     }
 
     @Override
-    public GroupDTO getGroup(String groupKey) throws IOException, ClassNotFoundException {
-        FutureGet futureGet = peerDHT.get(Number160.createHash(groupKey))
+    public GroupDTO getGroup(UUID groupKey) throws IOException, ClassNotFoundException {
+        FutureGet futureGet = peerDHT.get(Number160.createHash(groupKey.toString()))
                 .start();
         futureGet.awaitUninterruptibly();
         return (GroupDTO) futureGet.data().object();
