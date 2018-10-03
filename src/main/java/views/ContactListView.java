@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ContactListView extends JPanel implements ContactListener {
     private final int WIDTH = 240;
@@ -102,6 +104,12 @@ public class ContactListView extends JPanel implements ContactListener {
                 addFriend();
             }
         });
+        lblGroupAdd.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                createGroup();
+            }
+        });
     }
 
     private void createListView() {
@@ -122,10 +130,46 @@ public class ContactListView extends JPanel implements ContactListener {
         String username = JOptionPane.showInputDialog("Enter the username of your friend");
 
         try {
-            Person p = controller.addFriend(username);
-            myFriendRequests.addElement(p);
+            if (username != null) {
+                Person p = controller.addFriend(username);
+                myFriendRequests.addElement(p);
+            }
         } catch (IOException | ClassNotFoundException e) {
             ChatLogger.error("Adding friend failed " + e.getMessage());
+        }
+    }
+
+    private void createGroup() {
+        ArrayList<JComponent> inputs = new ArrayList<>();
+        JTextField groupName = new JTextField();
+
+        inputs.add(new JLabel("Group Name"));
+        inputs.add(groupName);
+
+        ArrayList<JCheckBox> cbFriends = new ArrayList<>();
+        Map<String, Person> friends = repo.getFriends();
+        for (Person p : friends.values()) {
+            cbFriends.add(new JCheckBox(p.getName()));
+        }
+        inputs.addAll(cbFriends);
+
+        int result = JOptionPane.showConfirmDialog(null, inputs.toArray(), "Group Creation",
+                JOptionPane.OK_CANCEL_OPTION);
+
+        // todo error handling
+        if (result == JOptionPane.OK_OPTION) {
+            try {
+                java.util.List<Person> members = new ArrayList<>();
+                for (JCheckBox cb : cbFriends) {
+                    if (cb.isSelected()) {
+                        members.add(friends.get(cb.getText()));
+                    }
+                }
+
+                controller.createGroup(groupName.getText(), members);
+            } catch (Exception e) {
+                ChatLogger.error("Create a new group failed " + e.getMessage());
+            }
         }
     }
 
@@ -142,15 +186,15 @@ public class ContactListView extends JPanel implements ContactListener {
     private void createFriendRequestsTab() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        myFriendRequests = new DefaultListModel<>();
-        JList listMyRequests = new JList(myFriendRequests);
-        listMyRequests.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabbedPane.addTab("My Requests", null, listMyRequests);
-
         incomingFriendRequests = new DefaultListModel<>();
         JList listIncomingRequests = new JList(incomingFriendRequests);
         listIncomingRequests.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabbedPane.addTab("Incoming Requests", null, listIncomingRequests);
+
+        myFriendRequests = new DefaultListModel<>();
+        JList listMyRequests = new JList(myFriendRequests);
+        listMyRequests.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabbedPane.addTab("My Requests", null, listMyRequests);
 
         add(tabbedPane, BorderLayout.SOUTH);
 

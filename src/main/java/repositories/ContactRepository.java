@@ -58,6 +58,7 @@ public class ContactRepository implements Serializable {
 
     public void addGroupToContactList(Group group) {
         this.groups.put(group.getUniqueID(), group);
+        this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
     public void removeGroupFromContactList(Group group) {

@@ -84,7 +84,8 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void sendGroupInvitation(String name, List<Person> members) throws IOException {
-        Group group = new Group(name, null);
+        Group group = new Group(name);
+        group.join(getContactRepository().getSelf());
         getContactRepository().addGroupToContactList(group);
         for (Person member : members) {
             sendGroupInvitation(group, member);
@@ -155,16 +156,23 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public void onGroupInvitation(UUID groupKey) throws IOException, ClassNotFoundException {
+    public void onGroupInvitation(UUID groupKey) {
         // TODO Optimization - Check if person exists locally
-        GroupDTO groupDTO = service.getGroup(groupKey);
-        List<Person> members = new ArrayList<>();
-        for (String memberName : groupDTO.getMembers()) {
-            PersonDTO personDTO = service.getPerson(memberName);
-            members.add(Person.create(personDTO));
-        }
-        Group group = new Group(groupDTO.getGroupname(), members);
-        getContactRepository().addGroupToContactList(group);
+
+        new Thread(() -> {
+            try {
+                GroupDTO groupDTO = service.getGroup(groupKey);
+                List<Person> members = new ArrayList<>();
+                for (String memberName : groupDTO.getMembers()) {
+                    PersonDTO personDTO = service.getPerson(memberName);
+                    members.add(Person.create(personDTO));
+                }
+                Group group = new Group(groupDTO.getGroupname(), groupKey, members);
+                getContactRepository().addGroupToContactList(group);
+            } catch (IOException | ClassCastException | ClassNotFoundException e) {
+                ChatLogger.error("Processing Group Invitation failed " + e.getMessage());
+            }
+        }).start();
     }
 
     @Override
