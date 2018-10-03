@@ -133,13 +133,18 @@ public class TomP2PService implements P2PService {
                         break;
                     }
                     case GROUP_INVITATION: {
-                        GroupInvitationMessage invitation_message = (GroupInvitationMessage) m;
-                        listener.onGroupInvitation(invitation_message.getGroupKey());
+                        GroupInvitationMessage invitationMessage = (GroupInvitationMessage) m;
+                        listener.onGroupInvitation(invitationMessage.getGroupKey());
                         break;
                     }
                     case GROUP_LEAVE: {
-                        GroupLeaveMessage leave_message = (GroupLeaveMessage) m;
-                        listener.onGroupLeave(sender, leave_message.getGroupKey());
+                        GroupLeaveMessage leaveMessage = (GroupLeaveMessage) m;
+                        listener.onGroupLeave(sender, leaveMessage.getGroupKey());
+                        break;
+                    }
+                    case GROUP_JOIN: {
+                        GroupJoinMessage joinMessage = (GroupJoinMessage)m;
+                        listener.onGroupJoin(Person.create(joinMessage.getJoiner()), joinMessage.getGroupKey());
                         break;
                     }
                     default:

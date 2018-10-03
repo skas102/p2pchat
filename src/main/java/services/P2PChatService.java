@@ -80,20 +80,23 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public void sendGroupInvitation(Group group) throws IOException {
-        service.storeGroupInfoOnDHT(group);
-
-        // TODO how do we check that everyone invited to the group really gets added to the group? Do we need to check
-        // if they are online and how do we handle message loss?
-        for (Person member : group.getMembers()) {
-            PersonDTO personDTO = member.createPersonDTO();
-            service.sendDirectMessage(personDTO, new GroupInvitationMessage(
-                    chatRepository.getClient().getUsername(),
-                    group.getUniqueID().toString())
-            );
-        }
-
+    public void sendGroupInvitation(String name, List<Person> members) throws IOException {
+        Group group = new Group(name, null);
         getContactRepository().addGroupToContactList(group);
+        for (Person member : members) {
+            sendGroupInvitation(group, member);
+        }
+    }
+
+    @Override
+    public void sendGroupInvitation(Group group, Person person) throws IOException {
+        group.join(person);
+        service.storeGroupInfoOnDHT(group);
+        PersonDTO personDTO = person.createPersonDTO();
+        service.sendDirectMessage(personDTO, new GroupInvitationMessage(
+                chatRepository.getClient().getUsername(),
+                group.getUniqueID().toString())
+        );
     }
 
     @Override
@@ -107,9 +110,25 @@ public class P2PChatService implements ChatService {
             PersonDTO personDTO = member.createPersonDTO();
             service.sendDirectMessage(personDTO, new GroupLeaveMessage(
                     chatRepository.getClient().getUsername(),
-                    group.getUniqueID().toString())
-            );
+                    group.getUniqueID().toString()
+            ));
         }
+    }
+
+    @Override
+    public void sendGroupJoin(Group group, Person joiner) throws IOException {
+        for (Person member : group.getMembers()) {
+            PersonDTO personDTO = member.createPersonDTO();
+            if (joiner.equals(member)) {
+                sendGroupInvitation(group, joiner);
+            } else {
+                service.sendDirectMessage(personDTO, new GroupJoinMessage(
+                        chatRepository.getClient().getUsername(),
+                        group.getUniqueID().toString(),
+                        joiner.createPersonDTO()));
+            }
+        }
+
     }
 
     @Override
@@ -153,6 +172,18 @@ public class P2PChatService implements ChatService {
             }
         }
         group.leave(p);
+    }
+
+    @Override
+    public void onGroupJoin(Person joiner, String groupKey) {
+        List<Group> groups = getContactRepository().getGroups();
+        Group group = null;
+        for (Group g : groups) {
+            if (g.getUniqueID().toString().equals(groupKey)) {
+                group = g;
+            }
+        }
+        group.join(joiner);
     }
 
     @Override
