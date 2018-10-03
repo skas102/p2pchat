@@ -50,6 +50,8 @@ public class Group implements Contact {
         members.remove(person);
     }
 
+    public void join(Person person) { members.add(person); }
+
     public List<Person> getMembers() {
         return members;
     }
