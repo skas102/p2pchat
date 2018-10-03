@@ -172,7 +172,7 @@ public class P2PChatService implements ChatService {
             } catch (IOException | ClassCastException | ClassNotFoundException e) {
                 ChatLogger.error("Processing Group Invitation failed " + e.getMessage());
             }
-        }).run();
+        }).start();
     }
 
     @Override
