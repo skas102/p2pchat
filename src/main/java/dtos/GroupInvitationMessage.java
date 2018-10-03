@@ -1,10 +1,12 @@
 package dtos;
 
+import java.util.UUID;
+
 public class GroupInvitationMessage implements Message {
     private String sender;
-    private String groupKey;
+    private UUID groupKey;
 
-    public GroupInvitationMessage(String sender, String groupKey) {
+    public GroupInvitationMessage(String sender, UUID groupKey) {
         this.sender = sender;
         this.groupKey = groupKey;
     }
@@ -19,7 +21,7 @@ public class GroupInvitationMessage implements Message {
         return sender;
     }
 
-    public String getGroupKey() {
+    public UUID getGroupKey() {
         return groupKey;
     }
 }
