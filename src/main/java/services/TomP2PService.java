@@ -76,7 +76,7 @@ public class TomP2PService implements P2PService {
 
         GroupDTO groupDTO = group.createGroupDTO();
 
-        peerDHT.put(Number160.createHash(group.getUniqueID().toString()))
+        peerDHT.put(Number160.createHash(group.getUniqueId().toString()))
                 .data(new Data(groupDTO))
                 .start()
                 .awaitUninterruptibly();
@@ -147,6 +147,10 @@ public class TomP2PService implements P2PService {
                         GroupJoinMessage joinMessage = (GroupJoinMessage) m;
                         listener.onGroupJoin(Person.create(joinMessage.getJoiner()), joinMessage.getGroupKey());
                         break;
+                    }
+                    case CHAT_MESSAGE: {
+                        ChatMessage message = (ChatMessage) m;
+                        listener.onChatMessageReceived(message);
                     }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);

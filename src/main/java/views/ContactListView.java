@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 
 public class ContactListView extends JPanel implements ContactListener {
     private final int WIDTH = 240;

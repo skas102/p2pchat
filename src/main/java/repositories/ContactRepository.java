@@ -57,12 +57,12 @@ public class ContactRepository implements Serializable {
     }
 
     public void addGroupToContactList(Group group) {
-        this.groups.put(group.getUniqueID(), group);
+        this.groups.put(group.getUniqueId(), group);
         this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
     public void removeGroupFromContactList(Group group) {
-        this.groups.remove(group.getUniqueID());
+        this.groups.remove(group.getUniqueId());
     }
 
     public List<Person> getMyRequests() {
