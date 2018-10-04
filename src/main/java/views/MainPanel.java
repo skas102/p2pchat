@@ -2,7 +2,7 @@ package views;
 
 import controllers.ChatController;
 import models.Contact;
-import models.Group;
+import models.ContactType;
 import models.Person;
 
 import javax.swing.*;
@@ -10,8 +10,12 @@ import java.awt.*;
 
 public class MainPanel extends JPanel implements MainPanelCallback {
     private EmptyDetailView emptyDetailView;
+    private PrivateChatDetailView privateChatView;
+
+    private ChatController controller;
 
     public MainPanel(ChatController controller) {
+        this.controller = controller;
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
@@ -23,6 +27,20 @@ public class MainPanel extends JPanel implements MainPanelCallback {
 
     @Override
     public void ShowContactDetail(Contact contact) {
-        System.out.println(contact + " selected");
+        removeCurrentDetailView();
+
+        if(contact.getType() == ContactType.PERSON){
+            privateChatView = new PrivateChatDetailView(controller, (Person) contact);
+            add(privateChatView, BorderLayout.CENTER);
+        }else if(contact.getType() == ContactType.GROUP){
+            // todo
+        }
+        revalidate();
+        repaint();
+    }
+
+    private void removeCurrentDetailView(){
+        BorderLayout lm = (BorderLayout) getLayout();
+        remove(lm.getLayoutComponent(BorderLayout.CENTER));
     }
 }

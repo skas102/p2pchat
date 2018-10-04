@@ -1,7 +1,6 @@
 package services;
 
 import dtos.*;
-import models.Contact;
 import models.ContactType;
 import models.Group;
 import models.Person;
@@ -61,7 +60,7 @@ public class P2PChatService implements ChatService {
         ContactRepository repo = getContactRepository();
         repo.removeIncomingFriendRequest(person);
 
-        repo.addFriendToContactList(person);
+        repo.addFriend(person);
     }
 
     @Override
@@ -87,14 +86,14 @@ public class P2PChatService implements ChatService {
 
         // 2. Remove friend from contactlist
         ContactRepository repo = getContactRepository();
-        repo.removeFriendFromContactList(person);
+        repo.removeFriend(person);
     }
 
     @Override
     public void sendGroupInvitation(String name, List<Person> members) throws IOException {
         Group group = new Group(name);
         group.join(getContactRepository().getSelf());
-        getContactRepository().addGroupToContactList(group);
+        getContactRepository().addGroup(group);
         for (Person member : members) {
             sendGroupInvitation(group, member);
         }
@@ -113,7 +112,7 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void sendGroupLeave(Group group) throws IOException {
-        getContactRepository().removeGroupFromContactList(group);
+        getContactRepository().removeGroup(group);
         Person self = getContactRepository().getSelf();
         group.leave(self);
         service.storeGroupInfoOnDHT(group);
@@ -176,7 +175,7 @@ public class P2PChatService implements ChatService {
     public void onFriendConfirm(Person p) {
         ContactRepository repo = getContactRepository();
         repo.removeMyFriendRequest(p);
-        repo.addFriendToContactList(p);
+        repo.addFriend(p);
     }
 
     @Override
@@ -198,7 +197,7 @@ public class P2PChatService implements ChatService {
                     members.add(Person.create(personDTO));
                 }
                 Group group = new Group(groupDTO.getGroupname(), groupDTO.getGroupKey(), members);
-                getContactRepository().addGroupToContactList(group);
+                getContactRepository().addGroup(group);
             } catch (IOException | ClassCastException | ClassNotFoundException e) {
                 ChatLogger.error("Processing Group Invitation failed " + e.getMessage());
             }
@@ -237,7 +236,7 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void onFriendRemoval(Person p) {
-        getContactRepository().removeFriendFromContactList(p);
+        getContactRepository().removeFriend(p);
     }
 
 }
