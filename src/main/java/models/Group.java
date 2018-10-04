@@ -47,7 +47,7 @@ public class Group implements Contact {
         return ContactType.GROUP;
     }
 
-    public UUID getUniqueID() {
+    public UUID getUniqueId() {
         return uniqueID;
     }
 
@@ -62,6 +62,6 @@ public class Group implements Contact {
     }
 
     public GroupDTO createGroupDTO() {
-        return new GroupDTO(name, getMemberNames());
+        return new GroupDTO(name, getMemberNames(), getUniqueId());
     }
 }

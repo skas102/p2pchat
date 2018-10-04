@@ -1,14 +1,17 @@
 package services;
 
+import dtos.ChatMessage;
 import models.Group;
 import models.Person;
 import repositories.ContactRepository;
+import repositories.MessageRepository;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface ChatService extends MessageListener {
     ContactRepository getContactRepository();
+    MessageRepository getMessageRepository();
 
     Person sendFriendRequest(String name) throws IOException, ClassNotFoundException;
 
@@ -25,4 +28,8 @@ public interface ChatService extends MessageListener {
     void sendGroupLeave(Group group) throws IOException;
 
     void sendGroupJoin(Group group, Person joiner) throws IOException;
+
+    void sendChatMessage(Person recipient, String message);
+
+    void sendChatMessage(Group recipient, String message);
 }

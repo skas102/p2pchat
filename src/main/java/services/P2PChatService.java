@@ -1,10 +1,13 @@
 package services;
 
 import dtos.*;
+import models.Contact;
+import models.ContactType;
 import models.Group;
 import models.Person;
 import repositories.ChatRepository;
 import repositories.ContactRepository;
+import repositories.MessageRepository;
 import util.ChatLogger;
 
 import java.io.IOException;
@@ -24,6 +27,11 @@ public class P2PChatService implements ChatService {
     @Override
     public ContactRepository getContactRepository() {
         return chatRepository.getContactRepository();
+    }
+
+    @Override
+    public MessageRepository getMessageRepository() {
+        return chatRepository.getMessageRepository();
     }
 
     @Override
@@ -99,7 +107,7 @@ public class P2PChatService implements ChatService {
         PersonDTO personDTO = person.createPersonDTO();
         service.sendDirectMessage(personDTO, new GroupInvitationMessage(
                 chatRepository.getClient().getUsername(),
-                group.getUniqueID()
+                group.getUniqueId()
         ));
     }
 
@@ -114,7 +122,7 @@ public class P2PChatService implements ChatService {
             PersonDTO personDTO = member.createPersonDTO();
             service.sendDirectMessage(personDTO, new GroupLeaveMessage(
                     chatRepository.getClient().getUsername(),
-                    group.getUniqueID()
+                    group.getUniqueId()
             ));
         }
     }
@@ -128,11 +136,33 @@ public class P2PChatService implements ChatService {
             } else {
                 service.sendDirectMessage(personDTO, new GroupJoinMessage(
                         chatRepository.getClient().getUsername(),
-                        group.getUniqueID(),
+                        group.getUniqueId(),
                         joiner.createPersonDTO()));
             }
         }
 
+    }
+
+    @Override
+    public void sendChatMessage(Person recipient, String message) {
+        service.sendDirectMessage(recipient.createPersonDTO(), new ChatMessage(
+                chatRepository.getClient().getUsername(),
+                recipient.getName(),
+                recipient.getType(),
+                message
+        ));
+    }
+
+    @Override
+    public void sendChatMessage(Group recipient, String message) {
+        recipient.getMembers().forEach(r -> {
+            service.sendDirectMessage(r.createPersonDTO(), new ChatMessage(
+                    chatRepository.getClient().getUsername(),
+                    recipient.getUniqueId().toString(),
+                    recipient.getType(),
+                    message
+            ));
+        } );
     }
 
     @Override
@@ -167,7 +197,7 @@ public class P2PChatService implements ChatService {
                     PersonDTO personDTO = service.getPerson(memberName);
                     members.add(Person.create(personDTO));
                 }
-                Group group = new Group(groupDTO.getGroupname(), groupKey, members);
+                Group group = new Group(groupDTO.getGroupname(), groupDTO.getGroupKey(), members);
                 getContactRepository().addGroupToContactList(group);
             } catch (IOException | ClassCastException | ClassNotFoundException e) {
                 ChatLogger.error("Processing Group Invitation failed " + e.getMessage());
@@ -185,6 +215,24 @@ public class P2PChatService implements ChatService {
     public void onGroupJoin(Person joiner, UUID groupKey) {
         Group group = getContactRepository().getGroups().get(groupKey);
         group.join(joiner);
+    }
+
+    @Override
+    public void onChatMessageReceived(ChatMessage message) {
+        ContactType type = message.getContactType();
+        if (type == ContactType.GROUP){
+            UUID groupKey = UUID.fromString(message.getContactIdentifier());
+            Group group = getContactRepository().getGroups().get(groupKey);
+            if (group != null) {
+                getMessageRepository().addGroupMessage(group, message);
+            }
+        } else {
+            Person friend = getContactRepository().getFriends().get(message.getContactIdentifier());
+            if (friend != null) {
+                getMessageRepository().addFriendMessage(friend, message);
+            }
+        }
+
     }
 
     @Override
