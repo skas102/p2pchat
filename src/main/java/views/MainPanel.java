@@ -9,6 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainPanel extends JPanel implements MainPanelCallback {
+    public static final int TOTAL_WIDTH = 800;
+    public static final int TOTAL_HEIGHT = 600;
+
+    public static final int LIST_WIDTH = 240;
+    public static final int DETAIL_WIDTH = TOTAL_WIDTH - LIST_WIDTH;
+
     private EmptyDetailView emptyDetailView;
     private PrivateChatDetailView privateChatView;
 
@@ -16,7 +22,7 @@ public class MainPanel extends JPanel implements MainPanelCallback {
 
     public MainPanel(ChatController controller) {
         this.controller = controller;
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(TOTAL_WIDTH, TOTAL_HEIGHT));
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
 
