@@ -46,6 +46,10 @@ public class Person implements Contact {
         return this.isOnline;
     }
 
+    public String getStatusText(){
+        return isOnline ? "Online" : "Offline";
+    }
+
     public PersonDTO createPersonDTO() {
         return new PersonDTO(username, peerAddress);
     }
