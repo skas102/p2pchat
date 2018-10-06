@@ -23,7 +23,7 @@ public class NewChatMessage implements Message {
 
     @Override
     public String getSenderUsername() {
-        return null;
+        return messageDTO.getSender();
     }
 
     public ChatMessageDTO getMessageDTO() {

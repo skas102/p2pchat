@@ -62,7 +62,7 @@ public class ChatController {
         getContactRepository().setSelf(Person.create(self));
 
         // todo remove - add friends on start to avoid sending & accepting requests every time
-//        getContactRepository().addFriend(Person.create(self));
-//        getContactRepository().addFriend(new Person("Test 2", self.getPeerAddress()));
+        getContactRepository().addFriend(Person.create(self));
+        getContactRepository().addFriend(new Person("Test 2", self.getPeerAddress()));
     }
 }

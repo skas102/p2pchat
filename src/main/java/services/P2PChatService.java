@@ -231,7 +231,7 @@ public class P2PChatService implements ChatService {
                 getMessageRepository().addGroupMessage(group, chatMessage);
             }
         } else {
-            Person friend = getContactRepository().getFriends().get(newMessage.getRecipientIdentifier());
+            Person friend = getContactRepository().getFriends().get(newMessage.getSenderUsername());
             if (friend != null) {
                 getMessageRepository().addFriendMessage(friend, chatMessage);
             }

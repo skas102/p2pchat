@@ -1,8 +1,9 @@
 package dtos;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ChatMessageDTO {
+public class ChatMessageDTO implements Serializable {
     private String sender;
     private String message;
     private LocalDateTime sentDateTime;

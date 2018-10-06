@@ -7,11 +7,11 @@ import javax.swing.*;
 public class MainWindow extends JFrame {
     public MainWindow(ChatController controller) {
         add(new MainPanel(controller));
+        setTitle("P2PChat " + controller.getContactRepository().getSelf().getName());
         showFrame();
     }
 
     private void showFrame() {
-        setTitle("P2P Chat");
         pack();
         setResizable(false);
         setVisible(true);
