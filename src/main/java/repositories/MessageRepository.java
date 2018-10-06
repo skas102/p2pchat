@@ -1,8 +1,6 @@
 package repositories;
 
-import dtos.ChatMessageDTO;
-import models.Group;
-import models.Person;
+import models.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -10,8 +8,8 @@ import java.util.*;
 
 public class MessageRepository implements Serializable {
 
-    private Map<String, List<ChatMessageDTO>> friendMessages;
-    private Map<UUID, List<ChatMessageDTO>> groupMessages;
+    private Map<String, PrivateChat> friendMessages;
+    private Map<UUID, GroupChat> groupMessages;
 
     private List<ChatMessageListener> listeners;
 
@@ -29,24 +27,24 @@ public class MessageRepository implements Serializable {
         this.listeners.remove(l);
     }
 
-    public void addGroupMessage(Group g, ChatMessageDTO m) {
+    public void addGroupMessage(Group g, ChatMessage m) {
         if (groupMessages.containsKey(g.getUniqueId())) {
-            groupMessages.get(g.getUniqueId()).add(m);
+            groupMessages.get(g.getUniqueId()).addMessage(m);
         } else {
-            List<ChatMessageDTO> messageList = new ArrayList<>();
-            messageList.add(m);
-            groupMessages.put(g.getUniqueId(), messageList);
+            GroupChat groupChat = new GroupChat(g);
+            groupChat.addMessage(m);
+            groupMessages.put(g.getUniqueId(), groupChat);
         }
         notifyListeners();
     }
 
-    public void addFriendMessage(Person p, ChatMessageDTO m) {
+    public void addFriendMessage(Person p, ChatMessage m) {
         if (friendMessages.containsKey(p.getName())) {
-            friendMessages.get(p.getName()).add(m);
+            friendMessages.get(p.getName()).addPrivateMessage(m);
         } else {
-            List<ChatMessageDTO> messageList = new ArrayList<>();
-            messageList.add(m);
-            friendMessages.put(p.getName(), messageList);
+            PrivateChat privateChat = new PrivateChat(p);
+            privateChat.addPrivateMessage(m);
+            friendMessages.put(p.getName(), privateChat);
         }
         notifyListeners();
     }

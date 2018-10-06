@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 public class ChatMessageDTO {
     private String sender;
     private String message;
-    private LocalDateTime sendDateTime;
+    private LocalDateTime sentDateTime;
 
-    public ChatMessageDTO(String sender, String message) {
+    public ChatMessageDTO(String sender, String message, LocalDateTime sentDateTime) {
         this.sender = sender;
         this.message = message;
-        this.sendDateTime = LocalDateTime.now();
+        this.sentDateTime = sentDateTime;
     }
 
     public String getSender() {
@@ -21,7 +21,7 @@ public class ChatMessageDTO {
         return message;
     }
 
-    public LocalDateTime getSendDateTime() {
-        return sendDateTime;
+    public LocalDateTime getSentDateTime() {
+        return sentDateTime;
     }
 }

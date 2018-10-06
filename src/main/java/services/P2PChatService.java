@@ -1,9 +1,9 @@
 package services;
 
-import dtos.ChatMessageDTO;
 import dtos.GroupDTO;
 import dtos.PersonDTO;
 import messages.*;
+import models.ChatMessage;
 import models.ContactType;
 import models.Group;
 import models.Person;
@@ -146,22 +146,22 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void sendChatMessage(Person recipient, String message) {
-        ChatMessageDTO messageDTO = new ChatMessageDTO(chatRepository.getClient().getUsername(), message);
+        ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
         service.sendDirectMessage(recipient.createPersonDTO(), new NewChatMessage(
                 recipient.getType(),
                 recipient.getName(),
-                messageDTO
+                chatMessage.createDTO()
         ));
     }
 
     @Override
     public void sendChatMessage(Group recipient, String message) {
-        ChatMessageDTO messageDTO = new ChatMessageDTO(chatRepository.getClient().getUsername(), message);
+        ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
         recipient.getMembers().forEach(r -> {
             service.sendDirectMessage(r.createPersonDTO(), new NewChatMessage(
                     recipient.getType(),
                     recipient.getUniqueId().toString(),
-                    messageDTO
+                    chatMessage.createDTO()
             ));
         });
     }
@@ -221,16 +221,17 @@ public class P2PChatService implements ChatService {
     @Override
     public void onChatMessageReceived(NewChatMessage newMessage) {
         ContactType type = newMessage.getContactType();
+        ChatMessage chatMessage = ChatMessage.create(newMessage.getMessageDTO());
         if (type == ContactType.GROUP) {
             UUID groupKey = UUID.fromString(newMessage.getRecipientIdentifier());
             Group group = getContactRepository().getGroups().get(groupKey);
             if (group != null) {
-                getMessageRepository().addGroupMessage(group, newMessage.getMessageDTO());
+                getMessageRepository().addGroupMessage(group, chatMessage);
             }
         } else {
             Person friend = getContactRepository().getFriends().get(newMessage.getRecipientIdentifier());
             if (friend != null) {
-                getMessageRepository().addFriendMessage(friend, newMessage.getMessageDTO());
+                getMessageRepository().addFriendMessage(friend, chatMessage);
             }
         }
     }
