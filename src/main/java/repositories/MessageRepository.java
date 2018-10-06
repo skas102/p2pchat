@@ -35,7 +35,17 @@ public class MessageRepository implements Serializable {
             groupChat.addMessage(m);
             groupMessages.put(g.getUniqueId(), groupChat);
         }
-        notifyListeners();
+        notifyListeners(g, m);
+    }
+
+    public PrivateChat getPrivateChat(Person p) {
+        if (friendMessages.containsKey(p.getName())) {
+            return friendMessages.get(p.getName());
+        }
+
+        PrivateChat chat = new PrivateChat(p);
+        friendMessages.put(p.getName(), chat);
+        return chat;
     }
 
     public void addFriendMessage(Person p, ChatMessage m) {
@@ -46,11 +56,10 @@ public class MessageRepository implements Serializable {
             privateChat.addPrivateMessage(m);
             friendMessages.put(p.getName(), privateChat);
         }
-        notifyListeners();
+        notifyListeners(p, m);
     }
 
-    private void notifyListeners() {
-        this.listeners.forEach(l -> l.onMessageReceived());
+    private void notifyListeners(Contact c, ChatMessage m) {
+        this.listeners.forEach(l -> l.onMessageReceived(c, m));
     }
-
 }

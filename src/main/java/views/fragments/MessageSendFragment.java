@@ -8,13 +8,16 @@ import java.awt.*;
 public class MessageSendFragment extends JPanel {
     private JTextArea messageBox;
     private JButton btnSend;
+    private MessageSendListener listener;
 
-    public MessageSendFragment() {
+    public MessageSendFragment(MessageSendListener listener) {
+        this.listener = listener;
         createView();
     }
 
     private void createView() {
-        setOpaque(false);
+        setOpaque(true);
+        setBackground(new Color(27, 27, 27));
         Box panel = Box.createHorizontalBox();
         panel.setPreferredSize(new Dimension(MainPanel.DETAIL_WIDTH, 50));
         panel.add(Box.createHorizontalStrut(5));
@@ -35,5 +38,13 @@ public class MessageSendFragment extends JPanel {
         panel.add(Box.createHorizontalStrut(5));
 
         add(panel, BorderLayout.CENTER);
+
+        btnSend.addActionListener((l) -> sendMessage());
+    }
+
+    private void sendMessage() {
+        String message = messageBox.getText();
+        messageBox.setText("");
+        listener.onMessageSent(message);
     }
 }

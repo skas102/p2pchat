@@ -4,6 +4,7 @@ import controllers.ChatController;
 import models.Contact;
 import models.ContactType;
 import models.Person;
+import models.PrivateChat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +37,9 @@ public class MainPanel extends JPanel implements MainPanelCallback {
         removeCurrentDetailView();
 
         if (contact.getType() == ContactType.PERSON) {
-            privateChatView = new PrivateChatDetailView(controller, (Person) contact);
+            Person p = (Person) contact;
+            PrivateChat privateChat = controller.getMessageRepository().getPrivateChat(p);
+            privateChatView = new PrivateChatDetailView(controller, privateChat);
             add(privateChatView, BorderLayout.CENTER);
         } else if (contact.getType() == ContactType.GROUP) {
             // todo

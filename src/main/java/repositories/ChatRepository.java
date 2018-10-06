@@ -17,7 +17,6 @@ public class ChatRepository implements Serializable {
         this.messageRepository = new MessageRepository();
     }
 
-
     public Client getClient() {
         return client;
     }

@@ -1,33 +1,38 @@
 package views;
 
 import controllers.ChatController;
-import models.Person;
+import models.*;
+import repositories.ChatMessageListener;
+import util.ChatLogger;
+import views.fragments.ChatHistoryFragment;
 import views.fragments.MessageSendFragment;
+import views.fragments.MessageSendListener;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PrivateChatDetailView extends JPanel {
+public class PrivateChatDetailView extends JPanel implements MessageSendListener, ChatMessageListener {
     private ChatController controller;
-    private Person person;
-    private DefaultListModel<String> messageListModel;
+    private PrivateChat privateChat;
+    private DefaultListModel<ChatMessage> lmPrivateMessages;
+    private ChatHistoryFragment privateChatHistory;
+    private JTabbedPane tabbedPane;
 
-    public PrivateChatDetailView(ChatController controller, Person person) {
+    public PrivateChatDetailView(ChatController controller, PrivateChat privateChat) {
         this.controller = controller;
-        this.person = person;
+        this.privateChat = privateChat;
+        this.controller.getMessageRepository().registerListener(this);
 
         createView();
         updateData();
     }
 
     private void updateData() {
-        for (int i = 0; i < 10; i++) {
-            messageListModel.addElement(String.format("Hello " + i));
-        }
+        privateChat.getPrivateMessges().forEach(m -> lmPrivateMessages.addElement(m));
     }
 
     private void createView() {
-        setBackground(new Color(27, 27, 27));
+        setBackground(new Color(242, 242, 242));
         setLayout(new BorderLayout(0, 0));
         setPreferredSize(new Dimension(MainPanel.DETAIL_WIDTH, MainPanel.TOTAL_HEIGHT));
         createHeader();
@@ -44,13 +49,13 @@ public class PrivateChatDetailView extends JPanel {
         titlePanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0,
                 new Color(74, 126, 187)));
 
-        JLabel title = new JLabel(person.getName());
+        JLabel title = new JLabel(privateChat.getFriend().getName());
         title.setFont(new Font(title.getName(), Font.PLAIN, 18));
         titlePanel.add(Box.createHorizontalStrut(20));
         titlePanel.add(title);
 
         // todo - set data dynmaically
-        JLabel onlineStatus = new JLabel(person.getStatusText());
+        JLabel onlineStatus = new JLabel(privateChat.getFriend().getStatusText());
         titlePanel.add(Box.createHorizontalStrut(8));
         titlePanel.add(onlineStatus, BorderLayout.EAST);
 
@@ -58,21 +63,37 @@ public class PrivateChatDetailView extends JPanel {
     }
 
     private void createChatDetails() {
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
 
-        messageListModel = new DefaultListModel<>();
-        JList list = new JList(messageListModel);
-        JScrollPane listScroll = new JScrollPane(list);
-        listScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        lmPrivateMessages = new DefaultListModel<>();
+        privateChatHistory = new ChatHistoryFragment(lmPrivateMessages);
 
-        tabbedPane.addTab("Messages", null, listScroll);
+        tabbedPane.addTab("Messages", null, privateChatHistory);
         tabbedPane.addTab("Notary Messages", null, new JLabel("Hello 2"));
 
         add(tabbedPane, BorderLayout.CENTER);
     }
 
     private void createMessageSend() {
-        add(new MessageSendFragment(), BorderLayout.SOUTH);
+        add(new MessageSendFragment(this), BorderLayout.SOUTH);
     }
 
+    @Override
+    public void onMessageSent(String message) {
+        if (tabbedPane.getSelectedComponent() == privateChatHistory) {
+            controller.sendPrivateMessage(privateChat.getFriend(), message);
+        } else {
+            ChatLogger.error("Notary messages not implemented");
+        }
+    }
+
+    @Override
+    public void onMessageReceived(Contact c, ChatMessage m) {
+        if (c.getType() == ContactType.PERSON) {
+            Person sender = (Person) c;
+            if (privateChat.getFriend().equals(sender)) {
+                lmPrivateMessages.addElement(m);
+            }
+        }
+    }
 }

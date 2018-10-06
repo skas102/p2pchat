@@ -75,9 +75,6 @@ public class ContactRepository implements Serializable {
 
     public void setSelf(Person self) {
         this.self = self;
-        // todo temp - remove
-        this.addFriend(self);
-        this.addFriend(new Person("Test 2", self.getPeerAddress()));
     }
 
     public Person getSelf() {

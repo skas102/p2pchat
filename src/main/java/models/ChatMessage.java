@@ -13,13 +13,13 @@ public class ChatMessage {
         this(sender, message, LocalDateTime.now());
     }
 
-    public ChatMessage(String sender, String message, LocalDateTime sentDateTime){
+    public ChatMessage(String sender, String message, LocalDateTime sentDateTime) {
         this.sender = sender;
         this.message = message;
         this.sentDateTime = sentDateTime;
     }
 
-    public static ChatMessage create(ChatMessageDTO dto){
+    public static ChatMessage create(ChatMessageDTO dto) {
         return new ChatMessage(dto.getSender(), dto.getMessage(), dto.getSentDateTime());
     }
 
@@ -35,7 +35,12 @@ public class ChatMessage {
         return sentDateTime;
     }
 
-    public ChatMessageDTO createDTO(){
+    public ChatMessageDTO createDTO() {
         return new ChatMessageDTO(sender, message, sentDateTime);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s: %s", sentDateTime.toString(), sender, message);
     }
 }
