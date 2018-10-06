@@ -34,6 +34,9 @@ public class MainPanel extends JPanel implements MainPanelCallback {
 
     @Override
     public void ShowContactDetail(Contact contact) {
+        if (contact == null) {
+            return;
+        }
         removeCurrentDetailView();
 
         if (contact.getType() == ContactType.PERSON) {

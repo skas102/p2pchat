@@ -107,6 +107,7 @@ public class TomP2PService implements P2PService {
                 .sendDirect(receiver.getPeerAddress())
                 .object(message)
                 .start();
+        ChatLogger.info(String.format("Send direct message to %s. Message = %s", receiver, message));
     }
 
     @Override
