@@ -21,7 +21,7 @@ public class PrivateChatDetailView extends JPanel {
     }
 
     private void updateData() {
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             messageListModel.addElement(String.format("Hello " + i));
         }
     }
@@ -57,7 +57,7 @@ public class PrivateChatDetailView extends JPanel {
         add(titlePanel, BorderLayout.NORTH);
     }
 
-    private void createChatDetails(){
+    private void createChatDetails() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         messageListModel = new DefaultListModel<>();

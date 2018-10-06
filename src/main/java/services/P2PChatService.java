@@ -163,7 +163,7 @@ public class P2PChatService implements ChatService {
                     recipient.getUniqueId().toString(),
                     messageDTO
             ));
-        } );
+        });
     }
 
     @Override
@@ -221,7 +221,7 @@ public class P2PChatService implements ChatService {
     @Override
     public void onChatMessageReceived(NewChatMessage newMessage) {
         ContactType type = newMessage.getContactType();
-        if (type == ContactType.GROUP){
+        if (type == ContactType.GROUP) {
             UUID groupKey = UUID.fromString(newMessage.getRecipientIdentifier());
             Group group = getContactRepository().getGroups().get(groupKey);
             if (group != null) {

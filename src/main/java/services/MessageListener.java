@@ -1,6 +1,5 @@
 package services;
 
-import dtos.ChatMessageDTO;
 import messages.NewChatMessage;
 import models.Person;
 

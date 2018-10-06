@@ -23,7 +23,9 @@ public class GroupDTO implements Serializable {
         return members;
     }
 
-    public UUID getGroupKey() { return groupKey; }
+    public UUID getGroupKey() {
+        return groupKey;
+    }
 
     @Override
     public String toString() {

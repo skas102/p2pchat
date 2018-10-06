@@ -26,7 +26,11 @@ public class GroupJoinMessage implements Message {
         return sender;
     }
 
-    public UUID getGroupKey() { return groupKey; }
+    public UUID getGroupKey() {
+        return groupKey;
+    }
 
-    public PersonDTO getJoiner() { return joiner; }
+    public PersonDTO getJoiner() {
+        return joiner;
+    }
 }

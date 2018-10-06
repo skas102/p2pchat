@@ -3,7 +3,6 @@ package views;
 import controllers.ChatController;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class MainWindow extends JFrame {
     public MainWindow(ChatController controller) {

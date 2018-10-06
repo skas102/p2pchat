@@ -1,8 +1,5 @@
 package dtos;
 
-import messages.Message;
-import messages.MessageType;
-
 import java.time.LocalDateTime;
 
 public class ChatMessageDTO {
@@ -16,7 +13,7 @@ public class ChatMessageDTO {
         this.sendDateTime = LocalDateTime.now();
     }
 
-    public String getSender(){
+    public String getSender() {
         return sender;
     }
 

@@ -9,7 +9,8 @@ public class NewChatMessage implements Message {
     private ContactType contactType;
 
     private String recipientIdentifier;
-    public NewChatMessage(ContactType contactType, String recipientIdentifier, ChatMessageDTO messageDTO){
+
+    public NewChatMessage(ContactType contactType, String recipientIdentifier, ChatMessageDTO messageDTO) {
         this.contactType = contactType;
         this.recipientIdentifier = recipientIdentifier;
         this.messageDTO = messageDTO;

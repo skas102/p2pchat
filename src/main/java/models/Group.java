@@ -18,7 +18,7 @@ public class Group implements Contact {
         this.uniqueID = UUID.randomUUID();
     }
 
-    public Group(String name, UUID uuid, List<Person> members){
+    public Group(String name, UUID uuid, List<Person> members) {
         this.name = name;
         this.members = members;
         this.uniqueID = uuid;
@@ -55,7 +55,9 @@ public class Group implements Contact {
         members.remove(person);
     }
 
-    public void join(Person person) { members.add(person); }
+    public void join(Person person) {
+        members.add(person);
+    }
 
     public List<Person> getMembers() {
         return members;

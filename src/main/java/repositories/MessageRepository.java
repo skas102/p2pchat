@@ -21,9 +21,13 @@ public class MessageRepository implements Serializable {
         this.listeners = new ArrayList<>();
     }
 
-    public void registerListener(ChatMessageListener l) { this.listeners.add(l); }
+    public void registerListener(ChatMessageListener l) {
+        this.listeners.add(l);
+    }
 
-    public void unregisterListener(ChatMessageListener l) { this.listeners.remove(l); }
+    public void unregisterListener(ChatMessageListener l) {
+        this.listeners.remove(l);
+    }
 
     public void addGroupMessage(Group g, ChatMessageDTO m) {
         if (groupMessages.containsKey(g.getUniqueId())) {
@@ -47,7 +51,7 @@ public class MessageRepository implements Serializable {
         notifyListeners();
     }
 
-    private void notifyListeners(){
+    private void notifyListeners() {
         this.listeners.forEach(l -> l.onMessageReceived());
     }
 

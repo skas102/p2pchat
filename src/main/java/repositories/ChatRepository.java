@@ -30,5 +30,7 @@ public class ChatRepository implements Serializable {
         return contactRepository;
     }
 
-    public MessageRepository getMessageRepository() { return messageRepository; }
+    public MessageRepository getMessageRepository() {
+        return messageRepository;
+    }
 }

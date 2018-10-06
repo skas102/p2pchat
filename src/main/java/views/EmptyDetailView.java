@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class EmptyDetailView extends JPanel {
-    public EmptyDetailView(){
+    public EmptyDetailView() {
         setBackground(new Color(242, 242, 242));
 
         JLabel lbl = new JLabel("Please select a contact to see the detail view");

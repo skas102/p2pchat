@@ -35,17 +35,17 @@ public class MainPanel extends JPanel implements MainPanelCallback {
     public void ShowContactDetail(Contact contact) {
         removeCurrentDetailView();
 
-        if(contact.getType() == ContactType.PERSON){
+        if (contact.getType() == ContactType.PERSON) {
             privateChatView = new PrivateChatDetailView(controller, (Person) contact);
             add(privateChatView, BorderLayout.CENTER);
-        }else if(contact.getType() == ContactType.GROUP){
+        } else if (contact.getType() == ContactType.GROUP) {
             // todo
         }
         revalidate();
         repaint();
     }
 
-    private void removeCurrentDetailView(){
+    private void removeCurrentDetailView() {
         BorderLayout lm = (BorderLayout) getLayout();
         remove(lm.getLayoutComponent(BorderLayout.CENTER));
     }

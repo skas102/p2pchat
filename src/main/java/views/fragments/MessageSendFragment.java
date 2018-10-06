@@ -9,7 +9,7 @@ public class MessageSendFragment extends JPanel {
     private JTextArea messageBox;
     private JButton btnSend;
 
-    public MessageSendFragment(){
+    public MessageSendFragment() {
         createView();
     }
 

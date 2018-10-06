@@ -1,6 +1,7 @@
 package services;
 
-import dtos.*;
+import dtos.GroupDTO;
+import dtos.PersonDTO;
 import messages.*;
 import models.BootstrapPeer;
 import models.Client;
