@@ -1,19 +1,19 @@
-package dtos;
+package messages;
 
 import java.util.UUID;
 
-public class GroupLeaveMessage implements Message {
+public class GroupInvitationMessage implements Message {
     private String sender;
     private UUID groupKey;
 
-    public GroupLeaveMessage(String sender, UUID groupKey) {
+    public GroupInvitationMessage(String sender, UUID groupKey) {
         this.sender = sender;
         this.groupKey = groupKey;
     }
 
     @Override
     public MessageType getType() {
-        return MessageType.GROUP_LEAVE;
+        return MessageType.GROUP_INVITATION;
     }
 
     @Override
@@ -21,5 +21,7 @@ public class GroupLeaveMessage implements Message {
         return sender;
     }
 
-    public UUID getGroupKey() { return groupKey; }
+    public UUID getGroupKey() {
+        return groupKey;
+    }
 }

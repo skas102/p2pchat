@@ -1,6 +1,7 @@
 package services;
 
 import dtos.*;
+import messages.*;
 import models.ContactType;
 import models.Group;
 import models.Person;

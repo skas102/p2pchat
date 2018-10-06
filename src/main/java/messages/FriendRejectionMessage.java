@@ -1,4 +1,4 @@
-package dtos;
+package messages;
 
 public class FriendRejectionMessage implements Message {
 

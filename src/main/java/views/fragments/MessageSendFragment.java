@@ -16,7 +16,6 @@ public class MessageSendFragment extends JPanel {
     private void createView() {
         setOpaque(false);
         Box panel = Box.createHorizontalBox();
-//        panel.setOpaque(false);
         panel.setPreferredSize(new Dimension(MainPanel.DETAIL_WIDTH, 50));
         panel.add(Box.createHorizontalStrut(5));
 

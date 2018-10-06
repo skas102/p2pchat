@@ -1,7 +1,7 @@
 package services;
 
 import dtos.GroupDTO;
-import dtos.Message;
+import messages.Message;
 import dtos.PersonDTO;
 import models.Group;
 

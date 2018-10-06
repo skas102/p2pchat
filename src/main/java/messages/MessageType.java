@@ -1,4 +1,4 @@
-package dtos;
+package messages;
 
 public enum MessageType {
     FRIEND_REQUEST,

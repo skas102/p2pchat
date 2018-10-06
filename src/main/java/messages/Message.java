@@ -1,4 +1,4 @@
-package dtos;
+package messages;
 
 import java.io.Serializable;
 

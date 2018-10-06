@@ -1,22 +1,19 @@
-package dtos;
+package messages;
 
 import java.util.UUID;
 
-public class GroupJoinMessage implements Message {
-
+public class GroupLeaveMessage implements Message {
     private String sender;
     private UUID groupKey;
-    private PersonDTO joiner;
 
-    public GroupJoinMessage(String sender, UUID groupKey, PersonDTO joiner) {
+    public GroupLeaveMessage(String sender, UUID groupKey) {
         this.sender = sender;
         this.groupKey = groupKey;
-        this.joiner = joiner;
     }
 
     @Override
     public MessageType getType() {
-        return MessageType.GROUP_JOIN;
+        return MessageType.GROUP_LEAVE;
     }
 
     @Override
@@ -25,6 +22,4 @@ public class GroupJoinMessage implements Message {
     }
 
     public UUID getGroupKey() { return groupKey; }
-
-    public PersonDTO getJoiner() { return joiner; }
 }

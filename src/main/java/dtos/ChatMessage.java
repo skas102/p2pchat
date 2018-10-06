@@ -1,5 +1,7 @@
 package dtos;
 
+import messages.Message;
+import messages.MessageType;
 import models.ContactType;
 
 import java.time.LocalDateTime;
