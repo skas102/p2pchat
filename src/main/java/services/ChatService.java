@@ -1,6 +1,5 @@
 package services;
 
-import dtos.ChatMessage;
 import models.Group;
 import models.Person;
 import repositories.ContactRepository;

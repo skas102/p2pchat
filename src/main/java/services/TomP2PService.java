@@ -1,10 +1,7 @@
 package services;
 
 import dtos.*;
-import messages.GroupInvitationMessage;
-import messages.GroupJoinMessage;
-import messages.GroupLeaveMessage;
-import messages.Message;
+import messages.*;
 import models.BootstrapPeer;
 import models.Client;
 import models.Group;
@@ -152,9 +149,10 @@ public class TomP2PService implements P2PService {
                         listener.onGroupJoin(Person.create(joinMessage.getJoiner()), joinMessage.getGroupKey());
                         break;
                     }
-                    case CHAT_MESSAGE: {
-                        ChatMessage message = (ChatMessage) m;
-                        listener.onChatMessageReceived(message);
+                    case NEW_CHAT_MESSAGE: {
+                        NewChatMessage newChatMessage = (NewChatMessage) m;
+                        listener.onChatMessageReceived(newChatMessage);
+                        break;
                     }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);

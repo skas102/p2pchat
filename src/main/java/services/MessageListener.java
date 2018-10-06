@@ -1,12 +1,10 @@
 package services;
 
-import dtos.ChatMessage;
-import models.Contact;
+import dtos.ChatMessageDTO;
+import messages.NewChatMessage;
 import models.Person;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface MessageListener {
@@ -24,5 +22,5 @@ public interface MessageListener {
 
     void onGroupJoin(Person joiner, UUID groupKey);
 
-    void onChatMessageReceived(ChatMessage message);
+    void onChatMessageReceived(NewChatMessage newChatMessage);
 }

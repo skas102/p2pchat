@@ -1,6 +1,6 @@
 package repositories;
 
-import dtos.ChatMessage;
+import dtos.ChatMessageDTO;
 import models.Group;
 import models.Person;
 
@@ -10,8 +10,8 @@ import java.util.*;
 
 public class MessageRepository implements Serializable {
 
-    private Map<String, List<ChatMessage>> friendMessages;
-    private Map<UUID, List<ChatMessage>> groupMessages;
+    private Map<String, List<ChatMessageDTO>> friendMessages;
+    private Map<UUID, List<ChatMessageDTO>> groupMessages;
 
     private List<ChatMessageListener> listeners;
 
@@ -25,22 +25,22 @@ public class MessageRepository implements Serializable {
 
     public void unregisterListener(ChatMessageListener l) { this.listeners.remove(l); }
 
-    public void addGroupMessage(Group g, ChatMessage m) {
+    public void addGroupMessage(Group g, ChatMessageDTO m) {
         if (groupMessages.containsKey(g.getUniqueId())) {
             groupMessages.get(g.getUniqueId()).add(m);
         } else {
-            List<ChatMessage> messageList = new ArrayList<>();
+            List<ChatMessageDTO> messageList = new ArrayList<>();
             messageList.add(m);
             groupMessages.put(g.getUniqueId(), messageList);
         }
         notifyListeners();
     }
 
-    public void addFriendMessage(Person p, ChatMessage m) {
+    public void addFriendMessage(Person p, ChatMessageDTO m) {
         if (friendMessages.containsKey(p.getName())) {
             friendMessages.get(p.getName()).add(m);
         } else {
-            List<ChatMessage> messageList = new ArrayList<>();
+            List<ChatMessageDTO> messageList = new ArrayList<>();
             messageList.add(m);
             friendMessages.put(p.getName(), messageList);
         }

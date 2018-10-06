@@ -1,6 +1,8 @@
 package services;
 
-import dtos.*;
+import dtos.ChatMessageDTO;
+import dtos.GroupDTO;
+import dtos.PersonDTO;
 import messages.*;
 import models.ContactType;
 import models.Group;
@@ -140,27 +142,26 @@ public class P2PChatService implements ChatService {
                         joiner.createPersonDTO()));
             }
         }
-
     }
 
     @Override
     public void sendChatMessage(Person recipient, String message) {
-        service.sendDirectMessage(recipient.createPersonDTO(), new ChatMessage(
-                chatRepository.getClient().getUsername(),
-                recipient.getName(),
+        ChatMessageDTO messageDTO = new ChatMessageDTO(chatRepository.getClient().getUsername(), message);
+        service.sendDirectMessage(recipient.createPersonDTO(), new NewChatMessage(
                 recipient.getType(),
-                message
+                recipient.getName(),
+                messageDTO
         ));
     }
 
     @Override
     public void sendChatMessage(Group recipient, String message) {
+        ChatMessageDTO messageDTO = new ChatMessageDTO(chatRepository.getClient().getUsername(), message);
         recipient.getMembers().forEach(r -> {
-            service.sendDirectMessage(r.createPersonDTO(), new ChatMessage(
-                    chatRepository.getClient().getUsername(),
-                    recipient.getUniqueId().toString(),
+            service.sendDirectMessage(r.createPersonDTO(), new NewChatMessage(
                     recipient.getType(),
-                    message
+                    recipient.getUniqueId().toString(),
+                    messageDTO
             ));
         } );
     }
@@ -218,21 +219,20 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public void onChatMessageReceived(ChatMessage message) {
-        ContactType type = message.getContactType();
+    public void onChatMessageReceived(NewChatMessage newMessage) {
+        ContactType type = newMessage.getContactType();
         if (type == ContactType.GROUP){
-            UUID groupKey = UUID.fromString(message.getContactIdentifier());
+            UUID groupKey = UUID.fromString(newMessage.getRecipientIdentifier());
             Group group = getContactRepository().getGroups().get(groupKey);
             if (group != null) {
-                getMessageRepository().addGroupMessage(group, message);
+                getMessageRepository().addGroupMessage(group, newMessage.getMessageDTO());
             }
         } else {
-            Person friend = getContactRepository().getFriends().get(message.getContactIdentifier());
+            Person friend = getContactRepository().getFriends().get(newMessage.getRecipientIdentifier());
             if (friend != null) {
-                getMessageRepository().addFriendMessage(friend, message);
+                getMessageRepository().addFriendMessage(friend, newMessage.getMessageDTO());
             }
         }
-
     }
 
     @Override
