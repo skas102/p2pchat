@@ -18,8 +18,8 @@ public class ContactRepository implements Serializable {
     public ContactRepository() {
         this.myFriendRequests = new ArrayList<>();
         this.incomingRequests = new ArrayList<>();
-        this.friends = new HashMap();
-        this.groups = new HashMap();
+        this.friends = new HashMap<>();
+        this.groups = new HashMap<>();
 
         this.contactListeners = new ArrayList<>();
     }
@@ -46,22 +46,22 @@ public class ContactRepository implements Serializable {
         this.incomingRequests.remove(person);
     }
 
-    public void addFriendToContactList(Person friend) {
+    public void addFriend(Person friend) {
         this.friends.put(friend.getName(), friend);
         this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
-    public void removeFriendFromContactList(Person friend) {
+    public void removeFriend(Person friend) {
         this.friends.remove(friend.getName());
         this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
-    public void addGroupToContactList(Group group) {
+    public void addGroup(Group group) {
         this.groups.put(group.getUniqueId(), group);
         this.contactListeners.forEach(l -> l.onContactListUpdated());
     }
 
-    public void removeGroupFromContactList(Group group) {
+    public void removeGroup(Group group) {
         this.groups.remove(group.getUniqueId());
     }
 

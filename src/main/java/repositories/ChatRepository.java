@@ -17,7 +17,6 @@ public class ChatRepository implements Serializable {
         this.messageRepository = new MessageRepository();
     }
 
-
     public Client getClient() {
         return client;
     }
@@ -30,5 +29,7 @@ public class ChatRepository implements Serializable {
         return contactRepository;
     }
 
-    public MessageRepository getMessageRepository() { return messageRepository; }
+    public MessageRepository getMessageRepository() {
+        return messageRepository;
+    }
 }

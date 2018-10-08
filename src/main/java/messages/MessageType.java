@@ -1,4 +1,4 @@
-package dtos;
+package messages;
 
 public enum MessageType {
     FRIEND_REQUEST,
@@ -8,5 +8,5 @@ public enum MessageType {
     GROUP_INVITATION,
     GROUP_LEAVE,
     GROUP_JOIN,
-    CHAT_MESSAGE
+    NEW_CHAT_MESSAGE
 }

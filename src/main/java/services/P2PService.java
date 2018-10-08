@@ -1,8 +1,8 @@
 package services;
 
 import dtos.GroupDTO;
-import dtos.Message;
 import dtos.PersonDTO;
+import messages.Message;
 import models.Group;
 
 import java.io.IOException;

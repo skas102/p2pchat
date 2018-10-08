@@ -3,15 +3,15 @@ package models;
 import dtos.PersonDTO;
 import net.tomp2p.peers.PeerAddress;
 
-import java.util.UUID;
-
 public class Person implements Contact {
 
     private String username;
     private PeerAddress peerAddress;
     private boolean isOnline;
 
-    public Person(String username, PeerAddress peerAddress) { this(username, peerAddress, false); }
+    public Person(String username, PeerAddress peerAddress) {
+        this(username, peerAddress, false);
+    }
 
     public Person(String username, PeerAddress peerAddress, boolean isOnline) {
         this.username = username;
@@ -44,6 +44,10 @@ public class Person implements Contact {
 
     public boolean isOnline() {
         return this.isOnline;
+    }
+
+    public String getStatusText() {
+        return isOnline ? "Online" : "Offline";
     }
 
     public PersonDTO createPersonDTO() {

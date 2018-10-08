@@ -1,15 +1,15 @@
-package dtos;
+package messages;
 
-public class FriendRequestMessage implements Message {
+public class FriendConfirmMessage implements Message {
     private String sender;
 
-    public FriendRequestMessage(String sender) {
+    public FriendConfirmMessage(String sender) {
         this.sender = sender;
     }
 
     @Override
     public MessageType getType() {
-        return MessageType.FRIEND_REQUEST;
+        return MessageType.FRIEND_CONFIRM;
     }
 
     @Override

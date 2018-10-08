@@ -15,21 +15,23 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.UUID;
 
 public class ContactListView extends JPanel implements ContactListener {
     private final int WIDTH = 240;
 
     private ChatController controller;
     private ContactRepository repo;
+    private MainPanelCallback callback;
+
     private DefaultListModel<Contact> listModel;
     private DefaultListModel<Person> myFriendRequests;
     private DefaultListModel<Person> incomingFriendRequests;
 
-    public ContactListView(ChatController controller) {
+    public ContactListView(ChatController controller, MainPanelCallback callback) {
         this.controller = controller;
         this.repo = controller.getContactRepository();
         this.repo.registerListener(this);
+        this.callback = callback;
 
         setPreferredSize(new Dimension(WIDTH, 600));
         setLayout(new BorderLayout());
@@ -115,7 +117,7 @@ public class ContactListView extends JPanel implements ContactListener {
 
     private void createListView() {
         // todo add Generics
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         JList list = new JList(listModel);
         list.setPreferredSize(new Dimension(WIDTH - 1, 50));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -125,6 +127,13 @@ public class ContactListView extends JPanel implements ContactListener {
         listScroll.setBorder(null);
 
         add(listScroll, BorderLayout.CENTER);
+
+        list.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                callback.ShowContactDetail((Contact) list.getSelectedValue());
+            }
+        });
     }
 
     private void addFriend() {

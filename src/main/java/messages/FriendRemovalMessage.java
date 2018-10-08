@@ -1,15 +1,16 @@
-package dtos;
+package messages;
 
-public class FriendConfirmMessage implements Message {
+public class FriendRemovalMessage implements Message {
+
     private String sender;
 
-    public FriendConfirmMessage(String sender) {
+    public FriendRemovalMessage(String sender) {
         this.sender = sender;
     }
 
     @Override
     public MessageType getType() {
-        return MessageType.FRIEND_CONFIRM;
+        return MessageType.FRIEND_REMOVAL;
     }
 
     @Override

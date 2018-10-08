@@ -4,6 +4,7 @@ import dtos.PersonDTO;
 import models.Group;
 import models.Person;
 import repositories.ContactRepository;
+import repositories.MessageRepository;
 import services.ChatService;
 
 import java.io.IOException;
@@ -19,6 +20,10 @@ public class ChatController {
 
     public ContactRepository getContactRepository() {
         return chatService.getContactRepository();
+    }
+
+    public MessageRepository getMessageRepository() {
+        return chatService.getMessageRepository();
     }
 
     public Person addFriend(String name) throws IOException, ClassNotFoundException {
@@ -49,7 +54,15 @@ public class ChatController {
         chatService.sendGroupJoin(group, joiner);
     }
 
+    public void sendPrivateMessage(Person recipient, String message) {
+        chatService.sendChatMessage(recipient, message);
+    }
+
     public void setSelf(PersonDTO self) {
         getContactRepository().setSelf(Person.create(self));
+
+        // todo remove - add friends on start to avoid sending & accepting requests every time
+        getContactRepository().addFriend(Person.create(self));
+        getContactRepository().addFriend(new Person("Test 2", self.getPeerAddress()));
     }
 }

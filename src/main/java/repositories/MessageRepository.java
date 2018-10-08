@@ -1,8 +1,6 @@
 package repositories;
 
-import dtos.ChatMessage;
-import models.Group;
-import models.Person;
+import models.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -10,8 +8,8 @@ import java.util.*;
 
 public class MessageRepository implements Serializable {
 
-    private Map<String, List<ChatMessage>> friendMessages;
-    private Map<UUID, List<ChatMessage>> groupMessages;
+    private Map<String, PrivateChat> friendMessages;
+    private Map<UUID, GroupChat> groupMessages;
 
     private List<ChatMessageListener> listeners;
 
@@ -21,34 +19,47 @@ public class MessageRepository implements Serializable {
         this.listeners = new ArrayList<>();
     }
 
-    public void registerListener(ChatMessageListener l) { this.listeners.add(l); }
+    public void registerListener(ChatMessageListener l) {
+        this.listeners.add(l);
+    }
 
-    public void unregisterListener(ChatMessageListener l) { this.listeners.remove(l); }
+    public void unregisterListener(ChatMessageListener l) {
+        this.listeners.remove(l);
+    }
 
     public void addGroupMessage(Group g, ChatMessage m) {
         if (groupMessages.containsKey(g.getUniqueId())) {
-            groupMessages.get(g.getUniqueId()).add(m);
+            groupMessages.get(g.getUniqueId()).addMessage(m);
         } else {
-            List<ChatMessage> messageList = new ArrayList<>();
-            messageList.add(m);
-            groupMessages.put(g.getUniqueId(), messageList);
+            GroupChat groupChat = new GroupChat(g);
+            groupChat.addMessage(m);
+            groupMessages.put(g.getUniqueId(), groupChat);
         }
-        notifyListeners();
+        notifyListeners(g, m);
+    }
+
+    public PrivateChat getPrivateChat(Person p) {
+        if (friendMessages.containsKey(p.getName())) {
+            return friendMessages.get(p.getName());
+        }
+
+        PrivateChat chat = new PrivateChat(p);
+        friendMessages.put(p.getName(), chat);
+        return chat;
     }
 
     public void addFriendMessage(Person p, ChatMessage m) {
         if (friendMessages.containsKey(p.getName())) {
-            friendMessages.get(p.getName()).add(m);
+            friendMessages.get(p.getName()).addPrivateMessage(m);
         } else {
-            List<ChatMessage> messageList = new ArrayList<>();
-            messageList.add(m);
-            friendMessages.put(p.getName(), messageList);
+            PrivateChat privateChat = new PrivateChat(p);
+            privateChat.addPrivateMessage(m);
+            friendMessages.put(p.getName(), privateChat);
         }
-        notifyListeners();
+        notifyListeners(p, m);
     }
 
-    private void notifyListeners(){
-        this.listeners.forEach(l -> l.onMessageReceived());
+    private void notifyListeners(Contact c, ChatMessage m) {
+        this.listeners.forEach(l -> l.onMessageReceived(c, m));
     }
-
 }
