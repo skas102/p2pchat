@@ -59,6 +59,16 @@ public class MessageRepository implements Serializable {
         notifyListeners(p, m);
     }
 
+    public GroupChat getGroupChat(Group g){
+        if(groupMessages.containsKey(g.getUniqueId())){
+            return groupMessages.get(g.getUniqueId());
+        }
+
+        GroupChat chat = new GroupChat(g);
+        groupMessages.put(g.getUniqueId(), chat);
+        return chat;
+    }
+
     private void notifyListeners(Contact c, ChatMessage m) {
         this.listeners.forEach(l -> l.onMessageReceived(c, m));
     }
