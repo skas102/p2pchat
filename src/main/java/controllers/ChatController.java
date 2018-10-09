@@ -58,6 +58,10 @@ public class ChatController {
         chatService.sendChatMessage(recipient, message);
     }
 
+    public void sendGroupMessage(Group group, String message){
+        chatService.sendChatMessage(group, message);
+    }
+
     public void setSelf(PersonDTO self) {
         getContactRepository().setSelf(Person.create(self));
 

@@ -63,7 +63,7 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     }
 
     @Override
-    public void onMessageSent(String message) {
+    public void onSendClicked(String message) {
         if (tabbedPane.getSelectedComponent() == privateChatHistory) {
             controller.sendPrivateMessage(privateChat.getFriend(), message);
         } else {

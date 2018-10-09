@@ -19,4 +19,8 @@ public class GroupChat {
     public void addMessage(ChatMessage m) {
         messages.add(m);
     }
+
+    public List<ChatMessage> getMessages(){
+        return messages;
+    }
 }

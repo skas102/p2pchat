@@ -159,6 +159,8 @@ public class P2PChatService implements ChatService {
     @Override
     public void sendChatMessage(Group recipient, String message) {
         ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
+
+        // todo don't send message to the sender himself
         recipient.getMembers().forEach(r -> {
             service.sendDirectMessage(r.createPersonDTO(), new NewChatMessage(
                     recipient.getType(),
