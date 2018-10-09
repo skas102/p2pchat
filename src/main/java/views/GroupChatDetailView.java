@@ -1,11 +1,7 @@
 package views;
 
 import controllers.ChatController;
-import models.Group;
-import models.ChatMessage;
-import models.Contact;
-import models.ContactType;
-import models.GroupChat;
+import models.*;
 import repositories.ChatMessageListener;
 import views.fragments.ChatDetailHeader;
 import views.fragments.ChatHistoryFragment;
@@ -68,9 +64,9 @@ public class GroupChatDetailView extends JPanel implements MessageSendListener, 
 
     @Override
     public void onMessageReceived(Contact c, ChatMessage m) {
-        if(c.getType() == ContactType.GROUP){
+        if (c.getType() == ContactType.GROUP) {
             Group g = (Group) c;
-            if(groupChat.getGroup().equals(g)){
+            if (groupChat.getGroup().equals(g)) {
                 lmGroupMessages.addElement(m);
             }
         }

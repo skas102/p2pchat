@@ -4,7 +4,6 @@ import dtos.ChatMessageDTO;
 import util.StringUtil;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ChatMessage {
     private String sender;
@@ -37,7 +36,7 @@ public class ChatMessage {
         return sentDateTime;
     }
 
-    public String getFormattedDateTime(){
+    public String getFormattedDateTime() {
         return StringUtil.formatDateTime(sentDateTime);
     }
 

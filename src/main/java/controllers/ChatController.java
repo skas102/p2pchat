@@ -58,7 +58,7 @@ public class ChatController {
         chatService.sendChatMessage(recipient, message);
     }
 
-    public void sendGroupMessage(Group group, String message){
+    public void sendGroupMessage(Group group, String message) {
         chatService.sendChatMessage(group, message);
     }
 

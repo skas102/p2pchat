@@ -43,8 +43,8 @@ public class MessageRepository implements Serializable {
         notifyListeners(p, m);
     }
 
-    public GroupChat getGroupChat(Group g){
-        if(groupMessages.containsKey(g.getUniqueId())){
+    public GroupChat getGroupChat(Group g) {
+        if (groupMessages.containsKey(g.getUniqueId())) {
             return groupMessages.get(g.getUniqueId());
         }
 

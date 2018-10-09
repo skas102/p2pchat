@@ -5,11 +5,11 @@ import views.MainPanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class ChatDetailHeader extends Box{
+public class ChatDetailHeader extends Box {
     private JLabel lblTitle;
     private JLabel lblSubtitle;
 
-    public ChatDetailHeader(String title, String subtitle){
+    public ChatDetailHeader(String title, String subtitle) {
         super(BoxLayout.X_AXIS);
         createView(title, subtitle);
     }
@@ -32,7 +32,7 @@ public class ChatDetailHeader extends Box{
         add(lblSubtitle, BorderLayout.EAST);
     }
 
-    public void updateText(String title, String subtitle){
+    public void updateText(String title, String subtitle) {
         lblTitle.setText(title);
         lblSubtitle.setText(subtitle);
     }

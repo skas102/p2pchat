@@ -12,7 +12,7 @@ public class GroupChat {
         this.messages = new ArrayList<>();
     }
 
-    public Group getGroup(){
+    public Group getGroup() {
         return group;
     }
 
@@ -20,7 +20,7 @@ public class GroupChat {
         messages.add(m);
     }
 
-    public List<ChatMessage> getMessages(){
+    public List<ChatMessage> getMessages() {
         return messages;
     }
 }
