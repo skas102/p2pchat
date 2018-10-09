@@ -163,13 +163,15 @@ public class P2PChatService implements ChatService {
         ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
         getMessageRepository().addGroupMessage(recipient, chatMessage);
 
-        // todo don't send message to the sender himself
+        Person self = getContactRepository().getSelf();
         recipient.getMembers().forEach(r -> {
-            service.sendDirectMessage(r.createPersonDTO(), new NewChatMessage(
-                    recipient.getType(),
-                    recipient.getUniqueId().toString(),
-                    chatMessage.createDTO()
-            ));
+            if (!self.equals(r)) {
+                service.sendDirectMessage(r.createPersonDTO(), new NewChatMessage(
+                        recipient.getType(),
+                        recipient.getUniqueId().toString(),
+                        chatMessage.createDTO()
+                ));
+            }
         });
     }
 
