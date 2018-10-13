@@ -52,6 +52,15 @@ public class MainPanel extends JPanel implements MainPanelCallback {
         repaint();
     }
 
+    @Override
+    public void RemoveDetail() {
+        removeCurrentDetailView();
+        add(emptyDetailView, BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
+    }
+
     private void removeCurrentDetailView() {
         BorderLayout lm = (BorderLayout) getLayout();
         remove(lm.getLayoutComponent(BorderLayout.CENTER));

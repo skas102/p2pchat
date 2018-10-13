@@ -53,7 +53,7 @@ public class ContactRepository implements Serializable {
 
     public void removeFriend(Person friend) {
         this.friends.remove(friend.getName());
-        this.contactListeners.forEach(l -> l.onContactListUpdated());
+        this.contactListeners.forEach(l -> l.onFriendRemoved(friend));
     }
 
     public void addGroup(Group group) {

@@ -7,5 +7,7 @@ public interface ContactListener {
 
     void onMyFriendRequestRemoved(Person p);
 
+    void onFriendRemoved(Person p);
+
     void onContactListUpdated();
 }
