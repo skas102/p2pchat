@@ -14,11 +14,12 @@ import java.awt.*;
 public class GroupChatDetailView extends JPanel implements MessageSendListener, ChatMessageListener {
     private ChatController controller;
     private GroupChat groupChat;
+
+    private ChatDetailHeader detailHeader;
     private DefaultListModel<ChatMessage> lmGroupMessages;
     private ChatHistoryFragment groupChatHistory;
     private JTabbedPane tabbedPane;
-
-    private ChatDetailHeader detailHeader;
+    private DefaultListModel<Person> lmMembers;
 
     public GroupChatDetailView(ChatController controller, GroupChat groupChat) {
         this.controller = controller;
@@ -31,6 +32,7 @@ public class GroupChatDetailView extends JPanel implements MessageSendListener, 
 
     private void updateData() {
         groupChat.getMessages().forEach(m -> lmGroupMessages.addElement(m));
+        groupChat.getGroup().getMembers().forEach(p -> lmMembers.addElement(p));
     }
 
     private void createView() {
@@ -52,8 +54,11 @@ public class GroupChatDetailView extends JPanel implements MessageSendListener, 
         lmGroupMessages = new DefaultListModel<>();
         groupChatHistory = new ChatHistoryFragment(lmGroupMessages);
 
+        lmMembers = new DefaultListModel<>();
+        JList<Person> membersList = new JList<>(lmMembers);
+
         tabbedPane.addTab("Messages", null, groupChatHistory);
-        tabbedPane.addTab("Members", null, new JLabel("Coming soon"));
+        tabbedPane.addTab("Members", null, membersList);
 
         add(tabbedPane, BorderLayout.CENTER);
     }
