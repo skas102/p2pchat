@@ -149,6 +149,7 @@ public class P2PChatService implements ChatService {
         ChatLogger.info("Send private message to " + recipient.getName());
         ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
         getMessageRepository().addFriendMessage(recipient, chatMessage);
+
         service.sendDirectMessage(recipient.createPersonDTO(), new NewChatMessage(
                 recipient.getType(),
                 recipient.getName(),
@@ -158,13 +159,19 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void sendChatMessage(Group recipient, String message) {
+        ChatLogger.info("Send group message to " + recipient.getName());
         ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
+        getMessageRepository().addGroupMessage(recipient, chatMessage);
+
+        Person self = getContactRepository().getSelf();
         recipient.getMembers().forEach(r -> {
-            service.sendDirectMessage(r.createPersonDTO(), new NewChatMessage(
-                    recipient.getType(),
-                    recipient.getUniqueId().toString(),
-                    chatMessage.createDTO()
-            ));
+            if (!self.equals(r)) {
+                service.sendDirectMessage(r.createPersonDTO(), new NewChatMessage(
+                        recipient.getType(),
+                        recipient.getUniqueId().toString(),
+                        chatMessage.createDTO()
+                ));
+            }
         });
     }
 

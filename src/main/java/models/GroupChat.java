@@ -12,7 +12,15 @@ public class GroupChat {
         this.messages = new ArrayList<>();
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
     public void addMessage(ChatMessage m) {
         messages.add(m);
+    }
+
+    public List<ChatMessage> getMessages() {
+        return messages;
     }
 }

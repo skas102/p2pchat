@@ -45,6 +45,6 @@ public class MessageSendFragment extends JPanel {
     private void sendMessage() {
         String message = messageBox.getText();
         messageBox.setText("");
-        listener.onMessageSent(message);
+        listener.onSendClicked(message);
     }
 }

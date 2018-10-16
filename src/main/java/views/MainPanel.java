@@ -1,10 +1,7 @@
 package views;
 
 import controllers.ChatController;
-import models.Contact;
-import models.ContactType;
-import models.Person;
-import models.PrivateChat;
+import models.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +15,7 @@ public class MainPanel extends JPanel implements MainPanelCallback {
 
     private EmptyDetailView emptyDetailView;
     private PrivateChatDetailView privateChatView;
+    private GroupChatDetailView groupChatView;
 
     private ChatController controller;
 
@@ -45,8 +43,20 @@ public class MainPanel extends JPanel implements MainPanelCallback {
             privateChatView = new PrivateChatDetailView(controller, privateChat);
             add(privateChatView, BorderLayout.CENTER);
         } else if (contact.getType() == ContactType.GROUP) {
-            // todo
+            Group g = (Group) contact;
+            GroupChat groupChat = controller.getMessageRepository().getGroupChat(g);
+            groupChatView = new GroupChatDetailView(controller, groupChat);
+            add(groupChatView, BorderLayout.CENTER);
         }
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public void RemoveDetail() {
+        removeCurrentDetailView();
+        add(emptyDetailView, BorderLayout.CENTER);
+
         revalidate();
         repaint();
     }

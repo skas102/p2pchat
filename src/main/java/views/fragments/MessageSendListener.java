@@ -1,5 +1,5 @@
 package views.fragments;
 
 public interface MessageSendListener {
-    void onMessageSent(String message);
+    void onSendClicked(String message);
 }

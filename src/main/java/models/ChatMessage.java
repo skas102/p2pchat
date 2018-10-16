@@ -1,6 +1,7 @@
 package models;
 
 import dtos.ChatMessageDTO;
+import util.StringUtil;
 
 import java.time.LocalDateTime;
 
@@ -35,12 +36,17 @@ public class ChatMessage {
         return sentDateTime;
     }
 
+    public String getFormattedDateTime() {
+        return StringUtil.formatDateTime(sentDateTime);
+    }
+
     public ChatMessageDTO createDTO() {
         return new ChatMessageDTO(sender, message, sentDateTime);
     }
 
     @Override
     public String toString() {
-        return String.format("%s %s: %s", sentDateTime.toString(), sender, message);
+        return String.format("%s %s: %s",
+                getFormattedDateTime(), sender, message);
     }
 }

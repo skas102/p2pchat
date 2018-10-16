@@ -66,4 +66,23 @@ public class Group implements Contact {
     public GroupDTO createGroupDTO() {
         return new GroupDTO(name, getMemberNames(), getUniqueId());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Person)) {
+            return false;
+        }
+        Group other = (Group) obj;
+        return uniqueID.equals(other.uniqueID);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + uniqueID.hashCode();
+        return result;
+    }
 }

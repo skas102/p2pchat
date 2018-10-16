@@ -4,6 +4,7 @@ import controllers.ChatController;
 import models.*;
 import repositories.ChatMessageListener;
 import util.ChatLogger;
+import views.fragments.ChatDetailHeader;
 import views.fragments.ChatHistoryFragment;
 import views.fragments.MessageSendFragment;
 import views.fragments.MessageSendListener;
@@ -17,6 +18,8 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     private DefaultListModel<ChatMessage> lmPrivateMessages;
     private ChatHistoryFragment privateChatHistory;
     private JTabbedPane tabbedPane;
+
+    private ChatDetailHeader detailHeader;
 
     public PrivateChatDetailView(ChatController controller, PrivateChat privateChat) {
         this.controller = controller;
@@ -35,31 +38,12 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
         setBackground(new Color(242, 242, 242));
         setLayout(new BorderLayout(0, 0));
         setPreferredSize(new Dimension(MainPanel.DETAIL_WIDTH, MainPanel.TOTAL_HEIGHT));
-        createHeader();
+
+        detailHeader = new ChatDetailHeader(privateChat.getFriend().getName(), privateChat.getFriend().getStatusText());
+        add(detailHeader, BorderLayout.NORTH);
+
         createChatDetails();
         createMessageSend();
-    }
-
-    private void createHeader() {
-        Box titlePanel = Box.createHorizontalBox();
-        titlePanel.setBackground(Color.WHITE);
-        titlePanel.setOpaque(true);
-        titlePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        titlePanel.setPreferredSize(new Dimension(MainPanel.DETAIL_WIDTH, 39));
-        titlePanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0,
-                new Color(74, 126, 187)));
-
-        JLabel title = new JLabel(privateChat.getFriend().getName());
-        title.setFont(new Font(title.getName(), Font.PLAIN, 18));
-        titlePanel.add(Box.createHorizontalStrut(20));
-        titlePanel.add(title);
-
-        // todo - set data dynmaically
-        JLabel onlineStatus = new JLabel(privateChat.getFriend().getStatusText());
-        titlePanel.add(Box.createHorizontalStrut(8));
-        titlePanel.add(onlineStatus, BorderLayout.EAST);
-
-        add(titlePanel, BorderLayout.NORTH);
     }
 
     private void createChatDetails() {
@@ -79,7 +63,7 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     }
 
     @Override
-    public void onMessageSent(String message) {
+    public void onSendClicked(String message) {
         if (tabbedPane.getSelectedComponent() == privateChatHistory) {
             controller.sendPrivateMessage(privateChat.getFriend(), message);
         } else {

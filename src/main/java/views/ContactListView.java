@@ -2,6 +2,8 @@ package views;
 
 import controllers.ChatController;
 import models.Contact;
+import models.ContactType;
+import models.Group;
 import models.Person;
 import repositories.ContactListener;
 import repositories.ContactRepository;
@@ -23,7 +25,8 @@ public class ContactListView extends JPanel implements ContactListener {
     private ContactRepository repo;
     private MainPanelCallback callback;
 
-    private DefaultListModel<Contact> listModel;
+    private DefaultListModel<Contact> contactListModel;
+    private JList<Contact> contactList;
     private DefaultListModel<Person> myFriendRequests;
     private DefaultListModel<Person> incomingFriendRequests;
 
@@ -43,13 +46,13 @@ public class ContactListView extends JPanel implements ContactListener {
     }
 
     private void updateContactList() {
-        listModel.removeAllElements();
+        contactListModel.removeAllElements();
         for (Contact c : repo.getFriends().values()) {
-            listModel.addElement(c);
+            contactListModel.addElement(c);
         }
 
         for (Contact c : repo.getGroups().values()) {
-            listModel.addElement(c);
+            contactListModel.addElement(c);
         }
     }
 
@@ -116,22 +119,27 @@ public class ContactListView extends JPanel implements ContactListener {
     }
 
     private void createListView() {
-        // todo add Generics
-        listModel = new DefaultListModel<>();
-        JList list = new JList(listModel);
-        list.setPreferredSize(new Dimension(WIDTH - 1, 50));
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setCellRenderer(new ContactCellRenderer());
+        contactListModel = new DefaultListModel<>();
+        contactList = new JList<>(contactListModel);
+        contactList.setPreferredSize(new Dimension(WIDTH - 1, 50));
+        contactList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        contactList.setCellRenderer(new ContactCellRenderer());
 
-        JScrollPane listScroll = new JScrollPane(list);
+        JScrollPane listScroll = new JScrollPane(contactList);
         listScroll.setBorder(null);
 
         add(listScroll, BorderLayout.CENTER);
 
-        list.addMouseListener(new MouseAdapter() {
+        contactList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                callback.ShowContactDetail((Contact) list.getSelectedValue());
+                Contact selectedContact = (Contact) contactList.getSelectedValue();
+                if (e.getButton() == MouseEvent.BUTTON1) { // left click
+                    callback.ShowContactDetail(selectedContact);
+                } else if (e.getButton() == MouseEvent.BUTTON3) { // right click
+                    getContactPopupMenu(selectedContact, contactList.getSelectedIndex())
+                            .show(e.getComponent(), e.getX(), e.getY());
+                }
             }
         });
     }
@@ -193,6 +201,14 @@ public class ContactListView extends JPanel implements ContactListener {
         incomingFriendRequests.remove(index);
     }
 
+    private void removeFriend(Person friend) {
+        controller.removeFriend(friend);
+    }
+
+    private void addMember(Group group) {
+
+    }
+
     private void createFriendRequestsTab() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -213,7 +229,7 @@ public class ContactListView extends JPanel implements ContactListener {
             public void mouseClicked(MouseEvent e) {
                 int index = listIncomingRequests.getSelectedIndex();
                 Person requester = (Person) listIncomingRequests.getSelectedValue();
-                getPopupMenu(requester, index).show(e.getComponent(), e.getX(), e.getY());
+                getRequestPopupMenu(requester, index).show(e.getComponent(), e.getX(), e.getY());
             }
         });
     }
@@ -229,25 +245,44 @@ public class ContactListView extends JPanel implements ContactListener {
     }
 
     @Override
+    public void onFriendRemoved(Person friend) {
+        if (contactList.getSelectedValue().equals(friend)) {
+            callback.RemoveDetail();
+        }
+
+        updateContactList();
+    }
+
+    @Override
     public void onContactListUpdated() {
         updateContactList();
     }
 
-    private JPopupMenu getPopupMenu(Person requester, int index) {
+    private JPopupMenu getRequestPopupMenu(Person requester, int index) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem acceptItem = new JMenuItem("Accept Request");
         popup.add(acceptItem);
         JMenuItem rejectItem = new JMenuItem("Reject Request");
         popup.add(rejectItem);
 
-        acceptItem.addActionListener(e -> {
-            confirmFriend(requester, index);
-        });
+        acceptItem.addActionListener(e -> confirmFriend(requester, index));
+        rejectItem.addActionListener(e -> rejectFriend(requester, index));
 
-        rejectItem.addActionListener(e -> {
-            rejectFriend(requester, index);
-        });
+        return popup;
+    }
 
+    private JPopupMenu getContactPopupMenu(Contact contact, int index) {
+        JPopupMenu popup = new JPopupMenu();
+
+        if (contact.getType() == ContactType.PERSON) {
+            JMenuItem removeFriendItem = new JMenuItem("Remove");
+            popup.add(removeFriendItem);
+            removeFriendItem.addActionListener(e -> removeFriend((Person) contact));
+        } else if (contact.getType() == ContactType.GROUP) {
+            JMenuItem addMemberItem = new JMenuItem("Add member");
+            popup.add(addMemberItem);
+            addMemberItem.addActionListener(e -> addMember((Group) contact));
+        }
         return popup;
     }
 }
