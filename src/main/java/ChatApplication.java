@@ -3,21 +3,20 @@ import dtos.PersonDTO;
 import models.BootstrapPeer;
 import models.Client;
 import repositories.ChatRepository;
-import services.ChatService;
-import services.P2PChatService;
-import services.P2PService;
-import services.TomP2PService;
+import services.*;
 import views.MainWindow;
 
 import java.io.IOException;
 
 public class ChatApplication {
     private P2PService p2pService;
+    private NotaryService notaryService;
     private ChatService chatService;
     private ChatController chatController;
 
     public ChatApplication(Client client, BootstrapPeer bootstrapPeer) {
         p2pService = new TomP2PService(client, bootstrapPeer);
+        notaryService = new EthereumNotaryService();
 
         // todo ask client for the username if first time, otherwise load from data file
         ChatRepository repo = new ChatRepository(client);
@@ -28,6 +27,8 @@ public class ChatApplication {
     public void run() {
         try {
             PersonDTO self = p2pService.start();
+            notaryService.start();
+
             chatController.setSelf(self);
             p2pService.receiveMessage(chatService);
         } catch (InterruptedException | IOException ex) {
