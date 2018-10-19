@@ -17,6 +17,7 @@ public class ChatApplication {
     public ChatApplication(Client client, BootstrapPeer bootstrapPeer) {
         p2pService = new TomP2PService(client, bootstrapPeer);
         notaryService = new EthereumNotaryService();
+        // TODO set contract address in notary Service
 
         // todo ask client for the username if first time, otherwise load from data file
         ChatRepository repo = new ChatRepository(client);
