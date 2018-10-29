@@ -1,0 +1,1 @@
+[{"constant":false,"inputs":[{"name":"message","type":"string"}],"name":"sendMessage","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"messages","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"}]
