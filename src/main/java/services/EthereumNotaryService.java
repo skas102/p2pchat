@@ -5,7 +5,6 @@ import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.sample.contracts.generated.Greeter;
 import org.web3j.tx.Contract;
 import org.web3j.tx.ManagedTransaction;
 import org.web3j.tx.Transfer;
@@ -17,7 +16,7 @@ import util.ChatLogger;
 
 import java.io.IOException;
 
-// TODO We need to deploy the smart contracts to the ropsten testnet and store the contracts address somewhere.
+// TODO We need to deploy the smart blockchain to the ropsten testnet and store the blockchain address somewhere.
 // TODO generate a solidity contract interface with the command line tool (maybe)
 
 public class EthereumNotaryService implements NotaryService {
@@ -34,7 +33,7 @@ public class EthereumNotaryService implements NotaryService {
 
         // This is the local wallet for every node. It is required to communicate with the smart contract
         // FIXME: Generate a new wallet file using the web3j command line tools https://docs.web3j.io/command_line.html
-        Credentials credentials = WalletUtils.loadCredentials("<password>", "/path/to/<walletfile>");
+//        Credentials credentials = WalletUtils.loadCredentials("<password>", "/path/to/<walletfile>");
         ChatLogger.info("Credentials loaded");
 
         
@@ -45,14 +44,14 @@ public class EthereumNotaryService implements NotaryService {
         ChatLogger.info("Sending 1 Wei ("
             + Convert.fromWei("1", Convert.Unit.ETHER).toPlainString() + " Ether)");
 
-        TransactionReceipt transferReceipt = Transfer.sendFunds(
-            web3j, credentials,
-            "0x687422eea2cb73b5d3e242ba5456b782919afc85",  // you can put any address here
-            BigDecimal.ONE, Convert.Unit.WEI)  // 1 wei = 10^-18 Ether
-            .send();
-
-        ChatLogger.info("Transaction complete, view it at https://ropsten.etherscan.io/"
-            + transferReceipt.getTransactionHash());
+//        TransactionReceipt transferReceipt = Transfer.sendFunds(
+//            web3j, credentials,
+//            "0x687422eea2cb73b5d3e242ba5456b782919afc85",  // you can put any address here
+//            BigDecimal.ONE, Convert.Unit.WEI)  // 1 wei = 10^-18 Ether
+//            .send();
+//
+//        ChatLogger.info("Transaction complete, view it at https://ropsten.etherscan.io/"
+//            + transferReceipt.getTransactionHash());
     }
 
     public void setContractAddress(String address) {
