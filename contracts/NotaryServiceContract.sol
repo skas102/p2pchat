@@ -8,7 +8,7 @@ contract Mortal {
     function kill() public { if (msg.sender == owner) selfdestruct(owner); }
 }
 
-contract NotaryServiceContract is Mortal {
+contract NotaryServiceContract {
 
     struct State {
         Status status;
