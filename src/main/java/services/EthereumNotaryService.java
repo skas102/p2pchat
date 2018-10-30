@@ -1,5 +1,7 @@
 package services;
 
+import blockchain.NotaryContractGasProvider;
+import blockchain.NotaryServiceContract;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -23,9 +25,14 @@ import java.io.IOException;
 public class EthereumNotaryService implements NotaryService {
 
     private String contractAddress = "0x20345ec4429c268a4dfa330a57561001b63b7df6";
+    private NotaryContractGasProvider gasProvider;
     private Credentials credentials;
+    private NotaryServiceContract contract;
 
     // TODO Add constructor that takes a contract address and creates instance of Contract
+    public EthereumNotaryService(){
+        gasProvider = new NotaryContractGasProvider();
+    }
 
     @Override
     public void start() throws IOException, CipherException {
@@ -40,6 +47,9 @@ public class EthereumNotaryService implements NotaryService {
         // TODO: store password somewhere else
         credentials = WalletUtils.loadCredentials("test123", walletPath);
         ChatLogger.info("Credentials loaded. Address: " + credentials.getAddress());
+
+        contract = NotaryServiceContract.load(contractAddress, web3j, credentials, gasProvider);
+        ChatLogger.info("NotaryServiceContract is loaded");
     }
 
     public void requestEthersFromTestnet() {
