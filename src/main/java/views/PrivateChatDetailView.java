@@ -16,9 +16,11 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     private ChatController controller;
     private PrivateChat privateChat;
     private DefaultListModel<ChatMessage> lmPrivateMessages;
-    private ChatHistoryFragment privateChatHistory;
-    private JTabbedPane tabbedPane;
+    private DefaultListModel<ChatMessage> lmNotaryMessages;
 
+    private ChatHistoryFragment privateChatHistory;
+    private ChatHistoryFragment notaryChatHistory;
+    private JTabbedPane tabbedPane;
     private ChatDetailHeader detailHeader;
 
     public PrivateChatDetailView(ChatController controller, PrivateChat privateChat) {
@@ -50,10 +52,13 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
         tabbedPane = new JTabbedPane();
 
         lmPrivateMessages = new DefaultListModel<>();
+        lmNotaryMessages = new DefaultListModel<>();
+
         privateChatHistory = new ChatHistoryFragment(lmPrivateMessages);
+        notaryChatHistory = new ChatHistoryFragment(lmNotaryMessages);
 
         tabbedPane.addTab("Messages", null, privateChatHistory);
-        tabbedPane.addTab("Notary Messages", null, new JLabel("Hello 2"));
+        tabbedPane.addTab("Notary Messages", null, notaryChatHistory);
 
         add(tabbedPane, BorderLayout.CENTER);
     }
