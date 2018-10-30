@@ -34,7 +34,7 @@ public class EthereumNotaryService implements NotaryService {
 
         // This is the local wallet for every node. It is required to communicate with the smart contract
         // Hint: Generate a new wallet file using the web3j command line tools https://docs.web3j.io/command_line.html
-        String walletPath = "wallets/" + username + ".json";
+        String walletPath = "wallets/wallet_" + username + ".json";
 
         // It is not good to save password and wallet in the repo
         // But yeah, just for the purpose of education!!!
