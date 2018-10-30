@@ -1,7 +1,7 @@
 package services;
 
-import blockchain.NotaryContract;
 import blockchain.GasProvider;
+import blockchain.NotaryContract;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -9,8 +9,10 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 import util.ChatLogger;
+import util.StringUtil;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 // TODO We need to deploy the smart blockchain to the ropsten testnet and store the blockchain address somewhere.
 // TODO generate a solidity contract interface with the command line tool (maybe)
@@ -23,7 +25,7 @@ public class EthereumNotaryService implements NotaryService {
     private NotaryContract contract;
 
     // TODO Add constructor that takes a contract address and creates instance of Contract
-    public EthereumNotaryService(){
+    public EthereumNotaryService() {
         gasProvider = new GasProvider();
     }
 
@@ -48,7 +50,7 @@ public class EthereumNotaryService implements NotaryService {
     public void requestEthersFromTestnet() {
         // FIXME: Request some Ether for the Ropsten test network
         ChatLogger.info("Sending 1 Wei ("
-            + Convert.fromWei("1", Convert.Unit.ETHER).toPlainString() + " Ether)");
+                + Convert.fromWei("1", Convert.Unit.ETHER).toPlainString() + " Ether)");
 
 //        TransactionReceipt transferReceipt = Transfer.sendFunds(
 //            web3j, credentials,
@@ -58,10 +60,6 @@ public class EthereumNotaryService implements NotaryService {
 //
 //        ChatLogger.info("Transaction complete, view it at https://ropsten.etherscan.io/"
 //            + transferReceipt.getTransactionHash());
-    }
-
-    public void setContractAddress(String address) {
-        // TODO Implement
     }
 
     public void addMessageHash(String hash, String recipient) {
@@ -76,7 +74,9 @@ public class EthereumNotaryService implements NotaryService {
         // TODO Implement
     }
 
-    public void getMessageState(String hash) {
-        
+    public void getMessageState(String hash) throws Exception {
+        // B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9 --> "hello world", state = accepted
+        BigInteger state = contract.getMessageState(StringUtil.hexStringToByteArray(hash)).send();
+        ChatLogger.info("State: " + state);
     }
 }

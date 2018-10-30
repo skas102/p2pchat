@@ -6,4 +6,6 @@ import java.io.IOException;
 
 public interface NotaryService {
     void start() throws IOException, CipherException;
+
+    void getMessageState(String hash) throws Exception;
 }

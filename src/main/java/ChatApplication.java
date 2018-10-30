@@ -32,6 +32,9 @@ public class ChatApplication {
             PersonDTO self = p2pService.start();
             notaryService.start();
 
+            // todo remove: test contract call
+            notaryService.getMessageState("B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9");
+
             chatController.setSelf(self);
             p2pService.receiveMessage(chatService);
         } catch (InterruptedException | IOException ex) {
@@ -40,6 +43,8 @@ public class ChatApplication {
             System.exit(1);
         } catch (CipherException e) {
             ChatLogger.error(e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
