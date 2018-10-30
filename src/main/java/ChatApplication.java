@@ -8,6 +8,7 @@ import services.*;
 import util.ChatLogger;
 import views.MainWindow;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class ChatApplication {
@@ -19,7 +20,6 @@ public class ChatApplication {
     public ChatApplication(Client client, BootstrapPeer bootstrapPeer) {
         p2pService = new TomP2PService(client, bootstrapPeer);
         notaryService = new EthereumNotaryService();
-        // TODO set contract address in notary Service
 
         // todo ask client for the username if first time, otherwise load from data file
         ChatRepository repo = new ChatRepository(client);
@@ -28,27 +28,33 @@ public class ChatApplication {
     }
 
     public void run() {
+        // Start P2P DHT
         try {
             PersonDTO self = p2pService.start();
-            notaryService.start();
-
-            // todo remove: test contract call
-            notaryService.getMessageState("B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9");
-
             chatController.setSelf(self);
             p2pService.receiveMessage(chatService);
         } catch (InterruptedException | IOException ex) {
             System.err.println("Starting P2P Service failed - " + ex.getMessage());
             ex.printStackTrace();
             System.exit(1);
-        } catch (CipherException e) {
-            ChatLogger.error(e.getMessage());
+        }
+
+        // Start NotaryService on Ethereum Blockchain
+        try {
+            notaryService.start();
+        } catch (IOException | CipherException e) {
+            JOptionPane.showMessageDialog(null, "Failed loading wallet: " + e.getMessage());
+            ChatLogger.error("NotaryService failed to start: " + e.getMessage());
             e.printStackTrace();
+        }
+
+        // todo remove: this is just a test call to contract
+        try {
+            notaryService.getMessageState("B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // todo pass controller to the view
         new MainWindow(chatController);
     }
 }
