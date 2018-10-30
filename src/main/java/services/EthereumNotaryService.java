@@ -15,13 +15,15 @@ import java.math.BigInteger;
 
 public class EthereumNotaryService implements NotaryService {
 
-    private String contractAddress = "0x469fce78cd4ea1db3a93090416adbed5029976cb";
+    private final String contractAddress = "0x469fce78cd4ea1db3a93090416adbed5029976cb";
+    private final String username;
     private GasProvider gasProvider;
     private Credentials credentials;
     private NotaryContract contract;
 
-    public EthereumNotaryService() {
+    public EthereumNotaryService(String username) {
         gasProvider = new GasProvider();
+        this.username = username;
     }
 
     @Override
@@ -32,9 +34,10 @@ public class EthereumNotaryService implements NotaryService {
 
         // This is the local wallet for every node. It is required to communicate with the smart contract
         // Hint: Generate a new wallet file using the web3j command line tools https://docs.web3j.io/command_line.html
-        String walletPath = System.getProperty("user.home") + "/wallet.json";
+        String walletPath = "wallets/" + username + ".json";
 
-        // TODO: store password somewhere else
+        // It is not good to save password and wallet in the repo
+        // But yeah, just for the purpose of education!!!
         credentials = WalletUtils.loadCredentials("test123", walletPath);
         ChatLogger.info("Credentials loaded. Address: " + credentials.getAddress());
 
