@@ -1,5 +1,6 @@
 package services;
 
+import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
@@ -21,22 +22,24 @@ import java.io.IOException;
 
 public class EthereumNotaryService implements NotaryService {
 
-    String contractAddress;
+    private String contractAddress = "0x20345ec4429c268a4dfa330a57561001b63b7df6";
+    private Credentials credentials;
 
     // TODO Add constructor that takes a contract address and creates instance of Contract
 
     @Override
-    public void start() throws IOException {
+    public void start() throws IOException, CipherException {
         Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/96269096d50040d39e625e2241929596"));
         ChatLogger.info("Connected to Ethereum client " +
                 web3j.web3ClientVersion().send().getWeb3ClientVersion());
 
         // This is the local wallet for every node. It is required to communicate with the smart contract
-        // FIXME: Generate a new wallet file using the web3j command line tools https://docs.web3j.io/command_line.html
-//        Credentials credentials = WalletUtils.loadCredentials("<password>", "/path/to/<walletfile>");
-        ChatLogger.info("Credentials loaded");
+        // Hint: Generate a new wallet file using the web3j command line tools https://docs.web3j.io/command_line.html
+        String walletPath = System.getProperty("user.home") + "/wallet.json";
 
-        
+        // TODO: store password somewhere else
+        credentials = WalletUtils.loadCredentials("test123", walletPath);
+        ChatLogger.info("Credentials loaded. Address: " + credentials.getAddress());
     }
 
     public void requestEthersFromTestnet() {

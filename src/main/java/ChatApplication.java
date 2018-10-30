@@ -2,8 +2,10 @@ import controllers.ChatController;
 import dtos.PersonDTO;
 import models.BootstrapPeer;
 import models.Client;
+import org.web3j.crypto.CipherException;
 import repositories.ChatRepository;
 import services.*;
+import util.ChatLogger;
 import views.MainWindow;
 
 import java.io.IOException;
@@ -36,6 +38,9 @@ public class ChatApplication {
             System.err.println("Starting P2P Service failed - " + ex.getMessage());
             ex.printStackTrace();
             System.exit(1);
+        } catch (CipherException e) {
+            ChatLogger.error(e.getMessage());
+            e.printStackTrace();
         }
 
         // todo pass controller to the view
