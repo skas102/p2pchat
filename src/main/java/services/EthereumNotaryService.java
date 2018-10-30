@@ -6,6 +6,7 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import util.ChatLogger;
 import util.StringUtil;
@@ -45,8 +46,10 @@ public class EthereumNotaryService implements NotaryService {
         ChatLogger.info("NotaryContract is loaded");
     }
 
-    public void addMessageHash(String hash, String recipient) {
-        // TODO Implement
+    public void addMessageHash(String hash, String recipient) throws Exception {
+        TransactionReceipt tx = contract.addMessage(StringUtil.hexToByteArray(hash), recipient).send();
+        ChatLogger.info(String.format("Transaction completed: Status=%s, hash=%s",
+                tx.getStatus(), tx.getTransactionHash()));
     }
 
     public void acceptMessage(String hash) {

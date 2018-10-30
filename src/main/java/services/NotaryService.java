@@ -7,5 +7,7 @@ import java.io.IOException;
 public interface NotaryService {
     void start() throws IOException, CipherException;
 
+    void addMessageHash(String hash, String recipient) throws Exception;
+
     void getMessageState(String hash) throws Exception;
 }

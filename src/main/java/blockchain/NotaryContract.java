@@ -1,8 +1,5 @@
 package blockchain;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collections;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -15,11 +12,15 @@ import org.web3j.tx.Contract;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
- * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the
  * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
  * <p>Generated with web3j version 3.6.0.
@@ -57,40 +58,41 @@ public class NotaryContract extends Contract {
 
     public RemoteCall<TransactionReceipt> acceptMessage(byte[] hash) {
         final Function function = new Function(
-                FUNC_ACCEPTMESSAGE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash)), 
+                FUNC_ACCEPTMESSAGE,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<TransactionReceipt> kill() {
         final Function function = new Function(
-                FUNC_KILL, 
-                Arrays.<Type>asList(), 
+                FUNC_KILL,
+                Arrays.<Type>asList(),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<TransactionReceipt> rejectMessage(byte[] hash) {
         final Function function = new Function(
-                FUNC_REJECTMESSAGE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash)), 
+                FUNC_REJECTMESSAGE,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<BigInteger> getMessageState(byte[] hash) {
-        final Function function = new Function(FUNC_GETMESSAGESTATE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint8>() {}));
+        final Function function = new Function(FUNC_GETMESSAGESTATE,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint8>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<TransactionReceipt> addMessage(byte[] hash, String recipient) {
         final Function function = new Function(
-                FUNC_ADDMESSAGE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash), 
-                new org.web3j.abi.datatypes.Address(recipient)), 
+                FUNC_ADDMESSAGE,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(hash),
+                        new org.web3j.abi.datatypes.Address(recipient)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
