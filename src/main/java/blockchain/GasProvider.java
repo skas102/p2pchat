@@ -4,7 +4,7 @@ import org.web3j.tx.gas.ContractGasProvider;
 
 import java.math.BigInteger;
 
-public class NotaryContractGasProvider implements ContractGasProvider {
+public class GasProvider implements ContractGasProvider {
     public static final String LOAD = "load";
 
     // todo
