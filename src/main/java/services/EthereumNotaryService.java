@@ -46,8 +46,8 @@ public class EthereumNotaryService implements NotaryService {
         ChatLogger.info("NotaryContract is loaded");
     }
 
-    public void addMessageHash(String hash, String recipient) throws Exception {
-        TransactionReceipt tx = contract.addMessage(StringUtil.hexToByteArray(hash), recipient).send();
+    public void addMessageHash(String hash) throws Exception {
+        TransactionReceipt tx = contract.addMessage(StringUtil.hexToByteArray(hash)).send();
         ChatLogger.info(String.format("Transaction completed: Status=%s, hash=%s",
                 tx.getStatus(), tx.getTransactionHash()));
     }
