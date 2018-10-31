@@ -5,11 +5,11 @@ import java.util.List;
 
 public class PrivateChat {
     private Person friend;
-    private List<ChatMessage> privateMessges;
+    private List<ChatMessage> privateMessages;
 
     public PrivateChat(Person friend) {
         this.friend = friend;
-        this.privateMessges = new ArrayList<>();
+        this.privateMessages = new ArrayList<>();
     }
 
     public Person getFriend() {
@@ -17,10 +17,10 @@ public class PrivateChat {
     }
 
     public void addPrivateMessage(ChatMessage m) {
-        privateMessges.add(m);
+        privateMessages.add(m);
     }
 
-    public List<ChatMessage> getPrivateMessges() {
-        return privateMessges;
+    public List<ChatMessage> getPrivateMessages() {
+        return privateMessages;
     }
 }

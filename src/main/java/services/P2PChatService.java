@@ -176,6 +176,18 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
+    public void sendNotaryChatMessage(Person recipient, String message) {
+        ChatLogger.info("Send notary message to " + recipient.getName());
+        ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
+        getMessageRepository().addNotaryMessage(recipient, chatMessage);
+
+        service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
+                recipient.getName(),
+                chatMessage.createDTO()
+        ));
+    }
+
+    @Override
     public void onFriendRequest(Person p) {
         ChatLogger.info("Received Friend Request by person " + p.getName());
         getContactRepository().addIncomingFriendRequest(p);
@@ -242,6 +254,15 @@ public class P2PChatService implements ChatService {
             if (friend != null) {
                 getMessageRepository().addFriendMessage(friend, chatMessage);
             }
+        }
+    }
+
+    @Override
+    public void onNotaryChatMessageReceived(NewNotaryChatMessage newNotaryChatMessage) {
+        ChatMessage chatMessage = ChatMessage.create(newNotaryChatMessage.getMessageDTO());
+        Person friend = getContactRepository().getFriends().get(newNotaryChatMessage.getSenderUsername());
+        if (friend != null) {
+            getMessageRepository().addNotaryMessage(friend, chatMessage);
         }
     }
 

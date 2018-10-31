@@ -32,4 +32,6 @@ public interface ChatService extends MessageListener {
     void sendChatMessage(Person recipient, String message);
 
     void sendChatMessage(Group recipient, String message);
+
+    void sendNotaryChatMessage(Person recipient, String message);
 }

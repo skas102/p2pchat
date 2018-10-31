@@ -9,5 +9,9 @@ public interface NotaryService {
 
     void addMessageHash(String hash) throws Exception;
 
+    void acceptMessage(String hash) throws Exception;
+
+    void rejectMessage(String hash) throws Exception;
+
     void getMessageState(String hash) throws Exception;
 }

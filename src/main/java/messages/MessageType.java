@@ -8,5 +8,6 @@ public enum MessageType {
     GROUP_INVITATION,
     GROUP_LEAVE,
     GROUP_JOIN,
-    NEW_CHAT_MESSAGE
+    NEW_CHAT_MESSAGE,
+    NEW_NOTARY_CHAT_MESSAGE,
 }

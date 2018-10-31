@@ -9,6 +9,7 @@ import java.util.*;
 public class MessageRepository implements Serializable {
 
     private Map<String, PrivateChat> friendMessages;
+    private Map<String, NotaryChat> notaryMessages;
     private Map<UUID, GroupChat> groupMessages;
 
     private List<ChatMessageListener> listeners;
@@ -57,6 +58,22 @@ public class MessageRepository implements Serializable {
         GroupChat chat = getGroupChat(g);
         chat.addMessage(m);
         notifyListeners(g, m);
+    }
+
+    public NotaryChat getNotaryChat(Person p) {
+        if (notaryMessages.containsKey(p.getName())) {
+            return notaryMessages.get(p.getName());
+        }
+
+        NotaryChat chat = new NotaryChat(p);
+        notaryMessages.put(p.getName(), chat);
+        return chat;
+    }
+
+    public void addNotaryMessage(Person p, ChatMessage m) {
+        NotaryChat chat = getNotaryChat(p);
+        chat.addNotaryMessage(m);
+        notifyListeners(p, m);
     }
 
     private void notifyListeners(Contact c, ChatMessage m) {

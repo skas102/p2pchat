@@ -1,6 +1,7 @@
 package services;
 
 import messages.NewChatMessage;
+import messages.NewNotaryChatMessage;
 import models.Person;
 
 import java.io.IOException;
@@ -22,4 +23,6 @@ public interface MessageListener {
     void onGroupJoin(Person joiner, UUID groupKey);
 
     void onChatMessageReceived(NewChatMessage newChatMessage);
+
+    void onNotaryChatMessageReceived(NewNotaryChatMessage newNotaryChatMessage);
 }

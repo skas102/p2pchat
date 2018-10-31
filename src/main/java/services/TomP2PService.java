@@ -156,6 +156,10 @@ public class TomP2PService implements P2PService {
                         listener.onChatMessageReceived(newChatMessage);
                         break;
                     }
+                    case NEW_NOTARY_CHAT_MESSAGE: {
+                        NewNotaryChatMessage newNotaryChatMessage = (NewNotaryChatMessage) m;
+                        listener.onNotaryChatMessageReceived(newNotaryChatMessage);
+                    }
                     default:
                         System.out.println("Sender " + senderAddress.inetAddress() + "Message: " + request);
                 }

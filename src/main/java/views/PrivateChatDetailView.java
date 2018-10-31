@@ -33,7 +33,7 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     }
 
     private void updateData() {
-        privateChat.getPrivateMessges().forEach(m -> lmPrivateMessages.addElement(m));
+        privateChat.getPrivateMessages().forEach(m -> lmPrivateMessages.addElement(m));
     }
 
     private void createView() {

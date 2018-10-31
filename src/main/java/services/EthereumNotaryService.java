@@ -52,12 +52,16 @@ public class EthereumNotaryService implements NotaryService {
                 tx.getStatus(), tx.getTransactionHash()));
     }
 
-    public void acceptMessage(String hash) {
-        // TODO Implement
+    public void acceptMessage(String hash) throws Exception {
+        TransactionReceipt tx = contract.acceptMessage(StringUtil.hexToByteArray(hash)).send();
+        ChatLogger.info(String.format("Accept Message Transaction compelted: Status=%s, hash=%s",
+                tx.getStatus(), tx.getTransactionHash()));
     }
 
-    public void rejectMessage(String hash) {
-        // TODO Implement
+    public void rejectMessage(String hash) throws Exception {
+        TransactionReceipt tx = contract.rejectMessage(StringUtil.hexToByteArray(hash)).send();
+        ChatLogger.info(String.format("Reject Message Transaction compelted: Status=%s, hash=%s",
+                tx.getStatus(), tx.getTransactionHash()));
     }
 
     // To test: hash "B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9" <-- "hello world"
