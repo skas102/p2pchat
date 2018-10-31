@@ -2,22 +2,24 @@ import controllers.ChatController;
 import dtos.PersonDTO;
 import models.BootstrapPeer;
 import models.Client;
+import org.web3j.crypto.CipherException;
 import repositories.ChatRepository;
-import services.ChatService;
-import services.P2PChatService;
-import services.P2PService;
-import services.TomP2PService;
+import services.*;
+import util.ChatLogger;
 import views.MainWindow;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class ChatApplication {
     private P2PService p2pService;
+    private NotaryService notaryService;
     private ChatService chatService;
     private ChatController chatController;
 
     public ChatApplication(Client client, BootstrapPeer bootstrapPeer) {
         p2pService = new TomP2PService(client, bootstrapPeer);
+        notaryService = new EthereumNotaryService(client.getUsername());
 
         // todo ask client for the username if first time, otherwise load from data file
         ChatRepository repo = new ChatRepository(client);
@@ -26,6 +28,7 @@ public class ChatApplication {
     }
 
     public void run() {
+        // Start P2P DHT
         try {
             PersonDTO self = p2pService.start();
             chatController.setSelf(self);
@@ -36,7 +39,25 @@ public class ChatApplication {
             System.exit(1);
         }
 
-        // todo pass controller to the view
+        // Start NotaryService on Ethereum Blockchain
+        try {
+            notaryService.start();
+        } catch (IOException | CipherException e) {
+            JOptionPane.showMessageDialog(null, "Failed loading wallet: " + e.getMessage());
+            ChatLogger.error("NotaryService failed to start: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // todo remove: this is just a test call to contract
+        try {
+            notaryService.getMessageState("B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9");
+
+//            notaryService.addMessageHash("7e9e5ac30f2216fd0fd6f5faed316f2d5983361a4203c3330cfa46ef65bb4767",
+//                    "0xe252fFd0978c97B935fEE04C12dEF779571dEee4");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         new MainWindow(chatController);
     }
 }
