@@ -1,13 +1,15 @@
 package services;
 
 import org.web3j.crypto.CipherException;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 public interface NotaryService {
     void start() throws IOException, CipherException;
 
-    void addMessageHash(String hash) throws Exception;
+    CompletableFuture<TransactionReceipt> addMessageHash(byte[] hash);
 
     void acceptMessage(String hash) throws Exception;
 

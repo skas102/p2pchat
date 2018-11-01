@@ -29,7 +29,7 @@ public class GasProvider implements ContractGasProvider {
             case FUNC_ADDMESSAGE:
                 return BigInteger.valueOf(70000);
             default:
-                return BigInteger.valueOf(2300);
+                return BigInteger.valueOf(21000);
         }
     }
 

@@ -13,10 +13,11 @@ import util.StringUtil;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.concurrent.CompletableFuture;
 
 public class EthereumNotaryService implements NotaryService {
 
-    private final String contractAddress = "0x469fce78cd4ea1db3a93090416adbed5029976cb";
+    private final String contractAddress = "0x59cd1f59b9cf96baaeea7a1b82e73d1f5d1831ad";
     private final String username;
     private GasProvider gasProvider;
     private Credentials credentials;
@@ -46,10 +47,11 @@ public class EthereumNotaryService implements NotaryService {
         ChatLogger.info("NotaryContract is loaded");
     }
 
-    public void addMessageHash(String hash) throws Exception {
-        TransactionReceipt tx = contract.addMessage(StringUtil.hexToByteArray(hash)).send();
-        ChatLogger.info(String.format("Transaction completed: Status=%s, hash=%s",
-                tx.getStatus(), tx.getTransactionHash()));
+    public CompletableFuture<TransactionReceipt> addMessageHash(byte[] hash) {
+        CompletableFuture<TransactionReceipt> txFuture = contract.addMessage(hash).sendAsync();
+        ChatLogger.info("Transaction started: call addMessageHash with " + hash.toString());
+
+        return txFuture;
     }
 
     public void acceptMessage(String hash) throws Exception {

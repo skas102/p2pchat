@@ -2,7 +2,9 @@ package views;
 
 import controllers.ChatController;
 import models.*;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ChatMessageListener;
+import util.ChatLogger;
 import views.fragments.ChatDetailHeader;
 import views.fragments.ChatHistoryFragment;
 import views.fragments.MessageSendFragment;
@@ -10,6 +12,7 @@ import views.fragments.MessageSendListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 public class PrivateChatDetailView extends JPanel implements MessageSendListener, ChatMessageListener {
     private ChatController controller;
@@ -71,8 +74,24 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
         if (tabbedPane.getSelectedComponent() == privateChatHistory) {
             controller.sendPrivateMessage(privateChat.getFriend(), message);
         } else {
+            try {
+                CompletableFuture<TransactionReceipt> txFuture = controller
+                        .sendNotaryMessage(privateChat.getFriend(), message);
 
-            controller.sendNotaryMessage(privateChat.getFriend(), message);
+                txFuture.thenAccept(tx -> {
+                            ChatLogger.info(String.format("addMessageHash Transaction completed, hash=%s",
+                                    tx.getTransactionHash()));
+                            JOptionPane.showMessageDialog(null, "Message hash is successfully added to the contract");
+                        }
+                ).exceptionally(ex -> {
+                    ChatLogger.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Transaction failed");
+                    return null;
+                });
+            } catch (Exception e) {
+                ChatLogger.error(e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 

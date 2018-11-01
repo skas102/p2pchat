@@ -2,11 +2,14 @@ package services;
 
 import models.Group;
 import models.Person;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface ChatService extends MessageListener {
     ContactRepository getContactRepository();
@@ -33,5 +36,5 @@ public interface ChatService extends MessageListener {
 
     void sendChatMessage(Group recipient, String message);
 
-    void sendNotaryChatMessage(Person recipient, String message);
+    CompletableFuture<TransactionReceipt> sendNotaryChatMessage(Person recipient, String message) throws Exception;
 }

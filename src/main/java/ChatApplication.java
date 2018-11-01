@@ -21,9 +21,8 @@ public class ChatApplication {
         p2pService = new TomP2PService(client, bootstrapPeer);
         notaryService = new EthereumNotaryService(client.getUsername());
 
-        // todo ask client for the username if first time, otherwise load from data file
         ChatRepository repo = new ChatRepository(client);
-        chatService = new P2PChatService(p2pService, repo);
+        chatService = new P2PChatService(p2pService, repo, notaryService);
         chatController = new ChatController(chatService);
     }
 

@@ -3,12 +3,14 @@ package controllers;
 import dtos.PersonDTO;
 import models.Group;
 import models.Person;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
 import services.ChatService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ChatController {
 
@@ -58,8 +60,8 @@ public class ChatController {
         chatService.sendChatMessage(recipient, message);
     }
 
-    public void sendNotaryMessage(Person recipient, String message) {
-        chatService.sendNotaryChatMessage(recipient, message);
+    public CompletableFuture<TransactionReceipt> sendNotaryMessage(Person recipient, String message) throws Exception {
+        return chatService.sendNotaryChatMessage(recipient, message);
     }
 
     public void sendGroupMessage(Group group, String message) {

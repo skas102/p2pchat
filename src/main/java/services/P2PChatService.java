@@ -4,23 +4,28 @@ import dtos.GroupDTO;
 import dtos.PersonDTO;
 import messages.*;
 import models.*;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ChatRepository;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
 import util.ChatLogger;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class P2PChatService implements ChatService {
     private ChatRepository chatRepository;
     private P2PService service;
+    private NotaryService notaryService;
 
-    public P2PChatService(P2PService service, ChatRepository chatRepository) {
+    public P2PChatService(P2PService service, ChatRepository chatRepository, NotaryService notaryService) {
         this.chatRepository = chatRepository;
         this.service = service;
+        this.notaryService = notaryService;
     }
 
     @Override
@@ -173,15 +178,17 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public void sendNotaryChatMessage(Person recipient, String message) {
+    public CompletableFuture<TransactionReceipt> sendNotaryChatMessage(Person recipient, String message)
+            throws NoSuchAlgorithmException {
         ChatLogger.info("Send notary message to " + recipient.getName());
         NotaryMessage notaryMessage = new NotaryMessage(chatRepository.getClient().getUsername(), message);
         getMessageRepository().addNotaryMessage(recipient, notaryMessage);
 
         service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
                 recipient.getName(),
-                notaryMessage.createDTO()
-        ));
+                notaryMessage.createDTO()));
+
+        return notaryService.addMessageHash(notaryMessage.getHash());
     }
 
     @Override
