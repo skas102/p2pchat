@@ -3,7 +3,6 @@ package views;
 import controllers.ChatController;
 import models.*;
 import repositories.ChatMessageListener;
-import util.ChatLogger;
 import views.fragments.ChatDetailHeader;
 import views.fragments.ChatHistoryFragment;
 import views.fragments.MessageSendFragment;
@@ -82,7 +81,11 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
         if (c.getType() == ContactType.PERSON) {
             Person sender = (Person) c;
             if (privateChat.getFriend().equals(sender)) {
-                lmPrivateMessages.addElement(m);
+                if (m instanceof NotaryMessage) {
+                    lmNotaryMessages.addElement(m);
+                } else {
+                    lmPrivateMessages.addElement(m);
+                }
             }
         }
     }
