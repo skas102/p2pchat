@@ -16,6 +16,7 @@ public class MessageRepository implements Serializable {
 
     public MessageRepository() {
         this.friendMessages = new HashMap<>();
+        this.notaryMessages = new HashMap<>();
         this.groupMessages = new HashMap<>();
         this.listeners = new ArrayList<>();
     }
@@ -70,7 +71,7 @@ public class MessageRepository implements Serializable {
         return chat;
     }
 
-    public void addNotaryMessage(Person p, ChatMessage m) {
+    public void addNotaryMessage(Person p, NotaryMessage m) {
         NotaryChat chat = getNotaryChat(p);
         chat.addNotaryMessage(m);
         notifyListeners(p, m);

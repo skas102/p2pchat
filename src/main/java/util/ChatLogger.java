@@ -19,6 +19,6 @@ public class ChatLogger {
     }
 
     public static void error(String message) {
-        logger.warn(message);
+        logger.error(message);
     }
 }

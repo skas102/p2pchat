@@ -58,6 +58,10 @@ public class ChatController {
         chatService.sendChatMessage(recipient, message);
     }
 
+    public void sendNotaryMessage(Person recipient, String message) {
+        chatService.sendNotaryChatMessage(recipient, message);
+    }
+
     public void sendGroupMessage(Group group, String message) {
         chatService.sendChatMessage(group, message);
     }

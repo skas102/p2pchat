@@ -72,7 +72,8 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
         if (tabbedPane.getSelectedComponent() == privateChatHistory) {
             controller.sendPrivateMessage(privateChat.getFriend(), message);
         } else {
-            ChatLogger.error("Notary messages not implemented");
+
+            controller.sendNotaryMessage(privateChat.getFriend(), message);
         }
     }
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class NotaryChat {
     private Person friend;
-    private List<ChatMessage> notaryMessages;
+    private List<NotaryMessage> notaryMessages;
 
     public NotaryChat(Person friend) {
         this.friend = friend;
@@ -16,11 +16,11 @@ public class NotaryChat {
         return friend;
     }
 
-    public void addNotaryMessage(ChatMessage m) {
+    public void addNotaryMessage(NotaryMessage m) {
         notaryMessages.add(m);
     }
 
-    public List<ChatMessage> getNotaryMessages() {
+    public List<NotaryMessage> getNotaryMessages() {
         return notaryMessages;
     }
 }
