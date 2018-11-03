@@ -9,14 +9,12 @@ import java.util.*;
 public class MessageRepository implements Serializable {
 
     private Map<String, PrivateChat> friendMessages;
-    private Map<String, NotaryChat> notaryMessages;
     private Map<UUID, GroupChat> groupMessages;
 
     private List<ChatMessageListener> listeners;
 
     public MessageRepository() {
         this.friendMessages = new HashMap<>();
-        this.notaryMessages = new HashMap<>();
         this.groupMessages = new HashMap<>();
         this.listeners = new ArrayList<>();
     }
@@ -61,18 +59,8 @@ public class MessageRepository implements Serializable {
         notifyListeners(g, m);
     }
 
-    public NotaryChat getNotaryChat(Person p) {
-        if (notaryMessages.containsKey(p.getName())) {
-            return notaryMessages.get(p.getName());
-        }
-
-        NotaryChat chat = new NotaryChat(p);
-        notaryMessages.put(p.getName(), chat);
-        return chat;
-    }
-
     public void addNotaryMessage(Person p, NotaryMessage m) {
-        NotaryChat chat = getNotaryChat(p);
+        PrivateChat chat = getPrivateChat(p);
         chat.addNotaryMessage(m);
         notifyListeners(p, m);
     }

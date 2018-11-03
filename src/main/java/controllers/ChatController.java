@@ -78,4 +78,8 @@ public class ChatController {
         g.join(getContactRepository().getSelf());
         getContactRepository().addGroup(g);
     }
+
+    public Person getSelf(){
+        return getContactRepository().getSelf();
+    }
 }
