@@ -4,9 +4,7 @@ import org.web3j.tx.gas.ContractGasProvider;
 
 import java.math.BigInteger;
 
-import static blockchain.NotaryContract.FUNC_ACCEPTMESSAGE;
-import static blockchain.NotaryContract.FUNC_ADDMESSAGE;
-import static blockchain.NotaryContract.FUNC_REJECTMESSAGE;
+import static blockchain.NotaryContract.*;
 
 public class GasProvider implements ContractGasProvider {
     // todo

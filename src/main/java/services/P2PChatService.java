@@ -12,7 +12,6 @@ import util.ChatLogger;
 import util.StringUtil;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;

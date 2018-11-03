@@ -3,7 +3,6 @@ package services;
 import models.Group;
 import models.NotaryMessage;
 import models.Person;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
 

@@ -1,7 +1,6 @@
 package messages;
 
 import dtos.ChatMessageDTO;
-import models.ContactType;
 
 public class NewNotaryChatMessage implements Message {
     private ChatMessageDTO messageDTO;

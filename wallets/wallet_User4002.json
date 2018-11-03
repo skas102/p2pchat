@@ -1,1 +1,21 @@
-{"address":"381839be3acbd1a73edd048d477c8e6a38257f70","id":"4370cbbc-4773-4387-9a1a-0357490b2bd7","version":3,"crypto":{"cipher":"aes-128-ctr","ciphertext":"79a9fb39e6d3402df8a89f8fb81c640c9c7d594b39746f3440b4da2d6effe699","cipherparams":{"iv":"772d50f0a23a5782bb7a60b6821a9e2b"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"1d169d051211a4a8e968d13cd6f9f00f4cdbb0abb76e8a4be9a2382be84fbd45"},"mac":"5d77f690bb629703345c104502d3843a868c485cb6fa8bc6523e553b17431d52"}}
+{
+  "address": "381839be3acbd1a73edd048d477c8e6a38257f70",
+  "id": "4370cbbc-4773-4387-9a1a-0357490b2bd7",
+  "version": 3,
+  "crypto": {
+    "cipher": "aes-128-ctr",
+    "ciphertext": "79a9fb39e6d3402df8a89f8fb81c640c9c7d594b39746f3440b4da2d6effe699",
+    "cipherparams": {
+      "iv": "772d50f0a23a5782bb7a60b6821a9e2b"
+    },
+    "kdf": "scrypt",
+    "kdfparams": {
+      "dklen": 32,
+      "n": 262144,
+      "p": 1,
+      "r": 8,
+      "salt": "1d169d051211a4a8e968d13cd6f9f00f4cdbb0abb76e8a4be9a2382be84fbd45"
+    },
+    "mac": "5d77f690bb629703345c104502d3843a868c485cb6fa8bc6523e553b17431d52"
+  }
+}
