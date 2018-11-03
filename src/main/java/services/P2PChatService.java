@@ -222,6 +222,26 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
+    public CompletableFuture<Void> rejectNotaryMessage(Person recipient, NotaryMessage m) throws NoSuchAlgorithmException {
+        ChatLogger.info("Sending accept notary message to " + recipient.getName());
+        byte[] hash = m.getHash();
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                TransactionReceipt tx = notaryService.rejectMessage(hash).join();
+                ChatLogger.info(String.format("rejectMessage Transaction completed, hash=%s",
+                        tx.getTransactionHash()));
+
+                m.setState(NotaryState.REJECTED);
+                return null;
+            } catch (Exception ex) {
+                ChatLogger.error(String.format("rejectMessage Transaction failed: %s", ex.getMessage()));
+                throw ex;
+            }
+        });
+    }
+
+    @Override
     public void onFriendRequest(Person p) {
         ChatLogger.info("Received Friend Request by person " + p.getName());
         getContactRepository().addIncomingFriendRequest(p);

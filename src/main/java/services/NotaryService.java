@@ -13,7 +13,7 @@ public interface NotaryService {
 
     CompletableFuture<TransactionReceipt> acceptMessage(byte[] hash);
 
-    void rejectMessage(String hash) throws Exception;
+    CompletableFuture<TransactionReceipt> rejectMessage(byte[] hash);
 
     void getMessageState(String hash) throws Exception;
 }

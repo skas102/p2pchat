@@ -6,6 +6,7 @@ import java.math.BigInteger;
 
 import static blockchain.NotaryContract.FUNC_ACCEPTMESSAGE;
 import static blockchain.NotaryContract.FUNC_ADDMESSAGE;
+import static blockchain.NotaryContract.FUNC_REJECTMESSAGE;
 
 public class GasProvider implements ContractGasProvider {
     // todo
@@ -23,8 +24,8 @@ public class GasProvider implements ContractGasProvider {
     public BigInteger getGasLimit(String contractFunc) {
         switch (contractFunc) {
             case FUNC_ADDMESSAGE:
-                return BigInteger.valueOf(70000);
             case FUNC_ACCEPTMESSAGE:
+            case FUNC_REJECTMESSAGE:
                 return BigInteger.valueOf(70000);
             default:
                 return BigInteger.valueOf(21000);

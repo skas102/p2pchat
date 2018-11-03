@@ -69,6 +69,10 @@ public class ChatController {
         return chatService.acceptNotaryMessage(recipient, m);
     }
 
+    public CompletableFuture<Void> rejectNotaryMessage(Person recipient, NotaryMessage m) throws NoSuchAlgorithmException {
+        return chatService.rejectNotaryMessage(recipient, m);
+    }
+
     public void sendGroupMessage(Group group, String message) {
         chatService.sendChatMessage(group, message);
     }

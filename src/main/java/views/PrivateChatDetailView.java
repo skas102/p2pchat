@@ -61,7 +61,19 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     }
 
     private void rejectNotaryMessage(NotaryMessage m, int index) {
-
+        try {
+            controller.rejectNotaryMessage(privateChat.getFriend(), m)
+                    .whenComplete((result, ex) -> {
+                        if (ex != null) {
+                            ChatLogger.error(ex);
+                            JOptionPane.showMessageDialog(null,
+                                    "Reject notary message is failed: " + ex.getMessage());
+                        }
+                        repaint();
+                    });
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     private void checkNotaryState(NotaryMessage m, int index) {

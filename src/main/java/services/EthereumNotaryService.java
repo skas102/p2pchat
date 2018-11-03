@@ -62,14 +62,17 @@ public class EthereumNotaryService implements NotaryService {
         return txFuture;
     }
 
-    public void rejectMessage(String hash) throws Exception {
-        TransactionReceipt tx = contract.rejectMessage(StringUtil.hexToByteArray(hash)).send();
-        ChatLogger.info(String.format("Reject Message Transaction compelted: Status=%s, hash=%s",
-                tx.getStatus(), tx.getTransactionHash()));
+    public CompletableFuture<TransactionReceipt> rejectMessage(byte[] hash){
+        CompletableFuture<TransactionReceipt> txFuture = contract.rejectMessage(hash).sendAsync();
+        ChatLogger.info(String.format("Transaction started: call rejectMessage with hash=%s",
+                StringUtil.bytesToHex(hash)));
+
+        return txFuture;
     }
 
-    // To test: hash "B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9" <-- "hello world"
-    // state = accepted
+    // To test:
+    // hash "0666BDA53FB35307856D288BB7B74C87E96949D4CC821242A7FFB8EDF2D014E2" --> accepted
+    // hash "9C6F30444092D79F5763EF181BAFDCF31DFDD070D471E5A03BB1E43EC6519694" --> rejected
     public void getMessageState(String hash) throws Exception {
         BigInteger state = contract.getMessageState(StringUtil.hexToByteArray(hash)).send();
         ChatLogger.info("State: " + state);
