@@ -77,7 +77,13 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     }
 
     private void checkNotaryState(NotaryMessage m, int index) {
-
+        try {
+            controller.checkState(m);
+            repaint();
+        } catch (Exception e) {
+            ChatLogger.error(e);
+            JOptionPane.showMessageDialog(null, "Failed to get state " + e.getMessage());
+        }
     }
 
     private void createView() {
@@ -113,7 +119,7 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
                     int index = notaryChatHistory.getList().getSelectedIndex();
                     NotaryMessage m = notaryChatHistory.getList().getSelectedValue();
 
-                    if (m.getState() == NotaryState.PENDING) {
+                    if (m != null && m.getState() == NotaryState.PENDING) {
                         getNotaryMessagePopup(m, index).show(e.getComponent(), e.getX(), e.getY());
                     }
                 }

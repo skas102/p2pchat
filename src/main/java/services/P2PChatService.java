@@ -9,8 +9,10 @@ import repositories.ChatRepository;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
 import util.ChatLogger;
+import util.StringUtil;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,21 +185,27 @@ public class P2PChatService implements ChatService {
         ChatLogger.info("Sending notary message to " + recipient.getName());
         NotaryMessage notaryMessage = new NotaryMessage(chatRepository.getClient().getUsername(), message);
         notaryMessage.setState(NotaryState.SENDING);
+        byte[] hash = notaryMessage.getHash();
         getMessageRepository().addNotaryMessage(recipient, notaryMessage);
 
-        // add the message to the blockchain first
-        return notaryService.addMessageHash(notaryMessage.getHash()).thenAccept(tx -> {
-            ChatLogger.info(String.format("addMessageHash Transaction completed, hash=%s",
-                    tx.getTransactionHash()));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // add the message to the blockchain first
+                TransactionReceipt tx = notaryService.addMessageHash(hash).join();
+                ChatLogger.info(String.format("addMessageHash Transaction completed, hash=%s",
+                        tx.getTransactionHash()));
 
-            service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
-                    recipient.getName(),
-                    notaryMessage.createDTO()));
-            notaryMessage.setState(NotaryState.PENDING);
-        }).exceptionally(ex -> {
-            ChatLogger.error(String.format("addMessageHash Transaction failed: %s", ex.getMessage()));
-            notaryMessage.setState(NotaryState.FAILED);
-            return null;
+                // send p2p message only when transaction is successful
+                service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
+                        recipient.getName(),
+                        notaryMessage.createDTO()));
+                notaryMessage.setState(NotaryState.PENDING);
+                return null;
+            } catch (Exception ex) {
+                ChatLogger.error(String.format("addMessageHash Transaction failed: %s", ex.getMessage()));
+                notaryMessage.setState(NotaryState.FAILED);
+                throw ex;
+            }
         });
     }
 
@@ -239,6 +247,18 @@ public class P2PChatService implements ChatService {
                 throw ex;
             }
         });
+    }
+
+    @Override
+    public void checkState(NotaryMessage m) throws Exception {
+        byte[] hash = m.getHash();
+        ChatLogger.info("Checking message state of " + hash);
+
+        int value = notaryService.getMessageState(hash).intValue();
+        NotaryState state = NotaryState.values()[value];
+        ChatLogger.info(String.format("State of %s: %d <==> %s", StringUtil.bytesToHex(hash), value, state));
+
+        m.setState(state);
     }
 
     @Override

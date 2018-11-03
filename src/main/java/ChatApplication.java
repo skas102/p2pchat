@@ -47,16 +47,6 @@ public class ChatApplication {
             e.printStackTrace();
         }
 
-        // todo remove: this is just a test call to contract
-        try {
-            notaryService.getMessageState("B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9");
-
-//            notaryService.addMessageHash("7e9e5ac30f2216fd0fd6f5faed316f2d5983361a4203c3330cfa46ef65bb4767",
-//                    "0xe252fFd0978c97B935fEE04C12dEF779571dEee4");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         new MainWindow(chatController);
     }
 }

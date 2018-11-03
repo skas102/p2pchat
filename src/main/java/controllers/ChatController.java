@@ -73,6 +73,10 @@ public class ChatController {
         return chatService.rejectNotaryMessage(recipient, m);
     }
 
+    public void checkState(NotaryMessage m) throws Exception {
+        chatService.checkState(m);
+    }
+
     public void sendGroupMessage(Group group, String message) {
         chatService.sendChatMessage(group, message);
     }

@@ -4,6 +4,7 @@ import org.web3j.crypto.CipherException;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.CompletableFuture;
 
 public interface NotaryService {
@@ -15,5 +16,5 @@ public interface NotaryService {
 
     CompletableFuture<TransactionReceipt> rejectMessage(byte[] hash);
 
-    void getMessageState(String hash) throws Exception;
+    BigInteger getMessageState(byte[] hash) throws Exception;
 }

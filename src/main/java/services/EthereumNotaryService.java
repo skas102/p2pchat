@@ -73,8 +73,7 @@ public class EthereumNotaryService implements NotaryService {
     // To test:
     // hash "0666BDA53FB35307856D288BB7B74C87E96949D4CC821242A7FFB8EDF2D014E2" --> accepted
     // hash "9C6F30444092D79F5763EF181BAFDCF31DFDD070D471E5A03BB1E43EC6519694" --> rejected
-    public void getMessageState(String hash) throws Exception {
-        BigInteger state = contract.getMessageState(StringUtil.hexToByteArray(hash)).send();
-        ChatLogger.info("State: " + state);
+    public BigInteger getMessageState(byte[] hash) throws Exception {
+        return contract.getMessageState(hash).send();
     }
 }
