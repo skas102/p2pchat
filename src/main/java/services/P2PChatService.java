@@ -4,6 +4,7 @@ import dtos.GroupDTO;
 import dtos.PersonDTO;
 import messages.*;
 import models.*;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ChatRepository;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
@@ -193,17 +194,31 @@ public class P2PChatService implements ChatService {
                     recipient.getName(),
                     notaryMessage.createDTO()));
             notaryMessage.setState(NotaryState.PENDING);
-        }).exceptionally(e -> {
-            ChatLogger.error(String.format("addMessageHash Transaction failed: %s", e.getMessage()));
+        }).exceptionally(ex -> {
+            ChatLogger.error(String.format("addMessageHash Transaction failed: %s", ex.getMessage()));
             notaryMessage.setState(NotaryState.FAILED);
             return null;
         });
     }
 
     @Override
-    public CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m) {
-        ChatLogger.info("Send accept notary message to " + recipient.getName());
-        return null;
+    public CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m) throws NoSuchAlgorithmException {
+        ChatLogger.info("Sending accept notary message to " + recipient.getName());
+        byte[] hash = m.getHash();
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                TransactionReceipt tx = notaryService.acceptMessage(hash).join();
+                ChatLogger.info(String.format("acceptMessage Transaction completed, hash=%s",
+                        tx.getTransactionHash()));
+
+                m.setState(NotaryState.ACCEPTED);
+                return null;
+            } catch (Exception ex) {
+                ChatLogger.error(String.format("acceptMessage Transaction failed: %s", ex.getMessage()));
+                throw ex;
+            }
+        });
     }
 
     @Override

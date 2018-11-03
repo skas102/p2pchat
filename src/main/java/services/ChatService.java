@@ -39,5 +39,5 @@ public interface ChatService extends MessageListener {
 
     CompletableFuture<Void> sendNotaryChatMessage(Person recipient, String message) throws NoSuchAlgorithmException;
 
-    CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m);
+    CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m) throws NoSuchAlgorithmException;
 }

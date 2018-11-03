@@ -45,7 +45,19 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     }
 
     private void acceptNotaryMessage(NotaryMessage m, int index) {
-        controller.acceptNotaryMessage(privateChat.getFriend(), m);
+        try {
+            CompletableFuture<Void> future = controller.acceptNotaryMessage(privateChat.getFriend(), m);
+            future.whenComplete((result, ex) -> {
+                if (ex != null) {
+                    ChatLogger.error(ex);
+                    JOptionPane.showMessageDialog(null,
+                            "Accept notary message is failed: " + ex.getMessage());
+                }
+                repaint();
+            });
+        } catch (NoSuchAlgorithmException e) {
+            ChatLogger.error(e);
+        }
     }
 
     private void rejectNotaryMessage(NotaryMessage m, int index) {
@@ -141,6 +153,7 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
                         JOptionPane.showMessageDialog(null,
                                 "Message hash is successfully added to the blockchain");
                     }
+                    repaint();
                 });
             } catch (NoSuchAlgorithmException e) {
                 ChatLogger.error(e.getMessage());

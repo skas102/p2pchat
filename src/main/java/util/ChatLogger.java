@@ -21,4 +21,9 @@ public class ChatLogger {
     public static void error(String message) {
         logger.error(message);
     }
+
+    public static void error(Throwable ex){
+        logger.error(ex.getMessage());
+        ex.printStackTrace();
+    }
 }

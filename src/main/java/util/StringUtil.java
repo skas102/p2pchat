@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 public class StringUtil {
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static boolean isNullOrEmpty(String str) {
         return str == null || "".equals(str);
     }
@@ -29,5 +30,13 @@ public class StringUtil {
     public static byte[] sha256(String s) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         return digest.digest(s.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 }

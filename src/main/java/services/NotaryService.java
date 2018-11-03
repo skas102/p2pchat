@@ -11,7 +11,7 @@ public interface NotaryService {
 
     CompletableFuture<TransactionReceipt> addMessageHash(byte[] hash);
 
-    void acceptMessage(String hash) throws Exception;
+    CompletableFuture<TransactionReceipt> acceptMessage(byte[] hash);
 
     void rejectMessage(String hash) throws Exception;
 
