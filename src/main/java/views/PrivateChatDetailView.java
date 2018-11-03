@@ -2,7 +2,6 @@ package views;
 
 import controllers.ChatController;
 import models.*;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ChatMessageListener;
 import util.ChatLogger;
 import views.fragments.ChatDetailHeader;
@@ -14,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.CompletableFuture;
 
 public class PrivateChatDetailView extends JPanel implements MessageSendListener, ChatMessageListener {
@@ -42,6 +42,18 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     private void updateData() {
         privateChat.getPrivateMessages().forEach(m -> lmPrivateMessages.addElement(m));
         privateChat.getNotaryMessages().forEach(m -> lmNotaryMessages.addElement(m));
+    }
+
+    private void acceptNotaryMessage(NotaryMessage m, int index) {
+        controller.acceptNotaryMessage(privateChat.getFriend(), m);
+    }
+
+    private void rejectNotaryMessage(NotaryMessage m, int index) {
+
+    }
+
+    private void checkNotaryState(NotaryMessage m, int index) {
+
     }
 
     private void createView() {
@@ -73,7 +85,7 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
         notaryChatHistory.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if( e.getButton() == MouseEvent.BUTTON3) { // right click
+                if (e.getButton() == MouseEvent.BUTTON3) { // right click
                     int index = notaryChatHistory.getList().getSelectedIndex();
                     NotaryMessage m = notaryChatHistory.getList().getSelectedValue();
 
@@ -88,17 +100,19 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
     private JPopupMenu getNotaryMessagePopup(NotaryMessage m, int index) {
         JPopupMenu popup = new JPopupMenu();
 
-        if (m.getSender().equals(self.getName())) {
-            JMenuItem checkItem = new JMenuItem("Check state");
-            popup.add(checkItem);
-        } else {
+        if (m.getSender().equals(privateChat.getFriend().getName())) {
             JMenuItem acceptItem = new JMenuItem("Accept Message");
             popup.add(acceptItem);
             JMenuItem rejectItem = new JMenuItem("Reject Message");
             popup.add(rejectItem);
 
-//            acceptItem.addActionListener(e -> confirmFriend(requester, index));
-//            rejectItem.addActionListener(e -> rejectFriend(requester, index));
+            acceptItem.addActionListener(e -> acceptNotaryMessage(m, index));
+            rejectItem.addActionListener(e -> rejectNotaryMessage(m, index));
+        } else {
+            JMenuItem checkItem = new JMenuItem("Check state");
+            popup.add(checkItem);
+
+            checkItem.addActionListener(e -> checkNotaryState(m, index));
         }
 
         return popup;
@@ -114,20 +128,21 @@ public class PrivateChatDetailView extends JPanel implements MessageSendListener
             controller.sendPrivateMessage(privateChat.getFriend(), message);
         } else {
             try {
-                CompletableFuture<TransactionReceipt> txFuture = controller
+                CompletableFuture<Void> future = controller
                         .sendNotaryMessage(privateChat.getFriend(), message);
 
-                txFuture.thenAccept(tx -> {
-                            ChatLogger.info(String.format("addMessageHash Transaction completed, hash=%s",
-                                    tx.getTransactionHash()));
-                            JOptionPane.showMessageDialog(null, "Message hash is successfully added to the contract");
-                        }
-                ).exceptionally(ex -> {
-                    ChatLogger.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(null, "Transaction failed");
-                    return null;
+                future.whenComplete((result, ex) -> {
+                    if (ex != null) {
+                        ChatLogger.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(null,
+                                "Notary message is failed to send: " + ex.getMessage());
+                        ex.printStackTrace();
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Message hash is successfully added to the blockchain");
+                    }
                 });
-            } catch (Exception e) {
+            } catch (NoSuchAlgorithmException e) {
                 ChatLogger.error(e.getMessage());
                 e.printStackTrace();
             }

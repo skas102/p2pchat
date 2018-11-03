@@ -1,6 +1,7 @@
 package services;
 
 import models.Group;
+import models.NotaryMessage;
 import models.Person;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ContactRepository;
@@ -36,5 +37,7 @@ public interface ChatService extends MessageListener {
 
     void sendChatMessage(Group recipient, String message);
 
-    CompletableFuture<TransactionReceipt> sendNotaryChatMessage(Person recipient, String message) throws Exception;
+    CompletableFuture<Void> sendNotaryChatMessage(Person recipient, String message) throws NoSuchAlgorithmException;
+
+    CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m);
 }

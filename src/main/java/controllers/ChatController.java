@@ -2,13 +2,14 @@ package controllers;
 
 import dtos.PersonDTO;
 import models.Group;
+import models.NotaryMessage;
 import models.Person;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
 import services.ChatService;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -60,8 +61,12 @@ public class ChatController {
         chatService.sendChatMessage(recipient, message);
     }
 
-    public CompletableFuture<TransactionReceipt> sendNotaryMessage(Person recipient, String message) throws Exception {
+    public CompletableFuture<Void> sendNotaryMessage(Person recipient, String message) throws NoSuchAlgorithmException {
         return chatService.sendNotaryChatMessage(recipient, message);
+    }
+
+    public CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m) {
+        return chatService.acceptNotaryMessage(recipient, m);
     }
 
     public void sendGroupMessage(Group group, String message) {
@@ -79,7 +84,7 @@ public class ChatController {
         getContactRepository().addGroup(g);
     }
 
-    public Person getSelf(){
+    public Person getSelf() {
         return getContactRepository().getSelf();
     }
 }

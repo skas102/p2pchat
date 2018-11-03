@@ -4,7 +4,6 @@ import dtos.GroupDTO;
 import dtos.PersonDTO;
 import messages.*;
 import models.*;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ChatRepository;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
@@ -178,17 +177,33 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public CompletableFuture<TransactionReceipt> sendNotaryChatMessage(Person recipient, String message)
+    public CompletableFuture<Void> sendNotaryChatMessage(Person recipient, String message)
             throws NoSuchAlgorithmException {
-        ChatLogger.info("Send notary message to " + recipient.getName());
+        ChatLogger.info("Sending notary message to " + recipient.getName());
         NotaryMessage notaryMessage = new NotaryMessage(chatRepository.getClient().getUsername(), message);
+        notaryMessage.setState(NotaryState.SENDING);
         getMessageRepository().addNotaryMessage(recipient, notaryMessage);
 
-        service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
-                recipient.getName(),
-                notaryMessage.createDTO()));
+        // add the message to the blockchain first
+        return notaryService.addMessageHash(notaryMessage.getHash()).thenAccept(tx -> {
+            ChatLogger.info(String.format("addMessageHash Transaction completed, hash=%s",
+                    tx.getTransactionHash()));
 
-        return notaryService.addMessageHash(notaryMessage.getHash());
+            service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
+                    recipient.getName(),
+                    notaryMessage.createDTO()));
+            notaryMessage.setState(NotaryState.PENDING);
+        }).exceptionally(e -> {
+            ChatLogger.error(String.format("addMessageHash Transaction failed: %s", e.getMessage()));
+            notaryMessage.setState(NotaryState.FAILED);
+            return null;
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m) {
+        ChatLogger.info("Send accept notary message to " + recipient.getName());
+        return null;
     }
 
     @Override
