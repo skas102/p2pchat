@@ -1,5 +1,8 @@
 package util;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,5 +25,18 @@ public class StringUtil {
                     + Character.digit(s.charAt(i + 1), 16));
         }
         return data;
+    }
+
+    public static byte[] sha256(String s) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        return digest.digest(s.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 }

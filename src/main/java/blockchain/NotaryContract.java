@@ -1,10 +1,5 @@
 package blockchain;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
@@ -26,11 +21,17 @@ import org.web3j.tx.gas.ContractGasProvider;
 import rx.Observable;
 import rx.functions.Func1;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
- * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the
  * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
  * <p>Generated with web3j version 3.6.0.
@@ -48,8 +49,11 @@ public class NotaryContract extends Contract {
 
     public static final String FUNC_GETMESSAGESTATE = "getMessageState";
 
-    public static final Event STATECHANGED_EVENT = new Event("StateChanged", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Bytes32>() {}, new TypeReference<Uint8>() {}));
+    public static final Event STATECHANGED_EVENT = new Event("StateChanged",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }, new TypeReference<Bytes32>() {
+            }, new TypeReference<Uint8>() {
+            }));
     ;
 
     @Deprecated
@@ -72,7 +76,7 @@ public class NotaryContract extends Contract {
 
     public RemoteCall<TransactionReceipt> addMessage(byte[] hash) {
         final Function function = new Function(
-                FUNC_ADDMESSAGE, 
+                FUNC_ADDMESSAGE,
                 Arrays.<Type>asList(new Bytes32(hash)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -80,7 +84,7 @@ public class NotaryContract extends Contract {
 
     public RemoteCall<TransactionReceipt> acceptMessage(byte[] hash) {
         final Function function = new Function(
-                FUNC_ACCEPTMESSAGE, 
+                FUNC_ACCEPTMESSAGE,
                 Arrays.<Type>asList(new Bytes32(hash)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -88,24 +92,25 @@ public class NotaryContract extends Contract {
 
     public RemoteCall<TransactionReceipt> kill() {
         final Function function = new Function(
-                FUNC_KILL, 
-                Arrays.<Type>asList(), 
+                FUNC_KILL,
+                Arrays.<Type>asList(),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<TransactionReceipt> rejectMessage(byte[] hash) {
         final Function function = new Function(
-                FUNC_REJECTMESSAGE, 
+                FUNC_REJECTMESSAGE,
                 Arrays.<Type>asList(new Bytes32(hash)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<BigInteger> getMessageState(byte[] hash) {
-        final Function function = new Function(FUNC_GETMESSAGESTATE, 
+        final Function function = new Function(FUNC_GETMESSAGESTATE,
                 Arrays.<Type>asList(new Bytes32(hash)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint8>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint8>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 

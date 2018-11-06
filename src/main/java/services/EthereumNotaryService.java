@@ -13,10 +13,11 @@ import util.StringUtil;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.concurrent.CompletableFuture;
 
 public class EthereumNotaryService implements NotaryService {
 
-    private final String contractAddress = "0x469fce78cd4ea1db3a93090416adbed5029976cb";
+    private final String contractAddress = "0x59cd1f59b9cf96baaeea7a1b82e73d1f5d1831ad";
     private final String username;
     private GasProvider gasProvider;
     private Credentials credentials;
@@ -46,28 +47,33 @@ public class EthereumNotaryService implements NotaryService {
         ChatLogger.info("NotaryContract is loaded");
     }
 
-    public void addMessageHash(String hash) throws Exception {
-        TransactionReceipt tx = contract.addMessage(StringUtil.hexToByteArray(hash)).send();
-        ChatLogger.info(String.format("Transaction completed: Status=%s, hash=%s",
-                tx.getStatus(), tx.getTransactionHash()));
+    public CompletableFuture<TransactionReceipt> addMessageHash(byte[] hash) {
+        CompletableFuture<TransactionReceipt> txFuture = contract.addMessage(hash).sendAsync();
+        ChatLogger.info("Transaction started: call addMessageHash with " + StringUtil.bytesToHex(hash));
+
+        return txFuture;
     }
 
-    public void acceptMessage(String hash) throws Exception {
-        TransactionReceipt tx = contract.acceptMessage(StringUtil.hexToByteArray(hash)).send();
-        ChatLogger.info(String.format("Accept Message Transaction compelted: Status=%s, hash=%s",
-                tx.getStatus(), tx.getTransactionHash()));
+    public CompletableFuture<TransactionReceipt> acceptMessage(byte[] hash) {
+        CompletableFuture<TransactionReceipt> txFuture = contract.acceptMessage(hash).sendAsync();
+        ChatLogger.info(String.format("Transaction started: call acceptMessage with hash=%s",
+                StringUtil.bytesToHex(hash)));
+
+        return txFuture;
     }
 
-    public void rejectMessage(String hash) throws Exception {
-        TransactionReceipt tx = contract.rejectMessage(StringUtil.hexToByteArray(hash)).send();
-        ChatLogger.info(String.format("Reject Message Transaction compelted: Status=%s, hash=%s",
-                tx.getStatus(), tx.getTransactionHash()));
+    public CompletableFuture<TransactionReceipt> rejectMessage(byte[] hash) {
+        CompletableFuture<TransactionReceipt> txFuture = contract.rejectMessage(hash).sendAsync();
+        ChatLogger.info(String.format("Transaction started: call rejectMessage with hash=%s",
+                StringUtil.bytesToHex(hash)));
+
+        return txFuture;
     }
 
-    // To test: hash "B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9" <-- "hello world"
-    // state = accepted
-    public void getMessageState(String hash) throws Exception {
-        BigInteger state = contract.getMessageState(StringUtil.hexToByteArray(hash)).send();
-        ChatLogger.info("State: " + state);
+    // To test:
+    // hash "0666BDA53FB35307856D288BB7B74C87E96949D4CC821242A7FFB8EDF2D014E2" --> accepted
+    // hash "9C6F30444092D79F5763EF181BAFDCF31DFDD070D471E5A03BB1E43EC6519694" --> rejected
+    public BigInteger getMessageState(byte[] hash) throws Exception {
+        return contract.getMessageState(hash).send();
     }
 }

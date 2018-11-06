@@ -1,7 +1,9 @@
 package models;
 
 import dtos.ChatMessageDTO;
+import util.StringUtil;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 public class NotaryMessage extends ChatMessage {
@@ -32,5 +34,9 @@ public class NotaryMessage extends ChatMessage {
     public String toString() {
         return String.format("%s %s %s: %s",
                 getFormattedDateTime(), state.toString(), getSender(), getMessage());
+    }
+
+    public byte[] getHash() throws NoSuchAlgorithmException {
+        return StringUtil.sha256(String.format("%s %s %s", getFormattedDateTime(), getSender(), getMessage()));
     }
 }

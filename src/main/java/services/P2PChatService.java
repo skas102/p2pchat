@@ -3,27 +3,30 @@ package services;
 import dtos.GroupDTO;
 import dtos.PersonDTO;
 import messages.*;
-import models.ChatMessage;
-import models.ContactType;
-import models.Group;
-import models.Person;
+import models.*;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import repositories.ChatRepository;
 import repositories.ContactRepository;
 import repositories.MessageRepository;
 import util.ChatLogger;
+import util.StringUtil;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class P2PChatService implements ChatService {
     private ChatRepository chatRepository;
     private P2PService service;
+    private NotaryService notaryService;
 
-    public P2PChatService(P2PService service, ChatRepository chatRepository) {
+    public P2PChatService(P2PService service, ChatRepository chatRepository, NotaryService notaryService) {
         this.chatRepository = chatRepository;
         this.service = service;
+        this.notaryService = notaryService;
     }
 
     @Override
@@ -176,15 +179,85 @@ public class P2PChatService implements ChatService {
     }
 
     @Override
-    public void sendNotaryChatMessage(Person recipient, String message) {
-        ChatLogger.info("Send notary message to " + recipient.getName());
-        ChatMessage chatMessage = new ChatMessage(chatRepository.getClient().getUsername(), message);
-        getMessageRepository().addNotaryMessage(recipient, chatMessage);
+    public CompletableFuture<Void> sendNotaryChatMessage(Person recipient, String message)
+            throws NoSuchAlgorithmException {
+        ChatLogger.info("Sending notary message to " + recipient.getName());
+        NotaryMessage notaryMessage = new NotaryMessage(chatRepository.getClient().getUsername(), message);
+        notaryMessage.setState(NotaryState.SENDING);
+        byte[] hash = notaryMessage.getHash();
+        getMessageRepository().addNotaryMessage(recipient, notaryMessage);
 
-        service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
-                recipient.getName(),
-                chatMessage.createDTO()
-        ));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // add the message to the blockchain first
+                TransactionReceipt tx = notaryService.addMessageHash(hash).join();
+                ChatLogger.info(String.format("addMessageHash Transaction completed, hash=%s",
+                        tx.getTransactionHash()));
+
+                // send p2p message only when transaction is successful
+                service.sendDirectMessage(recipient.createPersonDTO(), new NewNotaryChatMessage(
+                        recipient.getName(),
+                        notaryMessage.createDTO()));
+                notaryMessage.setState(NotaryState.PENDING);
+                return null;
+            } catch (Exception ex) {
+                ChatLogger.error(String.format("addMessageHash Transaction failed: %s", ex.getMessage()));
+                notaryMessage.setState(NotaryState.FAILED);
+                throw ex;
+            }
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> acceptNotaryMessage(Person recipient, NotaryMessage m) throws NoSuchAlgorithmException {
+        ChatLogger.info("Sending accept notary message to " + recipient.getName());
+        byte[] hash = m.getHash();
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                TransactionReceipt tx = notaryService.acceptMessage(hash).join();
+                ChatLogger.info(String.format("acceptMessage Transaction completed, hash=%s",
+                        tx.getTransactionHash()));
+
+                m.setState(NotaryState.ACCEPTED);
+                return null;
+            } catch (Exception ex) {
+                ChatLogger.error(String.format("acceptMessage Transaction failed: %s", ex.getMessage()));
+                throw ex;
+            }
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> rejectNotaryMessage(Person recipient, NotaryMessage m) throws NoSuchAlgorithmException {
+        ChatLogger.info("Sending accept notary message to " + recipient.getName());
+        byte[] hash = m.getHash();
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                TransactionReceipt tx = notaryService.rejectMessage(hash).join();
+                ChatLogger.info(String.format("rejectMessage Transaction completed, hash=%s",
+                        tx.getTransactionHash()));
+
+                m.setState(NotaryState.REJECTED);
+                return null;
+            } catch (Exception ex) {
+                ChatLogger.error(String.format("rejectMessage Transaction failed: %s", ex.getMessage()));
+                throw ex;
+            }
+        });
+    }
+
+    @Override
+    public void checkState(NotaryMessage m) throws Exception {
+        byte[] hash = m.getHash();
+        ChatLogger.info("Checking message state of " + hash);
+
+        int value = notaryService.getMessageState(hash).intValue();
+        NotaryState state = NotaryState.values()[value];
+        ChatLogger.info(String.format("State of %s: %d <==> %s", StringUtil.bytesToHex(hash), value, state));
+
+        m.setState(state);
     }
 
     @Override
@@ -259,10 +332,10 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void onNotaryChatMessageReceived(NewNotaryChatMessage newNotaryChatMessage) {
-        ChatMessage chatMessage = ChatMessage.create(newNotaryChatMessage.getMessageDTO());
+        NotaryMessage notaryMessage = NotaryMessage.create(newNotaryChatMessage.getMessageDTO());
         Person friend = getContactRepository().getFriends().get(newNotaryChatMessage.getSenderUsername());
         if (friend != null) {
-            getMessageRepository().addNotaryMessage(friend, chatMessage);
+            getMessageRepository().addNotaryMessage(friend, notaryMessage);
         }
     }
 
