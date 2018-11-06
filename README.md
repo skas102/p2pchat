@@ -54,3 +54,13 @@ User Interface
 1. Click on the group icon. 
 2. Enter the group name and select the members you want to add.
 3. Group can also be removed by right clicking the group.
+
+### Send Notary Messages
+
+![Notary messages](https://user-images.githubusercontent.com/3751899/47953523-32beb600-df7f-11e8-9c7a-ccdca33aee43.png)
+
+1. Notary messages can be sent just like normal messages
+2. When a notary message is submitted, it will be first added to the blockchain (Contract: https://ropsten.etherscan.io/address/0x59cd1f59b9cf96baaeea7a1b82e73d1f5d1831ad)
+3. Only if the transaction is successful, the message will be sent to the selected friend via p2p.
+4. The recipient can accept or reject the message by right clicking on it
+5. The status checks by pull mechanism, so the sender should right click on the message to check the status.
