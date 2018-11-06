@@ -6,8 +6,6 @@ public class Main {
 
     // Usage: java Main <client-port> <bootstrap-peer-ip> <bootstrap-peer-port>
     public static void main(String[] args) {
-        // todo replace all system log methods with the logger library
-        // todo exception handling
         ChatLogger.info("Started application");
 
         // By parameterizing the port, multiple chat applications could be started on the same machine

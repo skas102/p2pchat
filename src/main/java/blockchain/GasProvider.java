@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import static blockchain.NotaryContract.*;
 
 public class GasProvider implements ContractGasProvider {
-    // todo
     @Override
     public BigInteger getGasPrice(String contractFunc) {
         return BigInteger.valueOf(1);

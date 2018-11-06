@@ -29,5 +29,5 @@ build/
 out/
 
 
-# todo temp solution - Ignore User profiles
+# Ignore User profiles
 User*

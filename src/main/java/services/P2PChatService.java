@@ -42,7 +42,7 @@ public class P2PChatService implements ChatService {
     @Override
     public Person sendFriendRequest(String name) throws IOException, ClassNotFoundException {
         // 1. Load data about friend from DHT
-        PersonDTO personDTO = service.getPerson(name); // todo pass listeners for async
+        PersonDTO personDTO = service.getPerson(name);
         ChatLogger.info("Person info retrieved: " + personDTO);
 
         // 2. Send FriendRequest
@@ -282,8 +282,6 @@ public class P2PChatService implements ChatService {
 
     @Override
     public void onGroupInvitation(UUID groupKey) {
-        // TODO Optimization - Check if person exists locally
-
         new Thread(() -> {
             try {
                 GroupDTO groupDTO = service.getGroup(groupKey);

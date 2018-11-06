@@ -64,7 +64,7 @@ public class TomP2PService implements P2PService {
                 client.getUsername(),
                 peerDHT.peerAddress());
 
-        // todo on collision use domain key, e.g. UUID
+        // Collision may occur
         peerDHT.put(Number160.createHash(client.getUsername()))
                 .data(new Data(personDTO))
                 .start()
@@ -89,7 +89,7 @@ public class TomP2PService implements P2PService {
     public PersonDTO getPerson(String username) throws IOException, ClassNotFoundException {
         FutureGet futureGet = peerDHT.get(Number160.createHash(username))
                 .start();
-        futureGet.awaitUninterruptibly(); // todo This is a blocking operation, refactor code async
+        futureGet.awaitUninterruptibly(); // This is a blocking operation
         return (PersonDTO) futureGet.data().object();
     }
 

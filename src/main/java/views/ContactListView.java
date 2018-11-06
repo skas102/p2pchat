@@ -174,7 +174,6 @@ public class ContactListView extends JPanel implements ContactListener {
         int result = JOptionPane.showConfirmDialog(null, inputs.toArray(), "Group Creation",
                 JOptionPane.OK_CANCEL_OPTION);
 
-        // todo error handling
         if (result == JOptionPane.OK_OPTION) {
             try {
                 java.util.List<Person> members = new ArrayList<>();
